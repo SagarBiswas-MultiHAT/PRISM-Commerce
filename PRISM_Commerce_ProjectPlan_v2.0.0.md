@@ -71,7 +71,10 @@ No existing platform addresses **all of these together**:
 
 ### What makes it intelligent?
 
+
 PRISM has three layers of intelligence that work together:
+
+<div align=center>
 
 ```
 Layer 1: INDIVIDUAL INTELLIGENCE
@@ -81,9 +84,9 @@ Layer 1: INDIVIDUAL INTELLIGENCE
 │  per product for 7, 14, and 30 days ahead.      │
 │                                                 │
 │  Think of it as: "Your personal sales analyst   │
-│  who never sleeps and gets smarter every week."  │
+│  who never sleeps and gets smarter every week." │
 └─────────────────────────────────────────────────┘
-                    ↓ feeds into
+                ↓ feeds into
 Layer 2: SELF-IMPROVING INTELLIGENCE
 ┌─────────────────────────────────────────────────┐
 │  A closed feedback loop compares predictions    │
@@ -91,9 +94,9 @@ Layer 2: SELF-IMPROVING INTELLIGENCE
 │  is wrong, it automatically retrains itself.    │
 │                                                 │
 │  Think of it as: "An analyst who reviews their  │
-│  own mistakes and corrects their approach."      │
+│  own mistakes and corrects their approach."     │
 └─────────────────────────────────────────────────┘
-                    ↓ feeds into
+                ↓ feeds into
 Layer 3: COLLECTIVE INTELLIGENCE (Emergence)
 ┌─────────────────────────────────────────────────┐
 │  Cross-vendor category signals aggregate sales  │
@@ -104,9 +107,10 @@ Layer 3: COLLECTIVE INTELLIGENCE (Emergence)
 │                                                 │
 │  Think of it as: "Market intelligence from the  │
 │  entire bazaar, without anyone seeing your      │
-│  private sales numbers."                         │
+│  private sales numbers."                        │
 └─────────────────────────────────────────────────┘
 ```
+</div>
 
 ### Bangladesh-Native Differentiators
 
@@ -291,15 +295,15 @@ PRISM uses a **unified monorepo architecture (Turborepo)** with two primary runt
 │   Zustand (cart + offline)  │  │   (onnxruntime-node v1.17+)          │  │
 │   next-pwa (service worker) │  │   Inference < 80ms per product       │  │
 │   375px / 768px / 1440px    │  │   Cached 24h in Redis                │  │
-│   WCAG 2.1 AA accessible   │  │   Weather + Festival feature inject  │  │
+│   WCAG 2.1 AA accessible    │  │   Weather + Festival feature inject  │  │
 │                             │  └──────────────────────────────────────┘  │
 │                             │                                            │
 │                             │  ┌──────────────────────────────────────┐  │
-│                             │  │   CRON Scheduler (@nestjs/schedule)   │  │
-│                             │  │   • Weekly: GBR retrain trigger       │  │
-│                             │  │   • Hourly: Category velocity calc    │  │
-│                             │  │   • Daily: Weather forecast fetch     │  │
-│                             │  │   • Daily: Forecast accuracy eval     │  │
+│                             │  │   CRON Scheduler (@nestjs/schedule)  │  │
+│                             │  │   • Weekly: GBR retrain trigger      │  │
+│                             │  │   • Hourly: Category velocity calc   │  │
+│                             │  │   • Daily: Weather forecast fetch    │  │
+│                             │  │   • Daily: Forecast accuracy eval    │  │
 │                             │  └──────────────────────────────────────┘  │
 └─────────────────────────────┴────────────────────────────────────────────┘
           │                              │                    │
@@ -1219,38 +1223,38 @@ PRISM is not merely a generic platform labelled for Bangladesh. Five integration
 ### Screen 1 — Vendor AI Intelligence Dashboard (Desktop 1440px)
 
 ```
-┌───────────────────────────────────────────────────────────────────┐
-│  PRISM Commerce                                [EN | বাংলা]  [⚙️] │
-├───────────────────────────────────────────────────────────────────┤
+┌──────────────────────────────────────────────────────────────────────┐
+│  PRISM Commerce                                [EN | বাংলা]  [⚙️]    │
+├──────────────────────────────────────────────────────────────────────┤
 │  [₹ Revenue]  [📦 Orders]  [🔴 Low-Stock]  [⭐ VPS: 87]  [🌧️ Rain] │ ← Top Stats
-├────────────────────────┬──────────────────────────────────────────┤
-│  Product List (35%)    │  Selected Product (65%)                   │
-│                        │                                           │
-│  🔍 Search products    │  Recharts Area Chart:                     │
-│                        │  30d history + 30d GBR forecast            │
-│  [Product A]           │  (dashed line + confidence band)           │
-│   Stock: 12 ↑ 92%     │  Weather overlay: 🌧️ monsoon markers       │
-│   🗓 Eid in 14 days    │  Festival Markers: 🔴 Eid (x-axis)        │
-│                        │                                           │
-│  [Product B]           │  Feature Importance Bar:                   │
-│   Stock: 3 ↓ 67% 🚨   │  "Eid proximity: 43% | Weather: 12%"     │
-│                        │                                           │
-│                        │  Data Quality: ████████░░ 80% (real data) │
-│                        │                                           │
-├────────────────────────┤  ┌─ What-If Planner ──────────────────┐  │
-│  [Trending Products]   │  │  Days to Eid: [━━━━●━━] 14         │  │
-│  1. Product C ↑ 23%    │  │  Monsoon:     [ON] / OFF            │  │
-│  2. Product D ↑ 18%    │  │  Category Vel: [━━●━━━━] Medium     │  │
-│                        │  │  → Scenario Forecast: 45 units (+8) │  │
-│                        │  └────────────────────────────────────┘  │
-├────────────────────────┴──────────────────────────────────────────┤
-│  🟡 Product B below ROP  🔴 Order #1234 flagged  🔵 Eid in 7d    │ ← Alert Strip
-│                                    WhatsApp ✅ (বাংলা)            │
-├───────────────────────────────────────────────────────────────────┤
-│  [Coupon Optimizer] Surplus → Generate Coupon                     │
-│  [Category Velocity] Your fabric category ↑ 23% platform-wide    │ ← Cross-Vendor
-│  [Weather Impact] 🌧️ Rain gear demand ↑ 80% this week             │ ← Weather Signal
-└───────────────────────────────────────────────────────────────────┘
+├────────────────────────┬─────────────────────────────────────────────┤
+│  Product List (35%)    │  Selected Product (65%)                     │
+│                        │                                             │
+│  🔍 Search products    │  Recharts Area Chart:                       │
+│                        │  30d history + 30d GBR forecast             │
+│  [Product A]           │  (dashed line + confidence band)            │
+│   Stock: 12 ↑ 92%      │  Weather overlay: 🌧️ monsoon markers        │
+│   🗓 Eid in 14 days    │  Festival Markers: 🔴 Eid (x-axis)          │
+│                        │                                             │
+│  [Product B]           │  Feature Importance Bar:                    │
+│   Stock: 3 ↓ 67% 🚨    │  "Eid proximity: 43% | Weather: 12%"        │
+│                        │                                             │
+│                        │  Data Quality: ████████░░ 80% (real data)   │
+│                        │                                             │
+├────────────────────────┤  ┌─ What-If Planner ───────────────────┐    │
+│  [Trending Products]   │  │  Days to Eid: [━━━━●━━] 14          │    │
+│  1. Product C ↑ 23%    │  │  Monsoon:     [ON] / OFF            │    │
+│  2. Product D ↑ 18%    │  │  Category Vel: [━━●━━━━] Medium     │    │
+│                        │  │  → Scenario Forecast: 45 units (+8) │    │
+│                        │  └─────────────────────────────────────┘    │
+├────────────────────────┴─────────────────────────────────────────────┤
+│  🟡 Product B below ROP  🔴 Order #1234 flagged  🔵 Eid in 7d     │ ← Alert Strip
+│                                    WhatsApp ✅ (বাংলা)                │
+├───────────────────────────────────────────────────────────────────────┤
+│  [Coupon Optimizer] Surplus → Generate Coupon                         │
+│  [Category Velocity] Your fabric category ↑ 23% platform-wide         │ ← Cross-Vendor
+│  [Weather Impact] 🌧️ Rain gear demand ↑ 80% this week                │ ← Weather Signal
+└───────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -1260,13 +1264,13 @@ PRISM is not merely a generic platform labelled for Bangladesh. Five integration
 ```
 ┌──────────────────────────────┐
 │  PRISM Commerce  [EN | বাংলা] │ ← Top Bar
-│  🚨 3 Low-Stock  ⭐ VPS: 87  │
+│  🚨 3 Low-Stock  ⭐ VPS: 87 │
 ├──────────────────────────────┤
 │  Today's Revenue  Orders     │ ← Hero Card
 │  ৳42,500         12 Pending  │
 ├──────────────────────────────┤
 │  🌧️ Monsoon Alert            │ ← Weather Card
-│  Rain gear demand ↑ 80%     │
+│  Rain gear demand ↑ 80%      │
 ├──────────────────────────────┤
 │  🟡 Product B stock low!     │ ← Alert Banner
 │     WhatsApp alert sent ✅   │
@@ -1277,7 +1281,7 @@ PRISM is not merely a generic platform labelled for Bangladesh. Five integration
 │  [Product B]  ██ 15%  🚨     │
 │  Forecast: ↓                 │
 ├──────────────────────────────┤
-│  🏠  📦  📋  📊  ⚙️          │ ← Bottom Nav
+│  🏠  📦  📋  📊  ⚙️        │ ← Bottom Nav
 └──────────────────────────────┘
 ```
 
@@ -1295,14 +1299,14 @@ Delivery Partner: [Name]  📞 [WhatsApp Contact]
 Estimated Delivery: Today, 6:00 PM
 
 Order Items:
-┌────────────────────────────────────────────────────┐
-│ [Img]  Product Name         Qty: 2   ৳1,200 each   │
+┌─────────────────────────────────────────────────────┐
+│ [Img]  Product Name         Qty: 2   ৳1,200 each    │
 │ [Img]  Another Product      Qty: 1   ৳850 each      │
 │                    Subtotal:  ৳3,250                │
 │                    Coupon -10%: −৳325               │
 │                    Total:  ৳2,925                   │
 │                    Paid via: bKash                  │
-└────────────────────────────────────────────────────┘
+└─────────────────────────────────────────────────────┘
 
 Vendor: [Name]  [Platinum ⭐]  [Contact]
 
@@ -1317,12 +1321,12 @@ Vendor: [Name]  [Platinum ⭐]  [Contact]
 [Total Flagged Today: 3]  [Cleared This Week: 12]  [Anomaly Rate: 0.8%]
 
 Flagged Orders Table:
-┌──────────┬────────┬────────┬─────────────────┬──────────┬──────────┐
-│ Order ID │ Buyer  │ Amount │ Flag Reason     │ Z-Score  │ Time     │
-├──────────┼────────┼────────┼─────────────────┼──────────┼──────────┤
-│ 🔴 #1234 │ User A │ ৳8,500 │ Abnormal Qty    │ 3.8      │ 10:23 AM │
-│ 🔴 #1235 │ User B │ ৳12,000│ Addr Mismatch   │ 2.9      │ 10:45 AM │
-└──────────┴────────┴────────┴─────────────────┴──────────┴──────────┘
+┌──────────┬────────┬────────┬─────────────────┬──────────┬───────────┐
+│ Order ID │ Buyer  │ Amount │ Flag Reason     │ Z-Score  │ Time      │
+├──────────┼────────┼────────┼─────────────────┼──────────┼───────────┤
+│ 🔴 #1234 │ User A │ ৳8,500 │ Abnormal Qty    │ 3.8      │ 10:23 AM  │
+│ 🔴 #1235 │ User B │ ৳12,000│ Addr Mismatch   │ 2.9      │ 10:45 AM  │
+└──────────┴────────┴────────┴─────────────────┴──────────┴───────────┘
 
 [Detail Drawer] Full history + [Clear] [Escalate] actions
 
@@ -1340,26 +1344,26 @@ GBR Model: v2.1  |  Last Retrained: 6 hours ago  |  Data Quality: 87%
 ### Screen 4 — Delivery Partner Dashboard (Mobile 375px) (NEW)
 
 ```
-┌──────────────────────────────┐
-│  PRISM Delivery  [বাংলা]     │ ← Simple Top Bar
-├──────────────────────────────┤
-│  Today's Deliveries: 5      │
-│  Completed: 3  Pending: 2   │
-├──────────────────────────────┤
-│  📦 Order #ORD-2024-042     │ ← Delivery Card
-│  Vendor: Fabric House       │
-│  Buyer: Rahim, Mirpur       │
-│  Items: 3  |  ৳2,450        │
+┌────────────────────────────────┐
+│  PRISM Delivery  [বাংলা]        │ ← Simple Top Bar
+├────────────────────────────────┤
+│  Today's Deliveries: 5         │
+│  Completed: 3  Pending: 2      │
+├────────────────────────────────┤
+│  📦 Order #ORD-2024-042        │ ← Delivery Card
+│  Vendor: Fabric House          │
+│  Buyer: Rahim, Mirpur          │
+│  Items: 3  |  ৳2,450           │
 │  [📍 Navigate] [✅ Delivered] │
-├──────────────────────────────┤
-│  📦 Order #ORD-2024-043     │
-│  Vendor: Tech Zone          │
-│  Buyer: Fatima, Uttara      │
-│  Items: 1  |  ৳8,900        │
-│  [📍 Navigate] [📦 Pick Up]  │
-├──────────────────────────────┤
-│  🏠  📦  📊                  │ ← Bottom Nav
-└──────────────────────────────┘
+├────────────────────────────────┤
+│  📦 Order #ORD-2024-043        │
+│  Vendor: Tech Zone             │
+│  Buyer: Fatima, Uttara         │
+│  Items: 1  |  ৳8,900           │
+│  [📍 Navigate] [📦 Pick Up]   │
+├────────────────────────────────┤
+│  🏠  📦  📊                   │ ← Bottom Nav
+└────────────────────────────────┘
 ```
 
 ---
@@ -1504,29 +1508,33 @@ Defer Modules 04–06, What-If planner, and weather engine. Prioritize GBR forec
 
 PRISM is novel **at the intersection**, not at any individual component. What does not exist — especially for Bangladeshi SMEs — is a single platform combining:
 
+<div align=center>
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    PRISM'S NOVELTY MAP                           │
+│                    PRISM'S NOVELTY MAP                          │
 │                                                                 │
-│  ┌─── Commerce ───┐   ┌─── Intelligence ───┐                   │
-│  │ Multi-vendor    │   │ GBR ONNX forecast  │                   │
-│  │ Order lifecycle │   │ Self-improving loop │                   │
-│  │ bKash + Nagad   │   │ Cross-vendor emerge │                   │
-│  │ Reviews + VPS   │   │ Weather-aware       │                   │
-│  └────────┬────────┘   └────────┬────────────┘                   │
-│           │                     │                                │
-│           └──────── FUSION ─────┘                                │
-│                     │                                            │
-│  ┌─── Bangladesh ──┐│  ┌─── Accessibility ──┐                   │
-│  │ Festival Calendar││  │ PWA (offline-ready) │                   │
-│  │ Bengali UI + WA  ││  │ WCAG 2.1 AA         │                   │
-│  │ Monsoon awareness││  │ Mobile-first 375px   │                   │
-│  │ bKash/Nagad pay  ││  │ Bangla onboarding    │                   │
-│  └──────────────────┘│  └─────────────────────┘                   │
-│                      │                                            │
-│              ALL AT BDT 0/MONTH                                   │
+│  ┌─── Commerce ────┐   ┌─── Intelligence ────┐                  │
+│  │ Multi-vendor    │   │ GBR ONNX forecast   │                  │
+│  │ Order lifecycle │   │ Self-improving loop │                  │
+│  │ bKash + Nagad   │   │ Cross-vendor emerge │                  │
+│  │ Reviews + VPS   │   │ Weather-aware       │                  │
+│  └────────┬────────┘   └────────┬────────────┘                  │
+│           │                     │                               │
+│           └──────── FUSION ─────┘                               │
+│                       │                                         │
+│  ┌─── Bangladesh ───┐ │  ┌─── Accessibility ───┐                │
+│  │ Festival Calendar│ │  │ PWA (offline-ready) │                │
+│  │ Bengali UI + WA  │ │  │ WCAG 2.1 AA         │                │
+│  │ Monsoon awareness│ │  │ Mobile-first 375px  │                │
+│  │ bKash/Nagad pay  │ │  │ Bangla onboarding   │                │
+│  └──────────────────┘ │  └─────────────────────┘                │
+│                       │                                         │
+│              ALL AT BDT 0/MONTH                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+</div>
 
 **No existing platform — commercial, open-source, or academic — combines all of these.**
 
