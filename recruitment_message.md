@@ -12,9 +12,9 @@ Hey everyone! 👋
 
 Over the last few months, I’ve been working on something massive. I've evolved our PRISM Commerce project from a simple academic assignment into **V4.0: a full-fledged, production-ready startup plan**. 
 
-The vision is to build Bangladesh's first **Bangla-native, AI-agentic multi-vendor marketplace** that actually solves local problems for sellers and buyers—aiming to be a hyper-local, zero-cost alternative to Daraz and Shopify. 
+The vision is to build Bangladesh's first **Bangla-native, AI-agentic multi-vendor marketplace** that actually solves local problems for sellers and buyers; aiming to be a hyper-local, zero-cost alternative to Daraz and Shopify. 
 
-I’ve mapped out the entire architecture, from AI models to financial escrow. We are going to build this over the next 15 months, mostly self-funded (just splitting server costs), and I am looking for **3 Co-Founders** to build this with me as an equal team. It will be pure sweat equity—what we build, we own.
+I’ve mapped out the entire architecture, from AI models to financial escrow. We are going to build this over the next 15 months, mostly self-funded (just splitting server costs), and I am looking for **3 Co-Founders** to build this with me as an equal team. It will be pure sweat equity; what we build, we own.
 
 Here are the specific founding roles I’m looking to fill (I'll be taking the Full-Stack Architect & AI Lead role):
 
@@ -41,7 +41,7 @@ Who's in? 🔥
 
 গত কয়েক মাস ধরে আমি বিশাল একটা ব্যাপার নিয়ে কাজ করছিলাম। আমাদের PRISM Commerce প্রজেক্টটাকে আমি একটা নরমাল অ্যাকাডেমিক প্রজেক্ট থেকে **V4.0 Production-Ready Startup Plan**-এ রূপান্তর করেছি। 
 
-লক্ষ্য একটাই: বাংলাদেশের প্রথম **Bangla-native এবং AI-চালিত মাল্টি-ভেন্ডর মার্কেটপ্লেস** তৈরি করা, যা হবে দারাজ বা শপিফাই-এর চেয়ে অনেক সস্তা এবং লোকাল বিক্রেতাদের জন্য ব্যবহার করা অনেক সহজ। এখানে Escrow পেমেন্ট, AI Assistant (সাহায্যক) থেকে শুরু করে Live Commerce—সবকিছু থাকবে!
+লক্ষ্য একটাই: বাংলাদেশের প্রথম **Bangla-native এবং AI-চালিত মাল্টি-ভেন্ডর মার্কেটপ্লেস** তৈরি করা, যা হবে দারাজ বা শপিফাই-এর চেয়ে অনেক সস্তা এবং লোকাল বিক্রেতাদের জন্য ব্যবহার করা অনেক সহজ। এখানে Escrow পেমেন্ট, AI Assistant (সাহায্যক) থেকে শুরু করে Live Commerce; সবকিছু থাকবে!
 
 আমি পুরো আর্কিটেকচার, ১৫ মাসের রোডম্যাপ এবং রেভিনিউ মডেল সাজিয়ে ফেলেছি। আমরা সম্পূর্ণ নিজেদের পরিশ্রমে (sweat equity) এবং নিজেদের খরচে (শুধু সার্ভার কস্ট শেয়ার করে) এটা দাঁড় করাবো। এই জার্নিতে আমার **৩ জন Co-Founder** দরকার। 
 
