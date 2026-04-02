@@ -122,7 +122,7 @@ PRISM Commerce is a **Predictive Retail Intelligence and Stock Management** plat
 ┌─────────────────────────────────────────────────────────────────┐
 │                    THE BANGLADESH E-COMMERCE GAP                │
 │                                                                 │
-│  ┌─── Big Players ────┐   ┌─── The Gap ──────────────────┐     │
+│  ┌─── Big Players ────┐   ┌─── The Gap ───────────────────┐     │
 │  │ Daraz (Alibaba)    │   │                               │     │
 │  │ • English-centric  │   │  NO PLATFORM IN BANGLADESH    │     │
 │  │ • No AI for SMEs   │   │  COMBINES:                    │     │
@@ -133,7 +133,7 @@ PRISM Commerce is a **Predictive Retail Intelligence and Stock Management** plat
 │  │ • Grocery only     │   │  ✗ Festival intelligence      │     │
 │  │ • No multi-vendor  │   │  ✗ Social commerce bridge     │     │
 │  │ • Struggling 2025  │   │  ✗ Affordable SaaS pricing    │     │
-│  │                    │   │  ✗ Cross-vendor intelligence   │     │
+│  │                    │   │  ✗ Cross-vendor intelligence  │     │
 │  │ Shopify            │   │                               │     │
 │  │ • Expensive ($$$)  │   │  PRISM V3 FILLS THIS GAP      │     │
 │  │ • No BD features   │   │                               │     │
@@ -390,16 +390,16 @@ PRISM Commerce is a **Predictive Retail Intelligence and Stock Management** plat
 ┌─────────────────────────────────────────────────────────────────┐
 │                    PRISM V3 REVENUE STREAMS                     │
 │                                                                 │
-│  ┌─── Recurring ──────────┐   ┌─── Transactional ───────────┐  │
-│  │ SaaS Subscriptions     │   │ Commission per sale (2-5%)  │  │
-│  │ (৳0 – ৳5,000+/mo)     │   │ Payment processing (1-1.5%)│  │
-│  └────────────────────────┘   │ Logistics markup (৳5-20)    │  │
-│                                └─────────────────────────────┘  │
-│  ┌─── Advertising ────────┐   ┌─── Financial ───────────────┐  │
+│  ┌─── Recurring ──────────┐   ┌─── Transactional ───────────┐   │
+│  │ SaaS Subscriptions     │   │ Commission per sale (2-5%)  │   │
+│  │ (৳0 – ৳5,000+/mo)      │  │ Payment processing (1-1.5%)  │   │ 
+│  └────────────────────────┘   │ Logistics markup (৳5-20)    │   │
+│                               └─────────────────────────────┘   │
+│  ┌─── Advertising ─────────┐   ┌─── Financial ───────────────┐  │
 │  │ Promoted listings       │   │ Wallet float income         │  │
 │  │ Live commerce slots     │   │ BNPL partner revenue share  │  │
 │  │ Homepage featured spots │   │                             │  │
-│  └────────────────────────┘   └─────────────────────────────┘  │
+│  └─────────────────────────┘   └─────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -485,56 +485,56 @@ PRISM V3 uses a **modular monolith** architecture designed for future microservi
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                    PRISM COMMERCE V3.0 — STARTUP ARCHITECTURE              │
-├───────────────────────────────────────────────────────────────────────────── │
+│                    PRISM COMMERCE V3.0 — STARTUP ARCHITECTURE               │
+├─────────────────────────────────────────────────────────────────────────────│
 │                                                                             │
 │  CLIENTS                                                                    │
-│  ┌─────────────┐  ┌────────────┐  ┌────────────────┐  ┌────────────────┐  │
-│  │ Next.js 15  │  │ React      │  │ Facebook Shops │  │ WhatsApp       │  │
-│  │ Web + PWA   │  │ Native App │  │ (Sync SDK)     │  │ Business API   │  │
-│  └──────┬──────┘  └─────┬──────┘  └───────┬────────┘  └───────┬────────┘  │
+│  ┌─────────────┐  ┌────────────┐  ┌────────────────┐  ┌────────────────┐    │
+│  │ Next.js 15  │  │ React      │  │ Facebook Shops │  │ WhatsApp       │    │
+│  │ Web + PWA   │  │ Native App │  │ (Sync SDK)     │  │ Business API   │    │
+│  └──────┬──────┘  └─────┬──────┘  └───────┬────────┘  └───────┬────────┘    │
 │         └──────────────┬─┘                 │                   │            │
 │                        ▼                   ▼                   ▼            │
 │  ┌─────────────────────────────────────────────────────────────────────┐    │
 │  │              API GATEWAY (Kong / Nginx)                             │    │
-│  │         Rate Limiting · Auth · Routing · CORS · CDN                │    │
+│  │         Rate Limiting · Auth · Routing · CORS · CDN                 │    │
 │  └──────────────────────────────┬──────────────────────────────────────┘    │
 │                                 ▼                                           │
-│  CORE SERVICES (NestJS Modular Monolith — Docker Container)                │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐        │
-│  │Commerce  │ │Inventory │ │Orders    │ │Auth &    │ │Payment   │        │
-│  │Module    │ │Module    │ │Module    │ │RBAC      │ │Engine    │        │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘        │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐        │
-│  │AI/ML     │ │Chat &    │ │Logistics │ │Live      │ │Social    │        │
-│  │Engine    │ │Messaging │ │Engine    │ │Commerce  │ │Commerce  │        │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘        │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐                     │
-│  │Billing & │ │Notif &   │ │Analytics │ │GenAI     │                     │
-│  │Subscript.│ │Comms     │ │Engine    │ │Gateway   │                     │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────┘                     │
+│  CORE SERVICES (NestJS Modular Monolith — Docker Container)                 │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐           │
+│  │Commerce  │ │Inventory │ │Orders    │ │Auth &    │ │Payment   │           │
+│  │Module    │ │Module    │ │Module    │ │RBAC      │ │Engine    │           │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘           │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐           │
+│  │AI/ML     │ │Chat &    │ │Logistics │ │Live      │ │Social    │           │
+│  │Engine    │ │Messaging │ │Engine    │ │Commerce  │ │Commerce  │           │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘           │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐                        │
+│  │Billing & │ │Notif &   │ │Analytics │ │GenAI     │                        │
+│  │Subscript.│ │Comms     │ │Engine    │ │Gateway   │                        │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘                        │
 │                                 │                                           │
 │  ┌──────────────────────────────┴──────────────────────────────────────┐    │
 │  │              EVENT BUS (BullMQ — Redis Streams)                     │    │
-│  │   Async: notifications, analytics, ML retraining, email, SMS       │    │
-│  └────────────────────────────────────────────────────────────────────┘    │
+│  │   Async: notifications, analytics, ML retraining, email, SMS        │    │
+│  └─────────────────────────────────────────────────────────────────────┘    │
 │                                 │                                           │
 │  DATA LAYER                     │                                           │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐        │
-│  │PostgreSQL│ │Redis 7   │ │S3/MinIO  │ │Meili-    │ │Ollama    │        │
-│  │16 +      │ │Cache +   │ │Files &   │ │search    │ │(LLM)     │        │
-│  │pgvector  │ │Queue +   │ │Images &  │ │Full-text │ │Llama 3.2 │        │
-│  │(Primary) │ │Sessions  │ │Videos    │ │Search    │ │/ Mistral │        │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘        │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐           │
+│  │PostgreSQL│ │Redis 7   │ │S3/MinIO  │ │Meili-    │ │Ollama    │           │
+│  │16 +      │ │Cache +   │ │Files &   │ │search    │ │(LLM)     │           │
+│  │pgvector  │ │Queue +   │ │Images &  │ │Full-text │ │Llama 3.2 │           │
+│  │(Primary) │ │Sessions  │ │Videos    │ │Search    │ │/ Mistral │           │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘           │
 │                                                                             │
 │  INFRASTRUCTURE                                                             │
 │  ┌─────────────────────────────────────────────────────────────────────┐    │
-│  │  Docker Compose (dev) → Docker Swarm / K8s (prod)                  │    │
-│  │  CI/CD: GitHub Actions → ArgoCD                                    │    │
-│  │  Monitoring: Grafana + Prometheus + Loki                           │    │
-│  │  Error Tracking: Sentry                                            │    │
-│  │  CDN: Cloudflare                                                   │    │
-│  │  Hosting: VPS (Hetzner/DigitalOcean) or AWS                        │    │
+│  │  Docker Compose (dev) → Docker Swarm / K8s (prod)                   │    │
+│  │  CI/CD: GitHub Actions → ArgoCD                                     │    │
+│  │  Monitoring: Grafana + Prometheus + Loki                            │    │
+│  │  Error Tracking: Sentry                                             │    │
+│  │  CDN: Cloudflare                                                    │    │
+│  │  Hosting: VPS (Hetzner/DigitalOcean) or AWS                         │    │
 │  └─────────────────────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -1168,31 +1168,31 @@ Product catalog sync to Facebook Shops + Instagram Shopping. Order import from F
 ┌──────────────────────────────────────────────────────────────────────────┐
 │  PRISM Commerce                     [EN | বাংলা]  [💬 3]  [🔔 5]  [⚙️]  │
 ├──────────────────────────────────────────────────────────────────────────┤
-│  [৳ Revenue]  [📦 Orders]  [🔴 Low-Stock]  [⭐ VPS: 87]  [🌧️ Rain]    │
-│  [📊 Profit: ৳18,500]  [🎯 Plan: Growth]  [🔴 LIVE NOW]               │
+│  [৳ Revenue]  [📦 Orders]  [🔴 Low-Stock]  [⭐ VPS: 87]  [🌧️ Rain]     │
+│  [📊 Profit: ৳18,500]  [🎯 Plan: Growth]  [🔴 LIVE NOW]                │
 ├────────────────────────┬─────────────────────────────────────────────────┤
 │  Product List (35%)    │  Selected Product (65%)                         │
 │                        │                                                 │
-│  🔍 Search + AI 🤖    │  Recharts: 30d history + 30d GBR forecast      │
+│  🔍 Search + AI 🤖    │  Recharts: 30d history + 30d GBR forecast       │
 │                        │  (dashed + confidence band + festival markers)  │
 │  [Product A]           │  Weather overlay: 🌧️ monsoon                   │
-│   Stock: 12  ✅ 92%    │                                                 │
-│   🗓 Eid in 14 days   │  Feature Importance: "Eid: 43% | Weather: 12%" │
+│   Stock: 12  ✅ 92%   │                                                 │
+│   🗓 Eid in 14 days    │  Feature Importance: "Eid: 43% | Weather: 12%"  │
 │                        │  Data Quality: ████████░░ 80%                   │
 │  [Product B]           │                                                 │
-│   Stock: 3 🚨 15%     │  ┌─ What-If Planner ──────────────────────┐    │
-│                        │  │ Days to Eid: [━━━━●━━] 14              │    │
-│  ── AI Sahayak ──      │  │ Monsoon: [ON] / OFF                    │    │
-│  "আপনার কোন পণ্যে    │  │ → Scenario: 45 units (+8)              │    │
-│   ডিসকাউন্ট দেওয়া    │  └────────────────────────────────────────┘    │
+│   Stock: 3 🚨 15%     │  ┌─ What-If Planner ──────────────────────┐     │
+│                        │  │ Days to Eid: [━━━━●━━] 14             │      │
+│  ── AI Sahayak ──      │  │ Monsoon: [ON] / OFF                   │      │
+│  "আপনার কোন পণ্যে    │  │ → Scenario: 45 units (+8)              │     │
+│   ডিসকাউন্ট দেওয়া       │  └───────────────────────────────────────┘     │
 │   উচিত?"              │                                                 │
 ├────────────────────────┤  ┌─ Live Commerce ────────────────────────┐    │
-│ 🔴 GO LIVE NOW        │  │ Next scheduled: Tomorrow 3PM           │    │
-│ [Start Stream]         │  │ Last stream: 245 viewers, ৳8,400 sold │    │
-│                        │  └────────────────────────────────────────┘    │
+│ 🔴 GO LIVE NOW        │  │ Next scheduled: Tomorrow 3PM            │    │
+│ [Start Stream]         │  │ Last stream: 245 viewers, ৳8,400 sold  │    │
+│                        │  └────────────────────────────────────────┘     │
 ├────────────────────────┴─────────────────────────────────────────────────┤
 │  [💬 3 unread chats]  [📊 Analytics]  [🔗 Facebook Sync ✅]            │
-│  [Coupon Optimizer]  [Category Velocity ↑23%]  [Weather Impact 🌧️]     │
+│  [Coupon Optimizer]  [Category Velocity ↑23%]  [Weather Impact 🌧️]      │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -1202,24 +1202,24 @@ Product catalog sync to Facebook Shops + Instagram Shopping. Order import from F
 ┌──────────────────────────────┐
 │  PRISM 🛒  [🔍] [🤖] [💬]  │ ← AI search + chat
 ├──────────────────────────────┤
-│  🔴 LIVE NOW                 │ ← Live streams carousel
+│  🔴 LIVE NOW                │ ← Live streams carousel
 │  [Vendor A streaming...]     │
 │  [Vendor B streaming...]     │
 ├──────────────────────────────┤
 │  🤖 AI সহায়ক                │ ← GenAI assistant
-│  "ঈদের জন্য কী কিনবেন?"    │
-│  [Ask PRISM Sahayak...]     │
+│  "ঈদের জন্য কী কিনবেন?"     │
+│  [Ask PRISM Sahayak...]      │
 ├──────────────────────────────┤
-│  🔥 Trending Now             │
+│  🔥 Trending Now            │
 │  [Product] [Product] [→]     │
 ├──────────────────────────────┤
-│  🗓 Eid Collection            │ ← Festival-curated
+│  🗓 Eid Collection           │ ← Festival-curated
 │  [Product] [Product] [→]     │
 ├──────────────────────────────┤
-│  💰 Deals of the Day         │
+│  💰 Deals of the Day        │
 │  [Product] [Product] [→]     │
 ├──────────────────────────────┤
-│  🏠  🔍  🔴  💬  👤        │ ← Bottom nav
+│  🏠  🔍  🔴  💬  👤       │ ← Bottom nav
 │  Home Search Live Chat Me    │
 └──────────────────────────────┘
 ```
@@ -1227,27 +1227,27 @@ Product catalog sync to Facebook Shops + Instagram Shopping. Order import from F
 ### Screen 3 — Live Commerce Stream View (Mobile)
 
 ```
-┌──────────────────────────────┐
-│  [← Back]     🔴 LIVE  245  │ ← Viewer count
-│                              │
-│  ┌──────────────────────┐   │
-│  │                       │   │
-│  │   VENDOR VIDEO FEED   │   │
-│  │                       │   │
-│  │                       │   │
-│  └──────────────────────┘   │
-│                              │
-│  ┌─ Pinned Product ────────┐│
-│  │[Img] Red Saree  ৳1,800  ││ ← Tap to buy
-│  │      ⭐4.5  [Add to Cart]││
-│  └──────────────────────────┘│
-│                              │
-│  💬 Live Chat                │
-│  Rahim: "দাম কমানো যাবে?"   │
-│  Fatima: "🔥🔥🔥"           │
-│  [Type a message...]  [Send]│
-│  ❤️ 😍 🔥  [Share]          │
-└──────────────────────────────┘
+┌────────────────────────────────┐
+│  [← Back]     🔴 LIVE  245    │ ← Viewer count
+│                                │
+│  ┌──────────────────────┐      │
+│  │                      │      │
+│  │   VENDOR VIDEO FEED  │      │
+│  │                      │      │
+│  │                      │      │
+│  └──────────────────────┘      │
+│                                │
+│  ┌─ Pinned Product ──────────┐ │
+│  │[Img] Red Saree  ৳1,800    │ │ ← Tap to buy
+│  │      ⭐4.5  [Add to Cart] │ │
+│  └───────────────────────────┘ │
+│                                │
+│  💬 Live Chat                 │
+│  Rahim: "দাম কমানো যাবে?"      │
+│  Fatima: "🔥🔥🔥"            │
+│  [Type a message...]  [Send]   │
+│  ❤️ 😍 🔥  [Share]            │
+└────────────────────────────────┘
 ```
 
 ---
@@ -1322,7 +1322,7 @@ Product catalog sync to Facebook Shops + Instagram Shopping. Order import from F
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    OBSERVABILITY STACK                           │
+│                    OBSERVABILITY STACK                          │
 │                                                                 │
 │  Metrics:    NestJS → Prometheus → Grafana dashboards           │
 │  Logging:    Winston → Loki → Grafana log explorer              │
@@ -1336,13 +1336,13 @@ Product catalog sync to Facebook Shops + Instagram Shopping. Order import from F
 │  • API Performance: latency P50/P95/P99 per endpoint            │
 │  • Business: GMV, orders/min, active users, vendor signups      │
 │  • AI: forecast accuracy, GenAI usage, model latency            │
-│  • Live Commerce: active streams, viewers, conversion rate       │
+│  • Live Commerce: active streams, viewers, conversion rate      │
 │                                                                 │
 │  Alerting:                                                      │
 │  • API P95 > 500ms → Slack + PagerDuty                          │
 │  • Error rate > 1% → Slack                                      │
 │  • Database CPU > 80% → Auto-scale alert                        │
-│  • Payment webhook failure → Immediate alert                     │
+│  • Payment webhook failure → Immediate alert                    │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -1487,9 +1487,9 @@ PRISM Commerce demonstrates **emergent intelligence** — behaviors that arise f
                     EMERGENCE MAP — PRISM V3
 
     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-    │   Per-SKU    │     │   Weather    │     │  Festival    │
-    │   Sales      │     │   Signals    │     │  Calendar    │
-    │   History    │     │   (daily)    │     │  (auto)      │
+    │   Per-SKU   │     │   Weather   │     │  Festival   │
+    │   Sales     │     │   Signals   │     │  Calendar   │
+    │   History   │     │   (daily)   │     │  (auto)     │
     └──────┬──────┘     └──────┬──────┘     └──────┬──────┘
            │                   │                   │
            └──────────┬────────┘───────────────────┘
@@ -1509,27 +1509,27 @@ PRISM Commerce demonstrates **emergent intelligence** — behaviors that arise f
            │                    │
            └──────┬─────────────┘
                   │
-    ┌─────────────▼───────────┐     ┌────────────────────┐
+    ┌─────────────▼───────────┐     ┌─────────────────────┐
     │   Feedback Loop         │     │  Cross-Vendor       │
     │   (actual vs predicted) │────►│  Category Velocity  │
     │   Model self-improves   │     │  (emergent signal)  │
-    └─────────────────────────┘     └────────┬───────────┘
+    └─────────────────────────┘     └────────┬────────────┘
                                              │
-    ┌────────────────────────────────────────▼────────────┐
+    ┌────────────────────────────────────────▼─────────────┐
     │           EMERGENCE: Each vendor's forecasts         │
     │           improve because OTHER vendors use PRISM    │
     │           → Network Intelligence Effect              │
-    └─────────────────────────────────────────────────────┘
+    └──────────────────────────────────────────────────────┘
                               │
-    ┌─────────────────────────▼───────────────────────────┐
-    │     V3 — GenAI Layer Amplifies Emergence:            │
-    │                                                      │
-    │  • RAG search indexes ALL products → cross-vendor    │
+    ┌─────────────────────────▼─────────────────────────────┐
+    │     V3 — GenAI Layer Amplifies Emergence:             │
+    │                                                       │
+    │  • RAG search indexes ALL products → cross-vendor     │
     │    product discovery improves with more vendors       │
     │  • AI Weekly Digest learns from platform-wide data    │
     │  • Live Commerce trending products = emergent signal  │
     │  • Affiliate network = emergent distribution channel  │
-    └──────────────────────────────────────────────────────┘
+    └───────────────────────────────────────────────────────┘
 ```
 
 ### 22.2 Five Layers of Emergence in PRISM V3
@@ -1552,14 +1552,14 @@ PRISM Commerce demonstrates **emergent intelligence** — behaviors that arise f
 
 ```
            ┌─────────────────┐
-           │   E2E Tests      │  ← 15 critical user flows (Playwright)
-           │   (~30 tests)    │
+           │   E2E Tests     │  ← 15 critical user flows (Playwright)
+           │   (~30 tests)   │
            ├─────────────────┤
-           │  Integration     │  ← API endpoint tests (Supertest)
-           │   (~100 tests)   │
+           │  Integration    │  ← API endpoint tests (Supertest)
+           │   (~100 tests)  │
            ├─────────────────┤
-           │  Unit Tests      │  ← Service/module logic (Jest)
-           │   (~300+ tests)  │  ← 80% coverage target
+           │  Unit Tests     │  ← Service/module logic (Jest)
+           │   (~300+ tests) │  ← 80% coverage target
            └─────────────────┘
 ```
 
