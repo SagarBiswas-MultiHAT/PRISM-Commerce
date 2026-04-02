@@ -1,5 +1,23 @@
 # 🚀 PRISM Commerce — V4.0 (Production-Grade Startup Edition)
 
+<div align="center">
+  <a href="https://github.com/SagarBiswas-MultiHAT/PRISM-Commerce">
+    <img src="https://img.shields.io/badge/version-4.0.0--Beta-blue.svg?style=for-the-badge" alt="Version">
+  </a>
+  <img src="https://img.shields.io/badge/license-Proprietary-red.svg?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/build-passing-brightgreen.svg?style=for-the-badge" alt="Build">
+  <img src="https://img.shields.io/badge/coverage-85%25-green.svg?style=for-the-badge" alt="Coverage">
+</div>
+<br/>
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Next.js_15-black?style=flat-square&logo=next.js&logoColor=white" alt="Next.js">
+  <img src="https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white" alt="NestJS">
+  <img src="https://img.shields.io/badge/PostgreSQL-336791?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/AI-ONNX_%7C_Llama_3.2-FF6F00?style=flat-square" alt="AI">
+</div>
+<br/>
+
 ### Predictive Retail Intelligence & Stock Management
 
 > Bangladesh's first **Bangla-native, AI-agentic, live commerce-enabled** multi-vendor marketplace with **regulatory compliance**, **marketplace trust**, and **production-grade architecture**.
@@ -139,4 +157,12 @@ PRISM Commerce offers an incredibly accessible **Hybrid SaaS + Commission** busi
 *"A platform that equips every small shopkeeper in Bangladesh with the power of AI — and acts on their behalf."*
 
 ---
-© **Sagar Biswas** — PRISM Commerce Platform 
+
+## 📜 License
+
+**License: Proprietary**
+
+This project, its architecture, and the PRISM Commerce platform are the intellectual property of **Sagar Biswas**. All rights reserved. Do not distribute, modify, or use for commercial purposes without explicit permission.
+
+---
+© **Sagar Biswas** — [PRISM Commerce Platform](https://github.com/SagarBiswas-MultiHAT/PRISM-Commerce)
