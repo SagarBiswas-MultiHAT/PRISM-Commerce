@@ -1,165 +1,136 @@
-# PRISM Commerce
-## Predictive Retail Intelligence & Stock Management
+# 🚀 PRISM Commerce — V3.0 (Startup Edition)
 
-> This repository is the documentation hub for the PRISM Commerce capstone. The full specification is in the project plan files below; this README is the fastest way to understand the idea, the features, and how the parts fit together.
+### Predictive Retail Intelligence & Stock Management
 
-PRISM Commerce is a Bangladesh-focused commerce platform that combines a multi-vendor storefront with AI-driven inventory planning, real-time order tracking, and Bangla-first notifications. The goal is simple: help small and mid-sized sellers know what to stock, when to restock, how to price surplus items, and how to fulfill orders without guesswork.
+> Bangladesh's first **Bangla-native, AI-powered, live commerce-enabled** multi-vendor marketplace.
 
-If you only remember one sentence, remember this: PRISM Commerce turns sales history, festival timing, weather, and platform-wide demand signals into practical actions for vendors.
+---
 
-## Why it exists
+## 🎯 What is PRISM?
 
-- Overstocking ties up cash.
-- Stockouts during Eid, Puja, and other peaks lose sales.
-- English-only tools exclude many vendors.
-- Most small merchants already use phones, WhatsApp, and mobile money, so the system must fit those habits.
+PRISM Commerce is an AI-driven e-commerce platform that combines **predictive inventory intelligence** with a **full multi-vendor marketplace**, a **Bangla-speaking GenAI assistant**, **live commerce**, and **social commerce** — purpose-built for Bangladeshi SMEs.
 
-## What the platform covers
+> **One sentence:** The platform that makes Daraz, Shopify, and Netstock unnecessary for Bangladeshi merchants — by combining marketplace reach, SaaS power, and forecasting intelligence with local relevance that none of them have.
 
-| Area | What it includes | Why it matters |
-| --- | --- | --- |
-| Commerce | Multi-vendor catalog, cart, coupons, checkout, payments, reviews, recommendations, wishlist, real-time order tracking | End-to-end shopping experience for buyers |
-| Inventory | Variant-level stock, reorder points, low-stock alerts, reports, learned lead times | Prevents overbuying and stockouts |
-| Intelligence | Demand forecasting, velocity ranking, coupon optimization, anomaly detection, vendor scoring, scenario planning, weather-aware signals, feedback retraining | Makes stock and pricing decisions data-driven |
-| Operations | Admin approval, support handling, delivery assignment, billing, invoices, platform analytics | Keeps the marketplace organized |
-| Localization | English + Bangla UI, Bangla WhatsApp templates, localized numbers and currency formatting | Matches the way vendors actually work |
-| Platform | PWA shell, offline dashboard, realtime updates, free-tier deployment strategy | Keeps the system usable on low-cost infrastructure |
+---
 
-## Who uses it
+## 🏗️ Tech Stack
 
-| Role | What they do |
-| --- | --- |
-| Super Admin | Approves vendors, manages users and categories, reviews anomalies, and monitors platform-wide performance. |
-| Vendor | Lists products, tracks stock, reads forecasts, receives alerts, plans scenarios, and manages coupons and analytics. |
-| Buyer | Browses products, adds items to cart, pays, tracks orders, and leaves reviews. |
-| Support & Billing | Handles tickets, invoices, payment records, disputes, and reports. |
-| Delivery Partner | Sees assigned deliveries and updates pickup and delivery status from a lightweight mobile view. |
+| Layer | Technology |
+|---|---|
+| **Frontend** | Next.js 15 (App Router, SSR, PWA) |
+| **Mobile** | React Native (Phase 3) |
+| **Styling** | Tailwind CSS + shadcn/ui + Radix |
+| **Backend** | NestJS + TypeScript |
+| **Database** | PostgreSQL 16 + pgvector |
+| **Cache & Queue** | Redis 7 + BullMQ |
+| **ML Engine** | ONNX Runtime (GBR demand forecasting) |
+| **GenAI** | Ollama (Llama 3.2 / Mistral) + OpenAI fallback |
+| **Search** | Meilisearch (full-text) + pgvector (semantic/RAG) |
+| **Real-time** | Socket.io (chat, notifications) |
+| **Live Video** | LiveKit (WebRTC SFU) |
+| **Payments** | bKash + Nagad + SSLCommerz (Production) |
+| **Notifications** | WhatsApp Business Cloud API + Email + SMS |
+| **Infrastructure** | Docker + Grafana + Prometheus + Sentry |
 
-## How it works
+---
 
-1. A vendor lists products and enters initial sales history if the platform is still learning.
-2. Buyers place orders and pay through bKash, Nagad, or SSLCommerz.
-3. The backend combines sales history, festival timing, weather, and cross-vendor category trends.
-4. The ONNX forecasting model predicts demand for 7, 14, and 30 days ahead.
-5. The reorder engine turns that forecast into a stock threshold and sends alerts through WhatsApp, web push, or in-app notifications.
-6. A weekly feedback loop compares predicted and actual sales and improves the model over time.
+## 🧠 AI Intelligence Layer
 
-In practice, this means a fabric vendor can get a Bangla WhatsApp alert before Eid saying a product will run out in 9 days, along with a reorder suggestion based on real demand patterns instead of a fixed threshold.
+| # | Module | What It Does |
+|---|---|---|
+| 01 | **ONNX GBR Forecasting** | Predicts sales (7/14/30d) using 13 features including weather + festival signals |
+| 02 | **Smart Reorder Point** | Alerts vendors *before* stockout using AI-adjusted safety stock |
+| 03 | **Sales Velocity Ranker** | Identifies trending and decelerating products |
+| 04 | **Coupon Optimizer** | Recommends minimum discount to clear surplus stock |
+| 05 | **Anomaly Detector** | Flags suspicious orders using Z-score behavioral analysis |
+| 06 | **Vendor Performance Score** | 0-100 composite trust metric with tier badges |
+| 07 | **WhatsApp Notifications** | EN + বাংলা alerts for low stock, orders, weather, festivals |
+| 08 | **Cross-Vendor Emergence** | Category velocity aggregated across all vendors |
+| 09 | **Feedback Loop** | Auto-retrains model when forecast error > 25% |
+| 10 | **What-If Planner** | Interactive scenario simulation with ONNX re-inference |
+| 11 | **Weather Engine** | OpenWeatherMap signals for monsoon-driven demand |
+| 12 | **GenAI Sahayak** 🆕 | Bangla + English AI assistant for vendors and buyers |
+| 13 | **RAG Search** 🆕 | Semantic product search via pgvector embeddings |
 
-## Why the AI matters
+---
 
-PRISM does not rely on one rule. It combines three kinds of learning.
+## 🆕 What's New in V3 (Startup Transformation)
 
-| Layer | What it means | Example |
-| --- | --- | --- |
-| Individual learning | Each product gets its own forecast from its own history. | A specific fabric SKU gets a 7/14/30-day demand estimate. |
-| Collective learning | The platform learns from anonymized category behavior across vendors. | If the whole fabric category heats up before Eid, every fabric vendor benefits. |
-| Environmental learning | Festivals and weather change demand, so the model adjusts for them. | Rain gear rises during monsoon; clothing surges before Eid. |
+| Module | Description |
+|---|---|
+| **🔴 Live Commerce** | Vendors go LIVE, pin products, buyers buy in-stream |
+| **📱 Social Commerce** | Facebook Shops sync, WhatsApp Catalog, affiliate system |
+| **🤖 GenAI Assistant** | "PRISM Sahayak" — AI shopping/vendor assistant in Bangla |
+| **💰 PRISM Wallet** | Digital wallet with cashback, instant refunds |
+| **💳 BNPL** | Buy Now Pay Later via local BD providers |
+| **🚚 3PL Logistics** | Pathao, Paperfly, RedX, Steadfast integration |
+| **💬 In-App Chat** | Real-time buyer-seller messaging with AI auto-response |
+| **📊 Advanced Analytics** | Profit reporting, RFM, CLV, ABC analysis, AI weekly digest |
+| **🏢 Multi-Tenant SaaS** | Subscription tiers, white-label, plan enforcement |
+| **👥 Affiliate System** | Referral tracking, commission payouts, influencer dashboard |
+| **💵 Monetization** | Hybrid SaaS + Commission + Promoted Listings + Wallet |
 
-The forecasting model uses 13 engineered features, including recent sales, rolling trends, festival proximity, weather, and platform-wide category velocity. The model runs in-process with ONNX Runtime so inference stays fast and cheap.
+---
 
-### Intelligence modules
+## 💰 Business Model
 
-| Module | What it does |
-| --- | --- |
-| Demand forecast | Predicts 7, 14, and 30-day demand per product. |
-| Reorder point calculator | Converts the forecast into a practical restock threshold. |
-| Sales velocity ranker | Finds products that are gaining or losing momentum. |
-| Coupon optimizer | Suggests the smallest discount needed to clear surplus stock. |
-| Anomaly detector | Flags suspicious orders for review. |
-| Vendor performance score | Measures fulfillment, rating, response speed, delivery time, and disputes. |
-| WhatsApp notification engine | Sends alerts in the user's preferred language. |
-| Cross-vendor category emergence | Uses aggregate platform activity to improve forecasts without exposing private data. |
-| Closed-loop feedback | Retrains the model when forecast error stays high. |
-| What-if scenario planner | Lets vendors test changes like festival timing, price shifts, or weather. |
-| Weather-aware demand engine | Adjusts forecasts for heat, rain, and monsoon patterns. |
+**Hybrid SaaS + Commission + Advertising**
 
-## Bangladesh-first features
+| Tier | Price (৳/mo) | Products | Commission | Key Features |
+|---|---|---|---|---|
+| **Free** | ৳0 | 5 | 5% | Basic AI forecast |
+| **Starter** | ৳500 | 50 | 4% | Full AI + 2 live streams/mo |
+| **Growth** | ৳2,000 | Unlimited | 3% | Full AI + GenAI + What-If + Unlimited Live |
+| **Enterprise** | Custom | Unlimited | 2% | Everything + API + White-Label |
 
-- WhatsApp Business Cloud API is used because vendors already communicate there.
-- bKash, Nagad, and SSLCommerz support the payment habits of Bangladesh shoppers.
-- The festival calendar includes Eid-ul-Fitr, Eid-ul-Adha, Durga Puja, Pohela Boishakh, Victory Day, Independence Day, and Ramadan.
-- Bangla localization covers the UI, notifications, onboarding flow, number formatting, and invoice text.
-- The PWA design keeps the dashboard useful on low-end phones and unstable connections.
-- OpenWeatherMap adds weather context so the system can react to monsoon and heat-driven demand shifts.
+---
 
-## Architecture at a glance
+## 🇧🇩 Bangladesh-Native Features
 
-```text
-Buyers / Vendors / Delivery Partners
-	  |
-	  v
-  Next.js 14 frontend and PWA
-	  |
-	  v
-  NestJS API and AI modules
-	  |
-	  +--> Supabase (Postgres, Auth, Realtime, Storage)
-	  +--> Upstash Redis (cached forecasts, category velocity, weather data)
-	  +--> External services (WhatsApp, bKash, Nagad, SSLCommerz, OpenWeatherMap)
-	  |
-	  v
-  ONNX demand forecast engine
+- 🕌 **Festival Intelligence Calendar** — Eid, Puja, Boishakh surge prediction with 14-day pre-alerts
+- 🌧️ **Weather-Aware Demand** — monsoon and heat signals via OpenWeatherMap
+- 💬 **WhatsApp Business API** — notifications in English + Bengali (বাংলা)
+- 💳 **bKash + Nagad + SSLCommerz** — production payment integration
+- 🤖 **Bangla GenAI** — PRISM Sahayak speaks Bengali
+- 🚚 **Local 3PL** — Pathao, Paperfly, RedX, Steadfast, eCourier
+
+---
+
+## 📁 Project Structure
+
+```
+PRISM-Commerce/
+├── PRISM_Commerce_ProjectPlan_v3.0.0.md   # Full V3 startup plan (1780+ lines)
+├── PRISM_Commerce_ProjectPlan_v2.0.0.md   # Original V2 course project plan
+├── Bangla.md                               # Bengali project summary
+├── readme.md                               # This file
+└── walkthrough.md                          # V2→V3 changelog
 ```
 
-### Core stack
+---
 
-| Layer | Main tools |
-| --- | --- |
-| Frontend | Next.js 14, Tailwind CSS, shadcn/ui, next-intl, Recharts, Nivo, Zustand, next-pwa |
-| Backend | NestJS, TypeScript, Prisma, @nestjs/schedule |
-| Data | Supabase PostgreSQL, Supabase Auth, Supabase Realtime, Supabase Storage, Upstash Redis |
-| AI | scikit-learn, skl2onnx, onnxruntime-node |
-| Integrations | WhatsApp Business Cloud API, bKash, Nagad, SSLCommerz, OpenWeatherMap |
-| Delivery and ops | Delivery partner workflows, invoices, support tools, platform analytics |
-| Tooling | Turborepo, Jest, Playwright, Swagger, Winston, Sentry, GitHub Actions |
-| Cost target | BDT 0.00/month on free tiers |
+## 📊 V2 → V3 Comparison
 
-## Security and trust
+| Dimension | V2 (Course Project) | V3 (Startup) |
+|---|---|---|
+| Revenue | BDT 0/month | SaaS + Commission + Ads |
+| Scale | ~100 products | 10K+ vendors, 1M+ users |
+| AI | 11 modules + GBR | 13 modules + GenAI + RAG |
+| Commerce | Static pages | Live Commerce + Social |
+| Chat | WhatsApp only | In-app + WhatsApp + SMS |
+| Delivery | Basic role | 3PL integration |
+| Payments | Sandbox | Production APIs + Wallet + BNPL |
+| Infra | Free-tier | Docker + VPS + Managed DB |
+| Mobile | PWA only | PWA + React Native |
+| Timeline | 6 weeks | 12-month phased launch |
 
-- Role-based access control limits what each role can see and do.
-- JWT access tokens are short-lived and refresh tokens rotate.
-- Supabase Row-Level Security isolates vendor data.
-- Payment callbacks are verified server-side, not trusted from the client.
-- Audit logs are append-only for traceability.
-- Rate limiting and strict content security rules protect the platform from abuse.
+---
 
-## Accessibility and inclusivity
+## 📜 License
 
-- The target is WCAG 2.1 AA.
-- Keyboard navigation, screen-reader support, and high-contrast UI are part of the plan.
-- Touch targets are designed for mobile users and low-literacy users.
-- Bangla onboarding and plain-language tooltips explain forecasts and alerts.
-- The goal is to make the system usable by real vendors, not only by technical users.
+This project plan and architecture is the intellectual property of Sagar Biswas.
 
-## Roadmap
+---
 
-- Week 1: foundation, auth, schema, locale routing, and PWA shell.
-- Week 2: product catalog, cart, checkout, and WhatsApp templates.
-- Week 3: order lifecycle, inventory tracking, and delivery partner flow.
-- Week 4: ONNX forecasting, reorder alerts, and velocity ranking.
-- Week 5: analytics, weather awareness, coupon optimization, anomaly detection, vendor scoring, and scenario planning.
-- Week 6: security hardening, accessibility audit, tests, and deployment.
-
-## Documents in this repo
-
-- [Project plan v2.0](PRISM_Commerce_ProjectPlan_v2.0.0.md) - the full, upgraded specification.
-- [Project plan v1.0](PRISM_Commerce_ProjectPlan-v1.0.0.md) - the original plan.
-- [Walkthrough](walkthrough.md) - a summary of what changed in v2.0.
-
-## Mini glossary
-
-| Term | Plain English meaning |
-| --- | --- |
-| GBR | A machine learning model that predicts a number by combining many decision trees. |
-| ONNX | A portable model format that lets Python-trained AI run inside JavaScript. |
-| ROP | Reorder point - the stock level where the system says "buy more now". |
-| PWA | A web app that behaves like an installable phone app and can work offline. |
-| RLS | Row-Level Security - database rules that stop users from seeing each other's data. |
-| Category velocity | How fast a product category is selling across the whole platform. |
-| Data quality score | A 0-1 score showing how much of the forecast comes from real data versus seed data. |
-| CRON job | A scheduled background task that runs automatically on a timer. |
-
-## Bottom line
-
-PRISM Commerce is not just a storefront. It is a full commerce system with an embedded intelligence layer that learns from each product, the whole marketplace, and the environment around it. The result is a platform that can explain what is happening now, what is likely to happen next, and what a vendor should do about it.
+*"একটি প্লাটফর্ম যা বাংলাদেশের প্রতিটি ছোট দোকানদারকে AI-এর ক্ষমতা দিয়ে সজ্জিত করে।"*
