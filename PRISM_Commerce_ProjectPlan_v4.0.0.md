@@ -132,28 +132,28 @@ PRISM Commerce is a **Predictive Retail Intelligence and Stock Management** plat
 ### 2.2 The 2026 Opportunity Gap
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────────────────────────────┐
 │                THE BANGLADESH E-COMMERCE GAP (2026)                  │
 │                                                                      │
-│  ┌─── Established Players ──┐   ┌─── The Gap ──────────────────┐   │
-│  │ Daraz (Alibaba)          │   │                               │   │
-│  │ • Has DarazLive + DEX    │   │  NO PLATFORM IN BANGLADESH    │   │
-│  │ • Has DarazMall trust    │   │  COMBINES:                    │   │
-│  │ • No AI for vendors      │   │                               │   │
-│  │ • High commission 8-15%  │   │  ✗ Agentic AI assistant       │   │
-│  │ • English-centric        │   │  ✗ Bangla-first + voice       │   │
-│  │                          │   │  ✗ Predictive inventory       │   │
-│  │ Shopify                  │   │  ✗ Festival intelligence      │   │
-│  │ • Sidekick (English)     │   │  ✗ Escrow + buyer protection  │   │
-│  │ • No BD payments         │   │  ✗ Short-form video commerce  │   │
-│  │ • $29+/mo (too expensive)│   │  ✗ POS for physical stores    │   │
-│  │                          │   │  ✗ Bangla QR compliance       │   │
-│  │ sManager                 │   │  ✗ Cross-vendor intelligence  │   │
-│  │ • Has POS                │   │  ✗ Affordable SaaS pricing    │   │
-│  │ • No AI, no marketplace  │   │                               │   │
-│  │                          │   │  PRISM V4 FILLS THIS GAP      │   │
-│  └──────────────────────────┘   └───────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────┘
+│  ┌─── Established Players ──┐   ┌─── The Gap ────────────────────┐   │
+│  │ Daraz (Alibaba)          │   │                                │   │
+│  │ • Has DarazLive + DEX    │   │  NO PLATFORM IN BANGLADESH     │   │
+│  │ • Has DarazMall trust    │   │  COMBINES:                     │   │
+│  │ • No AI for vendors      │   │                                │   │
+│  │ • High commission 8-15%  │   │  ✗ Agentic AI assistant        │   │
+│  │ • English-centric        │   │  ✗ Bangla-first + voice        │   │
+│  │                          │   │  ✗ Predictive inventory        │   │
+│  │ Shopify                  │   │  ✗ Festival intelligence       │   │
+│  │ • Sidekick (English)     │   │  ✗ Escrow + buyer protection   │   │
+│  │ • No BD payments         │   │  ✗ Short-form video commerce   │   │
+│  │ • $29+/mo (too expensive)│   │  ✗ POS for physical stores     │   │
+│  │                          │   │  ✗ Bangla QR compliance        │   │
+│  │ sManager                 │   │  ✗ Cross-vendor intelligence   │   │
+│  │ • Has POS                │   │  ✗ Affordable SaaS pricing     │   │
+│  │ • No AI, no marketplace  │   │                                │   │
+│  │                          │   │  PRISM V4 FILLS THIS GAP       │   │
+│  └──────────────────────────┘   └────────────────────────────────┘   │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 2.3 Target Customer Segments
@@ -359,14 +359,14 @@ PRISM Commerce is a **Predictive Retail Intelligence and Stock Management** plat
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
-│                    PRISM V4 REVENUE STREAMS                           │
-│                                                                       │
+│                    PRISM V4 REVENUE STREAMS                          │
+│                                                                      │
 │  ┌─── Recurring ──────────────┐   ┌─── Transactional ─────────────┐  │
 │  │ SaaS Subscriptions         │   │ Commission per sale (2-5%)    │  │
-│  │ (৳0 – ৳5,000+/mo)         │   │ Payment processing (1-1.5%)  │  │
-│  │ 5 tiers (Free→Enterprise) │   │ Logistics markup (৳5-20)     │  │
-│  └────────────────────────────┘   └────────────────────────────────┘  │
-│                                                                       │
+│  │ (৳0 – ৳5,000+/mo)          │   │ Payment processing (1-1.5%)   │  │
+│  │ 5 tiers (Free→Enterprise)  │   │ Logistics markup (৳5-20)      │  │
+│  └────────────────────────────┘   └───────────────────────────────┘  │
+│                                                                      │
 │  ┌─── Advertising ────────────┐   ┌─── Financial ──────────────────┐ │
 │  │ Promoted listings          │   │ Wallet float income            │ │
 │  │ Live commerce slots        │   │ BNPL partner revenue share     │ │
@@ -374,7 +374,7 @@ PRISM Commerce is a **Predictive Retail Intelligence and Stock Management** plat
 │  │ Flash sale slots           │   │                                │ │
 │  │ Short-form video boost     │   │                                │ │
 │  └────────────────────────────┘   └────────────────────────────────┘ │
-│                                                                       │
+│                                                                      │
 │  ┌─── Value-Added (NEW V4) ───┐                                      │
 │  │ PRISM Academy courses      │                                      │
 │  │ Brand Store hosting        │                                      │
@@ -467,16 +467,16 @@ PRISM V4 uses a **Modular Monolith with CQRS, Event Sourcing, and Distributed Tr
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│                      PRISM COMMERCE SYSTEM (V4)                               │
+│                      PRISM COMMERCE SYSTEM (V4)                              │
 ├──────────────────────────────┬───────────────────────────────────────────────┤
 │   Next.js 15 Frontend        │        NestJS Backend API                     │
-│   (App Router + PPR + PWA)   │   (Modular Monolith + CQRS)                  │
+│   (App Router + PPR + PWA)   │   (Modular Monolith + CQRS)                   │
 │   shadcn/ui + Tailwind CSS   │                                               │
 │   next-intl (EN + BN)        │  ┌────────────────────────────────────────┐   │
 │   Recharts + Nivo            │  │  ONNX GBR ML Model                     │   │
 │   Zustand (cart + offline)   │  │  (onnxruntime-node v1.17+)             │   │
 │   React Native (Phase 2)     │  │  Inference < 80ms per product          │   │
-│   Expo (mobile app)          │  │  Weather + Festival + Category inject   │   │
+│   Expo (mobile app)          │  │  Weather + Festival + Category inject  │   │
 │                              │  └────────────────────────────────────────┘   │
 │                              │                                               │
 │  ┌─ Video Layer ──────────┐  │  ┌────────────────────────────────────────┐   │
@@ -487,20 +487,20 @@ PRISM V4 uses a **Modular Monolith with CQRS, Event Sourcing, and Distributed Tr
 │  └────────────────────────┘  │  │  RAG via pgvector + Meilisearch        │   │
 │                              │  └────────────────────────────────────────┘   │
 │                              │                                               │
-│                              │  ┌────────────────────────────────────────┐   │
-│                              │  │  Event Bus & Background Jobs            │   │
-│                              │  │  • BullMQ: Task queues (email, SMS)     │   │
-│                              │  │  • Event Store: orders, payments, inv   │   │
-│                              │  │  • CRON: forecast, velocity, weather    │   │
-│                              │  │  • Saga: order fulfillment pipeline     │   │
-│                              │  └────────────────────────────────────────┘   │
+│                              │  ┌─────────────────────────────────────────┐  │
+│                              │  │  Event Bus & Background Jobs            │  │
+│                              │  │  • BullMQ: Task queues (email, SMS)     │  │
+│                              │  │  • Event Store: orders, payments, inv   │  │
+│                              │  │  • CRON: forecast, velocity, weather    │  │
+│                              │  │  • Saga: order fulfillment pipeline     │  │
+│                              │  └─────────────────────────────────────────┘  │
 │                              │                                               │
 │                              │  ┌────────────────────────────────────────┐   │
-│                              │  │  Trust & Compliance Engine (NEW V4)     │   │
-│                              │  │  • Escrow manager                       │   │
-│                              │  │  • PRISM Protect dispute resolver       │   │
-│                              │  │  • KYC / verification pipeline          │   │
-│                              │  │  • VAT computation + reporting          │   │
+│                              │  │  Trust & Compliance Engine (NEW V4)    │   │
+│                              │  │  • Escrow manager                      │   │
+│                              │  │  • PRISM Protect dispute resolver      │   │
+│                              │  │  • KYC / verification pipeline         │   │
+│                              │  │  • VAT computation + reporting         │   │
 │                              │  └────────────────────────────────────────┘   │
 └──────────────────────────────┴───────────────────────────────────────────────┘
           │                              │                    │
@@ -534,36 +534,36 @@ PRISM V4 uses a **Modular Monolith with CQRS, Event Sourcing, and Distributed Tr
 
 ```
 ┌─── WRITE PATH (Commands) ────────────────────────────────────────────┐
-│                                                                       │
+│                                                                      │
 │  Client → API Gateway → NestJS Command Handler                       │
-│     │                                                                 │
+│     │                                                                │
 │     ├─ PlaceOrderCommand → OrderSaga                                 │
 │     │   ├─ Step 1: ReserveInventory → InventoryReserved event        │
 │     │   ├─ Step 2: ProcessPayment → PaymentProcessed event           │
-│     │   ├─ Step 3: HoldEscrow → EscrowHeld event                    │
+│     │   ├─ Step 3: HoldEscrow → EscrowHeld event                     │
 │     │   ├─ Step 4: ConfirmOrder → OrderConfirmed event               │
 │     │   └─ Step 5: AssignLogistics → LogisticsAssigned event         │
-│     │                                                                 │
+│     │                                                                │
 │     ├─ On ANY step failure → Compensating actions:                   │
 │     │   PaymentFailed → ReleaseInventory + NotifyBuyer               │
 │     │   LogisticsFailed → RefundPayment + ReleaseInventory           │
-│     │                                                                 │
+│     │                                                                │
 │     └─ All events → PostgreSQL Event Store (append-only)             │
-│                     + Redis publish for real-time subscribers         │
-└───────────────────────────────────────────────────────────────────────┘
+│                     + Redis publish for real-time subscribers        │
+└──────────────────────────────────────────────────────────────────────┘
 
 ┌─── READ PATH (Queries) ──────────────────────────────────────────────┐
-│                                                                       │
+│                                                                      │
 │  Client → API Gateway → NestJS Query Handler                         │
-│     │                                                                 │
+│     │                                                                │
 │     ├─ ProductSearch → Meilisearch (denormalized product index)      │
 │     ├─ DashboardData → Redis cached materialized views               │
 │     ├─ OrderHistory → PostgreSQL read replica                        │
 │     └─ AnalyticsQuery → PostgreSQL read replica + materialized views │
-│                                                                       │
+│                                                                      │
 │  Read models are updated asynchronously by event projectors:         │
 │     Event Store → Projector → Denormalized Tables / Meilisearch      │
-└───────────────────────────────────────────────────────────────────────┘
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 8.3 Data Flow — Key Journeys
@@ -1239,53 +1239,53 @@ GBR features injected: `is_festival_week`, `days_to_next_festival`, `festival_ty
 ### Screen 1 — Vendor AI Dashboard (Desktop 1440px)
 
 ```
-┌──────────────────────────────────────────────────────────────────────────┐
-│  PRISM Commerce  [🔍 Search] [🔔 3] [Sahayak 🤖] [EN|বাংলা] [Profile ▼]│
-├─────────┬────────────────────────────────────────────────────────────────┤
-│ Sidebar │  ┌─ Top Stats ──────────────────────────────────────────────┐  │
+┌───────────────────────────────────────────────────────────────────────────┐
+│  PRISM Commerce  [🔍 Search] [🔔 3] [Sahayak 🤖] [EN|বাংলা] [Profile ▼]  │
+├─────────┬─────────────────────────────────────────────────────────────────┤
+│ Sidebar │  ┌─ Top Stats ───────────────────────────────────────────────┐  │
 │ 🏠 Home  │  │ Revenue ৳42.5K  │ Orders 12  │ Low-Stock 3🔴 │ VPS 87⭐ │  │
 │ 📦 Prods │  └──────────────────────────────────────────────────────────┘  │
-│ 📋 Orders│  ┌─ Opportunity Engine (NEW V4) ─────────────────────────────┐ │
-│ 📊 AI    │  │ 🔴 Product B: Stockout in 5 days → [Restock Now]          │ │
-│ 🎥 Live  │  │ 🟡 Product D: 60-day excess → [Create Flash Sale]        │ │
-│ 📹 Reels │  │ 🟢 Product A: Demand ↑23% → [Hold Price]                 │ │
-│ 💰 Sales │  └───────────────────────────────────────────────────────────┘ │
-│ 🏪 POS   │                                                               │
-│ 🎓 Learn │  ┌─ Product List ──────┬─ Forecast Chart ─────────────────┐  │
-│ ⚙️ Setup │  │ [Product A] ███ 85% │ Recharts Area Chart:             │  │
-│         │  │  Forecast: ↑         │ 30d history + 30d GBR forecast   │  │
-│         │  │ [Product B] ██ 15%🚨 │ (dashed + confidence band)       │  │
-│         │  │  🗓 Eid in 14 days    │ Festival Markers: 🔴 Eid (x-axis)│  │
-│         │  └──────────────────────┴──────────────────────────────────┘  │
-│         │  ┌─ Sahayak Chat (Agentic) ────────────────────────────────┐  │
-│         │  │ 🤖 "আপনার ৩টি স্লো-মুভিং প্রোডাক্টে ১৫% ডিসকাউন্ট         │  │
-│         │  │    তৈরি করেছি। দেখুন... " [View Coupons]                 │  │
-│         │  └──────────────────────────────────────────────────────────┘  │
-└─────────┴────────────────────────────────────────────────────────────────┘
+│ 📋 Orders│  ┌─ Opportunity Engine (NEW V4) ────────────────────────────┐  │
+│ 📊 AI    │  │ 🔴 Product B: Stockout in 5 days → [Restock Now]         │  │
+│ 🎥 Live  │  │ 🟡 Product D: 60-day excess → [Create Flash Sale]        │  │
+│ 📹 Reels │  │ 🟢 Product A: Demand ↑23% → [Hold Price]                 │  │
+│ 💰 Sales │  └──────────────────────────────────────────────────────────┘  │
+│ 🏪 POS   │                                                                │
+│ 🎓 Learn │  ┌─ Product List ──────┬─ Forecast Chart ──────────────────┐   │
+│ ⚙️ Setup │  │ [Product A] ███ 85% │ Recharts Area Chart:              │   │
+│         │  │  Forecast: ↑         │ 30d history + 30d GBR forecast     │   │
+│         │  │ [Product B] ██ 15%🚨 │ (dashed + confidence band)         │   │
+│         │  │  🗓 Eid in 14 days    │ Festival Markers: 🔴 Eid (x-axis) │   │
+│         │  └──────────────────────┴────────────────────────────────────┘   │
+│         │  ┌─ Sahayak Chat (Agentic) ────────────────────────────────┐     │
+│         │  │ 🤖 "আপনার ৩টি স্লো-মুভিং প্রোডাক্টে ১৫% ডিসকাউন্ট           │     │
+│         │  │    তৈরি করেছি। দেখুন... " [View Coupons]                 │     │
+│         │  └─────────────────────────────────────────────────────────┘     │
+└─────────┴──────────────────────────────────────────────────────────────────┘
 ```
 
 ### Screen 2 — Buyer Homepage (Mobile 375px)
 
 ```
-┌──────────────────────────────┐
-│  PRISM  [🔍] [🔔] [🛒 2]     │
-├──────────────────────────────┤
+┌───────────────────────────────┐
+│  PRISM  [🔍] [🔔] [🛒 2]    │
+├───────────────────────────────┤
 │  🤖 "কি খুঁজছেন?" [🎤 Voice] │ ← Sahayak search bar
-├──────────────────────────────┤
-│  📹 [Reel 1] [Reel 2] [R3]  │ ← Swipeable reels
-│     Trending Reels ▸         │
-├──────────────────────────────┤
-│  🔴 LIVE  [Vendor A: Sarees] │ ← Active live stream
-│  👤 2.3K watching [Join]     │
-├──────────────────────────────┤
-│  Flash Sale ⚡ 2h 34m left   │
-│  [Product] ৳800 ░░৳500 -37% │
-├──────────────────────────────┤
+├───────────────────────────────┤
+│  📹 [Reel 1] [Reel 2] [R3]   │ ← Swipeable reels
+│     Trending Reels ▸          │
+├───────────────────────────────┤
+│  🔴 LIVE  [Vendor A: Sarees]  │ ← Active live stream
+│  👤 2.3K watching [Join]      │
+├───────────────────────────────┤
+│  Flash Sale ⚡ 2h 34m left    │
+│  [Product] ৳800 ░░৳500 -37%   │
+├───────────────────────────────┤
 │  Trending Now 🔥              │
-│  [Prod 1] [Prod 2] [Prod 3] │
-├──────────────────────────────┤
+│  [Prod 1] [Prod 2] [Prod 3]   │
+├───────────────────────────────┤
 │  🏠  🔍  📹  🛒  👤         │ ← Bottom nav
-└──────────────────────────────┘
+└───────────────────────────────┘
 ```
 
 ---
