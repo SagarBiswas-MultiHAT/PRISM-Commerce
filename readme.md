@@ -6,37 +6,73 @@
 
 ---
 
-## 🎯 What is PRISM?
+## 🎯 What is PRISM? (For Everyone)
 
-PRISM Commerce is an AI-agentic e-commerce platform that combines **predictive inventory intelligence** with a **full multi-vendor marketplace**, an **agentic Bangla-speaking GenAI assistant**, **live commerce**, **short-form video commerce**, **social commerce**, and **marketplace trust infrastructure** — purpose-built for Bangladeshi SMEs with full regulatory compliance.
+**Think of PRISM Commerce as a mix of Daraz, Shopify, and a smart business assistant, built entirely for Bangladesh.**
 
-> **One sentence:** The platform that makes Daraz, Shopify, and Netstock unnecessary for Bangladeshi merchants — by combining marketplace reach, SaaS power, forecasting intelligence, and local trust mechanisms that none of them have.
+Small merchants in Bangladesh struggle with multiple platforms: selling on Facebook, tracking stock in notebooks or scattered software, managing bKash payments manually, and guessing what customers will buy next. 
+
+PRISM Commerce is a unified platform that solves all of these problems at once by combining four major features:
+1. **A Massive Marketplace:** Reach buyers directly.
+2. **SaaS Tools:** Manage your inventory, sales, and payments from one dashboard.
+3. **Local Payment & Trust Ecosystem:** Fully handles bKash, SSLCommerz, and Bangladesh Bank’s Escrow regulations.
+4. **Agentic Artificial Intelligence:** PRISM doesn't just give you advice; it has a smart Bangla-speaking assistant (**Sahayak**) that can automatically create discounts, reply to customers, and re-order stock for you.
 
 ---
 
-## 🏗️ Tech Stack
+## 📁 Attached Project Documents & Navigation
+
+To understand the full depth of PRISM Commerce, please refer to the attached detailed planning documents. They document our journey from a V1 academic concept to a V4 production-ready startup plan. 
+
+### 🌟 Core Project Plans
+* [**PRISM Commerce Project Plan V4.0.0**](./PRISM_Commerce_ProjectPlan_v4.0.0.md) — (Latest) Full production-grade startup plan (1640+ lines).
+* [**PRISM Commerce Project Plan V3.0.0**](./PRISM_Commerce_ProjectPlan_v3.0.0.md) — The V3 phase introducing hybrid monetization.
+* [**PRISM Commerce Project Plan V2.0.0**](./PRISM_Commerce_ProjectPlan_v2.0.0.md) — Enhanced course-level architecture plan.
+* [**PRISM Commerce Project Plan V1.0.0**](./PRISM_Commerce_ProjectPlan-v1.0.0.md) — Original proof-of-concept plan.
+
+### 👥 Team & Operations
+* [**PRISM Team Plan (Markdown)**](./PRISM_Team_Plan.md) — Detailed 15-month roadmap, 4-person equity split, and specific role responsibilities.
+* [**PRISM Team Plan (Docx)**](./PRISM_Team_Plan.docx) — Word document version of the team plan.
+* [**Co-Founder Recruitment Drafts**](./recruitment_message.md) — Pitch messages designed to recruit Member B, C, and D.
+
+### 🇧🇩 Regional Context & Explanations
+* [**Bangla Overview (বাংলা সারসংক্ষেপ)**](./Bangla.md) — Visual diagrams and a layman’s explanation of the startup completely in Bengali.
+
+### 🔄 Project Evolution Changelogs (Walkthroughs)
+* [**V3 to V4 Changelog**](./walkthrough(v3-v4).md) — What changed to make the project production-ready.
+* [**V2 to V3 Changelog**](./walkthrough(v2-v3).md)
+* [**V1 to V2 Changelog**](./walkthrough(v1-v2).md)
+
+*(Note: You are currently reading `readme.md`)*
+
+---
+
+## 🏗️ Elite Tech Stack
+
+PRISM implements modern, robust technologies built to scale to millions of concurrent users.
 
 | Layer | Technology |
 |---|---|
 | **Frontend** | Next.js 15 (App Router, PPR, PWA) |
-| **Mobile** | React Native (Expo) |
+| **Mobile App** | React Native (Expo) |
 | **Styling** | Tailwind CSS + shadcn/ui + Radix |
-| **Backend** | NestJS + TypeScript (CQRS + Event Sourcing) |
+| **Backend Core** | NestJS + TypeScript (CQRS + Event Sourcing) |
 | **Database** | PostgreSQL 16 + pgvector + Read Replica |
-| **Cache & Queue** | Redis 7 + BullMQ |
+| **Cache & Queue**| Redis 7 + BullMQ |
 | **ML Engine** | ONNX Runtime (GBR demand forecasting) |
 | **GenAI** | Ollama (Llama 3.2, agentic) + OpenAI GPT-4o fallback |
 | **Search** | Meilisearch (full-text) + pgvector (semantic/RAG) |
 | **Real-time** | Socket.io + SSE |
 | **Live Video** | LiveKit (WebRTC SFU) + HLS Recording |
-| **Payments** | bKash + Nagad + SSLCommerz + **Bangla QR** + Rocket + **Escrow** |
-| **Notifications** | WhatsApp Business Cloud API + Email + Web Push |
-| **Infrastructure** | Docker + Grafana + Prometheus + Sentry + **OpenTelemetry** |
-| **CDN / WAF** | Cloudflare |
+| **Payments** | bKash + Nagad + SSLCommerz + Bangla QR + Rocket + Escrow |
+| **Notifications**| WhatsApp Business Cloud API + Email + Web Push |
+| **Infrastructure**| Docker + Grafana + Prometheus + Sentry + OpenTelemetry |
 
 ---
 
-## 🧠 AI Intelligence Layer — 15 Modules
+## 🧠 AI Intelligence Layer — 15 Built-in Modules
+
+Unlike typical software, PRISM has 15 interconnected AI modules acting as the "brain" of the platform.
 
 | # | Module | What It Does |
 |---|---|---|
@@ -45,147 +81,62 @@ PRISM Commerce is an AI-agentic e-commerce platform that combines **predictive i
 | 03 | **Sales Velocity Ranker** | Identifies trending and decelerating products |
 | 04 | **Coupon Optimizer** | Recommends minimum discount to clear surplus stock |
 | 05 | **Anomaly Detector** | Flags suspicious orders using Z-score (6 signals including COD history) |
-| 06 | **Vendor Performance Score** | 0-100 composite trust metric with tier badges |
+| 06 | **Vendor Performance Score**| 0-100 composite trust metric with tier badges |
 | 07 | **WhatsApp Notifications** | EN + বাংলা alerts (12 template types) |
-| 08 | **Cross-Vendor Emergence** | Category velocity aggregated across all vendors |
-| 09 | **Feedback Loop** | Auto-retrains model when forecast error > 25% |
-| 10 | **Weather Engine** | Monsoon + heat demand signals via OpenWeatherMap |
+| 08 | **Cross-Vendor Emergence** | Category velocity aggregated across all vendors securely |
+| 09 | **Feedback Loop** | Auto-retrains ML model when forecast error > 25% |
+| 10 | **Weather Engine** | Translates monsoon + heat metrics into sales demand via OpenWeatherMap |
 | 11 | **What-If Planner** | Interactive scenario simulation with ONNX re-inference |
-| 12 | **Agentic GenAI Sahayak V2** 🆕 | Bangla + English AI that **executes actions** (not just advises) |
-| 13 | **RAG Semantic Search** | Natural language Bangla product discovery via pgvector |
-| 14 | **Opportunity Engine** 🆕 | Proactive pricing intelligence with 15-minute refresh |
-| 15 | **Bundle Recommender** 🆕 | AI-suggested product bundles from co-purchase patterns |
+| 12 | **Agentic GenAI Sahayak** 🆕| Bangla & English AI that **ACTS** on requests (makes coupons, adds to cart, etc.) |
+| 13 | **RAG Semantic Search** | Natural-language Bangla product discovery powered by pgvector |
+| 14 | **Opportunity Engine** 🆕 | Proactive pricing intelligence refreshing every 15-minutes |
+| 15 | **Bundle Recommender** 🆕 | AI-generated product pairing from co-purchase analytics patterns |
 
 ---
 
-## 🆕 What's New in V4 (Production Transformation)
+## 🇧🇩 Deeply Local: Bangladesh-Native Features
 
-### 🤖 Agentic Commerce
-- **Sahayak V2** — AI assistant that executes actions: create coupons, add to cart, set discounts
-- **Voice Commands** — Bangla voice-enabled search and vendor operations
-- **Schema.org** — Structured product data for AI agent discovery
+Built from day one to respect the reality of doing retail in Bangladesh.
 
-### 🛡️ Marketplace Trust
-- **PRISM Verified** — 3-tier vendor verification (NID → Trade License → Brand)
-- **PRISM Protect** — Buyer protection guarantee with 7-day returns
-- **Escrow System** — Payment held until delivery (regulatory compliant)
-- **Brand Stores** — Custom storefronts for authorized brands
-
-### 📹 Content Commerce
-- **Short-Form Video** — TikTok-style 60-second shoppable reels
-- **TikTok Shop** — Catalog + order sync integration
-- **YouTube Shopping** — Live stream commerce integration
-
-### 💳 Payments & Compliance
-- **Bangla QR** — National QR standard (June 2026 mandate)
-- **Escrow** — BD Digital Commerce Guidelines requirement
-- **VAT Automation** — 15% VAT computation + monthly reports
-- **KYC Pipeline** — Trade License + TIN verification
-
-### 🏪 Offline Commerce
-- **POS Mode** — Physical store point-of-sale with barcode scan
-- **Unified Inventory** — Online + offline stock in one dashboard
-
-### 📈 Intelligence Upgrades
-- **Opportunity Engine** — 15-min scan for stockout risk / excess / rising demand
-- **Bundle AI** — Co-purchase pattern analysis
-- **COD Intelligence** — Fraud scoring + digital conversion incentives
-- **Intelligent Logistics Routing** — Multi-factor 3PL selection with failover
-
-### 🏗️ Architecture Upgrades
-- **CQRS** — Separate read/write paths for scale
-- **Event Sourcing** — Immutable event store for orders, payments, inventory
-- **Saga Pattern** — Distributed transaction management
-- **OpenTelemetry** — Distributed request tracing
-- **Read Replicas** — Analytics offloading
-
-### 🌱 Growth Engine
-- **PRISM Academy** — Bangla video tutorials + seller certification
-- **Referral System** — Vendor/buyer/affiliate referral programs
-- **Flash Sales** — Scheduled sales with countdown timers
-- **Growth Playbook** — Vendor acquisition, buyer acquisition, retention strategies
+- 🕌 **Festival Intelligence Calendar** — Accounts for sales surges during Eid, Puja, and Boishakh.
+- 🌧️ **Weather-Aware Demand** — Lowers digital demand but boosts specific product sales during Monsoons.
+- 💬 **WhatsApp Business API** — Sellers and Buyers communicate naturally over WhatsApp templates.
+- 💳 **Bangla QR & Escrow** — Compliant up to the June 2026 mandates of Bangladesh Bank digital commerce.
+- 🚚 **Local 3PL Ready** — Built-in shipping hooks for Pathao, Paperfly, RedX, Steadfast, and eCourier. 
+- 🏪 **Offline POS Mode** — Accept sales offline inside the physical store; inventory syncs to the cloud automatically.
 
 ---
 
-## 💰 Business Model
+## 💰 The Business Model
 
-**Hybrid SaaS + Commission + Advertising + Value-Added**
+PRISM Commerce offers an incredibly accessible **Hybrid SaaS + Commission** business model for our vendors:
 
 | Tier | Price (৳/mo) | Products | Commission | Key Features |
 |---|---|---|---|---|
 | **Free** | ৳0 | 5 | 5% | Basic forecast, 3 AI queries/day |
 | **Starter** | ৳500 | 50 | 4% | Full AI + POS + 2 live streams/mo |
 | **Growth** | ৳2,000 | 500 | 3% | GenAI + What-If + Opportunity Engine + Unlimited Live |
-| **Pro** 🆕 | ৳5,000 | Unlimited | 2.5% | API access + Brand Store + Dedicated CSM |
-| **Enterprise** | Custom | Unlimited | 2% | Everything + White-Label + SLA |
+| **Pro** | ৳5,000 | Unlimited| 2.5% | API access + Brand Store + Dedicated CSM |
+| **Enterprise** | Custom | Unlimited| 2% | Everything + White-Label + SLA |
 
 ---
 
-## 🇧🇩 Bangladesh-Native Features
+## 📊 Project Version Comparison Map
 
-- 🕌 **Festival Intelligence Calendar** — Eid, Puja, Boishakh with 14-day pre-surge window
-- 🌧️ **Weather-Aware Demand** — Monsoon signals via OpenWeatherMap
-- 💬 **WhatsApp Business API** — 12 templates in English + Bengali (বাংলা)
-- 💳 **bKash + Nagad + SSLCommerz + Bangla QR** — Full BD payment stack
-- 🤖 **Bangla Agentic AI** — Sahayak executes actions in Bangla
-- 🎤 **Bangla Voice Commands** — Voice-enabled search and operations
-- 🚚 **Local 3PL** — Pathao, Paperfly, RedX, Steadfast, eCourier
-- 🔒 **Escrow + KYC** — Regulatory-compliant from Day 1
-- 🏪 **POS Mode** — Bangla QR acceptance at physical stores
-
----
-
-## 📊 Version Comparison
-
-| Dimension | V1 (Course) | V2 (Enhanced) | V3 (Startup) | V4 (Production) |
+| Dimension | V1 (Course Demo) | V2 (Enhanced Plan) | V3 (Startup Vision) | V4 (Production Ready) |
 |---|---|---|---|---|
-| Revenue | ৳0/month | ৳0/month | SaaS + Commission | SaaS + Commission + 5 tiers |
 | AI Modules | 9 | 11 | 13 | **15** |
-| GenAI | None | None | Sahayak (advisor) | **Sahayak V2 (agentic)** |
-| Commerce | Static | PWA | Live + Social | **Live + Social + Reels + TikTok** |
-| Trust | None | None | VPS score | **Verified + Protect + Escrow** |
-| Payments | Sandbox | Sandbox | Production | **+ Bangla QR + Escrow + EMI** |
-| Compliance | None | None | Partial | **Full (Escrow, QR, VAT, KYC)** |
-| Offline | None | PWA | PWA | **POS Mode** |
-| Architecture | Monolith | Monolith | Modular Monolith | **CQRS + Event Sourcing** |
-| Timeline | 6 weeks | 6 weeks | 12 months | **15 months** |
-| DB Tables | ~15 | ~20 | ~30 | **50+** |
-| API Endpoints | ~20 | ~30 | ~40 | **75+** |
-| User Roles | 4 | 5 | 7 | **8** |
+| GenAI Type | None | None | Sahayak (Advisor Mode) | **Sahayak V2 (Agentic Mode)** |
+| Commerce Scope| Static Web | PWA Web | Live Video + Social | **Live + Short-form Reels + POS** |
+| Trust/Security| Minimal | Minimal | Vendor Performance | **Verified Vendors + Buyer Protect + BD Escrow** |
+| Payments | Sandbox | Sandbox | Production Keys | **+ Bangla QR + Escrow Lifecycle** |
+| Tech Architecture| Standard Monolith| Monolith | Modular Monolith | **CQRS + Event Sourcing + Read Replicas** |
+| DB Tables | ~15 | ~20 | ~30 | **50+ Database Entities** |
 
 ---
 
-## 📁 Project Structure
-
-```
-PRISM-Commerce/
-├── PRISM_Commerce_ProjectPlan_v4.0.0.md   # Full V4 production plan (1640+ lines)
-├── PRISM_Commerce_ProjectPlan_v3.0.0.md   # V3 startup plan (1780+ lines)
-├── PRISM_Commerce_ProjectPlan_v2.0.0.md   # V2 course project plan
-├── PRISM_Commerce_ProjectPlan-v1.0.0.md   # V1 original plan
-├── Bangla.md                               # Bengali project summary
-├── readme.md                               # This file
-├── walkthrough(v1-v2).md                   # V1→V2 changelog
-├── walkthrough(v2-v3).md                   # V2→V3 changelog
-└── walkthrough(v3-v4).md                   # V3→V4 changelog
-```
-
----
-
-## 💵 Financial Viability
-
-| Path | Investment | Break-Even | Team |
-|---|---|---|---|
-| **Self-Funding** | ~৳2.6M ($22K) over 15 months | Month 16-18 | Solo → 4-5 people |
-| **With Pre-Seed** | ৳15-25M ($125K-210K) | Month 12-14 | 4-5 from Day 1 → 10+ |
-
----
-
-## 📜 License
-
-This project plan and architecture is the intellectual property of Sagar Biswas.
-
----
-
-*"একটি প্লাটফর্ম যা বাংলাদেশের প্রতিটি ছোট দোকানদারকে AI-এর ক্ষমতা দিয়ে সজ্জিত করে — এবং তাদের হয়ে কাজও করে।"*
+*"একটি প্লাটফর্ম যা বাংলাদেশের প্রতিটি ছোট দোকানদারকে AI-এর ক্ষমতা দিয়ে সজ্জিত করে — এবং তাদের হয়ে কাজও করে।"*  
 *"A platform that equips every small shopkeeper in Bangladesh with the power of AI — and acts on their behalf."*
+
+---
+© **Sagar Biswas** — PRISM Commerce Platform 
