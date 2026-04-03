@@ -1,0 +1,50 @@
+Target      : FQA + Growth person
+Key Hook    : "dual role: protect the platform AND grow it" — uniqueness highlight
+
+---
+
+হ্যালো [নাম] ভাই/আপু! 👋
+
+তোমার ব্যাপারে শুনেছি / দেখেছি — তাই directly বলতে চাইছিলাম।
+
+আমি একটা project তৈরি করছি যেটাতে শুধু কোড না, একজন স্মার্ট মানুষ দরকার যিনি platform-টাকে ঠিকমতো test করবেন এবং real মাঠে নিয়ে যাবেন — বাংলাদেশের real vendors খুঁজে আনবেন।
+
+প্রজেক্টটার নাম **PRISM Commerce** — Bangladesh-এর জন্য প্রথম Bangla-native, AI-driven multi-vendor marketplace। সহজ কথায়: আমরা বাংলাদেশের ছোট ব্যবসায়ীদের জন্য AI-powered একটা platform বানাচ্ছি যেটা Daraz-এর থেকে সস্তা, ভালো এবং সম্পূর্ণ Bangla-তে কাজ করে।
+
+তোমার role-এ যা থাকবে:
+✔️ সম্পূর্ণ QA — Jest unit tests, Playwright E2E tests, k6 load testing (10K concurrent)
+✔️ Security testing — OWASP ZAP + manual pentest
+✔️ Field sales — ঢাকার Chawkbazar, Mirpur, Uttara-তে shops visit করে vendors sign up করানো
+✔️ PRISM Academy — Bangla-তে tutorial videos তৈরি
+✔️ Social media — Facebook, TikTok, YouTube-তে PRISM-র presence তৈরি।
+
+Eta শুধু testing role না। তুমি একদিকে যেমন platform ঠিকমতো maintain করবে, অন্যদিকে সেটা real users-এর কাছে পৌঁছে দিবে। এটাই startup-এর সবচেয়ে vital combination।
+
+QA & Growth Lead হিসেবে **16% founding equity** offer করতে চাইছি। Platform revenue generate করলে সেটাতে real share।
+
+আগ্রহী হলে একটু জানাও। NDA sign করার পর full plan share করব।
+
+ধন্যবাদ! 🙏
+
+---
+
+Hey [Name]! 👋
+
+I've heard about / seen your work and think you'd be a great fit for something I'm building.
+
+The project is **PRISM Commerce** — Bangladesh's first Bangla-native AI-driven multi-vendor marketplace. Simply put: a smarter, cheaper, fully Bangla alternative to Daraz for Bangladesh's small business owners.
+
+Here's what your role would look like:
+✔️ Full QA ownership — Jest unit tests, Playwright E2E flows, k6 load testing (10K users)
+✔️ Security testing — OWASP ZAP scanning + manual pentest support
+✔️ Field sales — visiting shops in Dhaka (Chawkbazar, Mirpur, Uttara) to sign up real vendors
+✔️ PRISM Academy — scripting and recording Bangla tutorial videos
+✔️ Social media — building PRISM's presence on Facebook, TikTok, YouTube
+
+This isn't just a testing role. You'd be the person who both makes sure the platform doesn't break AND gets it in front of real users. That combination is the most vital thing in a startup.
+
+As QA & Growth Lead, you'd hold **16% founding equity** — real ownership when the platform generates revenue.
+
+Interested? Let me know — I'll share full details after a quick NDA.
+
+Thanks! 🙏

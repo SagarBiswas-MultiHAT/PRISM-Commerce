@@ -1,0 +1,54 @@
+Target      : Frontend developer
+Key Hook    : Next.js 15, React Native, TikTok-style UI — specific stack দেখানো হয়েছে
+
+---
+
+হ্যালো [নাম] ভাই/আপু! 👋
+
+তোমার Next.js / React-এর কাজগুলো দেখেছি — তাই directly message করতে বসে গেলাম।
+
+আমি একটা প্রজেক্ট তৈরি করছি যেটাতে একজন হ্যান্ডস-অন ফ্রন্টেন্ড লিড দরকার, এবং তোমাদের মতো কেউ যারা বাস্তবিকভাবে ভালো ফ্রন্টেন্ড করা জানেন তাদেরই খুঁজছি।
+
+প্রজেক্টটার নাম **PRISM Commerce** — Bangladesh-এর জন্য প্রথম Bangla-native, AI-driven multi-vendor marketplace। Platform-টা Next.js 15 দিয়ে বানানো, React Native-এ mobile app আছে, এবং Bengali + English দুটো language কাজ করবে।
+
+তোমাকে যা বানাতে হবে সেটার ছোট একটা idea দিচ্ছি:
+✔️ Vendor AI dashboard (Recharts দিয়ে demand forecast charts)
+✔️ Live commerce shoppable video UI (TikTok-style reels + live stream)
+✔️ PWA-based POS mode for physical shops
+✔️ React Native mobile app (buyer + vendor)
+✔️ Full bilingual UI — Bangla fonts, Bengali numerals, locale switching
+
+Stack: **Next.js 15 · React Native (Expo) · Tailwind CSS · shadcn/ui · Recharts · LiveKit**
+
+Eta purely CV/portfolio-র কথা না ভাবলে — Frontend Lead হিসেবে **22% founding equity** দেওয়ার plan আছে। Platform থেকে revenue আসলে সেটাতে real stake থাকবে।
+
+15 months-এ launch করার plan। আত্মীয় ভাবে কাজ করব, সেটার guarantee।
+
+আগ্রহী হলে call/meet করতে পারি। বিস্তারিত share করব, তার আগে একটা simple NDA sign করতে হবে।
+
+ধন্যবাদ! 🙏
+
+---
+
+Hey [Name]! 👋
+
+I noticed your frontend work — Next.js, React — and I think you'd be the right fit for what I'm building.
+
+The project is **PRISM Commerce** — Bangladesh's first Bangla-native AI-driven multi-vendor marketplace. We need a hands-on **Frontend Lead** who can build real, production-quality UI — not just demos.
+
+Here's a glimpse of what you'd own:
+✔️ Vendor AI dashboard with live demand forecast charts (Recharts)
+✔️ TikTok-style shoppable reel feed + live commerce UI
+✔️ PWA-based Point of Sale mode for physical shops
+✔️ React Native mobile app for buyers and vendors
+✔️ Full bilingual UI — Bangla fonts, Bengali numerals, locale routing
+
+Stack: **Next.js 15 · React Native (Expo) · Tailwind CSS · shadcn/ui · Recharts · LiveKit**
+
+This isn't just a portfolio piece. As Frontend Lead, you'd hold **22% founding equity** — real ownership that pays out when the platform generates revenue.
+
+Launch plan: 15 months. Small tight-knit team. Real product.
+
+Interested? Let's get on a call. I'll share the full plan after a quick NDA sign.
+
+Thanks! 🙏
