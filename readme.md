@@ -183,7 +183,7 @@ PRISM Commerce offers an incredibly accessible **Hybrid SaaS + Commission** busi
 
 ## 📜 License
 
-**License: Proprietary**
+[**License: Proprietary**](LICENSE)
 
 This project, its architecture, and the PRISM Commerce platform are the intellectual property of **Sagar Biswas**. All rights reserved. Do not distribute, modify, or use for commercial purposes without explicit permission.
 
