@@ -51,7 +51,6 @@ To understand the full depth of PRISM Commerce, please refer to the attached det
 ### 👥 Team & Operations
 * [**PRISM Team Plan (Markdown)**](./PRISM_Team_Plan.md) — Detailed 15-month roadmap, 4-person equity split, and specific role responsibilities.
 * [**PRISM Team Plan (Docx)**](./PRISM_Team_Plan.docx) — Word document version of the team plan.
-* [**Co-Founder Recruitment Drafts**](./recruitment_message.md) — Pitch messages designed to recruit Member B, C, and D.
 
 ### 🇧🇩 Regional Context & Explanations
 * [**Bangla Overview (বাংলা সারসংক্ষেপ)**](./Bangla.md) — Visual diagrams and a layman’s explanation of the startup completely in Bengali.
@@ -60,6 +59,30 @@ To understand the full depth of PRISM Commerce, please refer to the attached det
 * [**V3 to V4 Changelog**](./walkthrough(v3-v4).md) — What changed to make the project production-ready.
 * [**V2 to V3 Changelog**](./walkthrough(v2-v3).md)
 * [**V1 to V2 Changelog**](./walkthrough(v1-v2).md)
+
+### ⚖️ PRISM_Recruitment_&_Legal_Docs
+
+This folder contains the recruitment outreach templates and legal documents used to evaluate, onboard, and formalise founding-team members for PRISM Commerce. It includes role-specific outreach messages, a mutual NDA template, and the standard Equity Vesting Agreement.
+
+How to use
+- Initial outreach: use the Universal template to gauge interest, then send the appropriate role-specific message.
+- Role follow-up: use the role templates in `PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/` (Member_B, Member_C, Member_D) to present responsibilities and proposed equity.
+- NDA before details: always obtain a signed NDA (see `Legal_Docs/PRISM_NDA_v2_0_0.docx`) before sharing confidential architecture, financials, or roadmap.
+- Commitment: for candidates who accept an offer, execute the Vesting Agreement (`Legal_Docs/PRISM_Vesting_Agreement_v2_0_0.docx`) and follow the vesting schedule.
+- Customisation: replace placeholders (e.g., [Name], [Role], equity %, Start Date) when sending messages. Do not alter legal language without counsel.
+
+Contents
+- [PRISM_Recruitment_&_Legal_Docs/readme.md](PRISM_Recruitment_&_Legal_Docs/readme.md) — overview (this file)
+- [PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Universal.txt](PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Universal.txt) — initial outreach template
+- [PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_B.txt](PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_B.txt) — Frontend Lead template (22% equity example)
+- [PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_C.txt](PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_C.txt) — Backend (Payments & Compliance) template (22% equity example)
+- [PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_D.txt](PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_D.txt) — QA & Growth template (16% equity example)
+- [PRISM_Recruitment_&_Legal_Docs/Legal_Docs/PRISM_NDA_v2_0_0.docx](PRISM_Recruitment_&_Legal_Docs/Legal_Docs/PRISM_NDA_v2_0_0.docx) — Mutual NDA template (2-year confidentiality; 12‑month non-compete/non-solicit)
+- [PRISM_Recruitment_&_Legal_Docs/Legal_Docs/PRISM_Vesting_Agreement_v2_0_0.docx](PRISM_Recruitment_&_Legal_Docs/Legal_Docs/PRISM_Vesting_Agreement_v2_0_0.docx) — Equity Vesting Agreement (15-month schedule; 3-month cliff)
+
+Notes & Legal Guidance
+- These templates are intended as internal starting-point documents only. Seek independent legal advice before modifying or executing any legal document. The English text is authoritative; Bangla summaries are provided for convenience.
+- Standard process: Universal → role-specific → NDA → full plan share → Vesting Agreement → onboarding.
 
 *(Note: You are currently reading `readme.md`)*
 
