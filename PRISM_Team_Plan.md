@@ -20,10 +20,10 @@
 
 1. [Section 1 — Team Overview](#section-1--team-overview)
 2. [Section 2 — Individual Role Deep-Dives](#section-2--individual-role-deep-dives)
-   - [Sagar Biswas — Full-Stack Architect & AI Lead (40%)](#sagar-biswas--full-stack-architect--ai-lead-40)
-   - [Member B — Frontend Lead & Mobile Developer (21%)](#member-b--frontend-lead--mobile-developer-21)
-   - [Member C — Backend Dev: Payments, Compliance & Logistics (21%)](#member-c--backend-dev-payments-compliance--logistics-21)
-   - [Member D — QA Engineer & Growth / Business Dev (18%)](#member-d--qa-engineer--growth--business-dev-18)
+   - [Sagar Biswas — Full-Stack Architect & AI Lead (45%)](#sagar-biswas--full-stack-architect--ai-lead-45)
+   - [Member B — Frontend Lead & Mobile Developer (20%)](#member-b--frontend-lead--mobile-developer-20)
+   - [Member C — Backend Dev: Payments, Compliance & Logistics (20%)](#member-c--backend-dev-payments-compliance--logistics-20)
+   - [Member D — QA Engineer & Growth / Business Dev (15%)](#member-d--qa-engineer--growth--business-dev-15)
 3. [Section 3 — Month-by-Month Plan & Targets](#section-3--month-by-month-plan--targets)
 4. [Section 4 — Milestones, Revenue Gates & Key Decisions](#section-4--milestones-revenue-gates--key-decisions)
 5. [Section 5 — Collaboration, Git Workflow & Team Rules](#section-5--collaboration-git-workflow--team-rules)
@@ -38,10 +38,10 @@ The PRISM Commerce team is made up of four CSE students. Every person wears mult
 
 | Member | Role Title | Primary Domain | Ownership |
 |---|---|---|---|
-| **Sagar Biswas** | Full-Stack Architect & AI Lead | Architecture · NestJS Core · All 15 AI Modules · DevOps | **40%** |
-| **Member B** *(Your Name)* | Frontend Lead & Mobile Developer | Next.js 15 · React Native · UI/UX · PWA · i18n | **21%** |
-| **Member C** *(Your Name)* | Backend Dev: Payments, Compliance & Logistics | All Payment Gateways · Escrow · KYC · 3PL · WhatsApp API | **21%** |
-| **Member D** *(Your Name)* | QA Engineer & Growth / Business Dev | Testing Suite · Vendor Acquisition · PRISM Academy · Marketing | **18%** |
+| **Sagar Biswas** | Full-Stack Architect & AI Lead | Architecture · NestJS Core · All 15 AI Modules · DevOps | **45%** |
+| **Member B** *(Your Name)* | Frontend Lead & Mobile Developer | Next.js 15 · React Native · UI/UX · PWA · i18n | **20%** |
+| **Member C** *(Your Name)* | Backend Dev: Payments, Compliance & Logistics | All Payment Gateways · Escrow · KYC · 3PL · WhatsApp API | **20%** |
+| **Member D** *(Your Name)* | QA Engineer & Growth / Business Dev | Testing Suite · Vendor Acquisition · PRISM Academy · Marketing | **15%** |
 
 ---
 
@@ -51,10 +51,10 @@ Ownership is **not** a simple 25/25/25/25 split because the domains are not equa
 
 | Member | % | Justification |
 |---|---|---|
-| **Sagar Biswas** | 40% | Carries the heaviest technical load: system architecture decisions, all 15 AI/ML modules (the core differentiator), CQRS/Event Sourcing, database design (50+ tables with RLS/pgvector), Docker/CI-CD/monitoring stack, and the full backend skeleton. The AI layer alone (GBR ONNX, Sahayak agentic mode, RAG, Opportunity Engine) represents 30–40% of PRISM's unique value. |
-| **Member B** | 21% | The frontend spans two frameworks (Next.js 15 + React Native), three rendering strategies (RSC, PPR, Client), full bilingual UI (Bengali/English), live commerce overlays, short-form video feed, POS PWA, and the entire vendor and buyer dashboard experience. This is a very large surface area. |
-| **Member C** | 21% | Payment integration is where the money flows — and where bugs are catastrophic. Owns bKash, Nagad, SSLCommerz, Bangla QR, Rocket, escrow accounting, KYC pipeline, WhatsApp templates, all five 3PL APIs, COD intelligence, BNPL, and VAT reporting. Legal/regulatory liability sits here. |
-| **Member D** | 18% | Testing, vendor acquisition, and PRISM Academy are essential but involve less raw engineering complexity. Member D's QA work protects the whole team, and their BD work fills the platform with real users — but the domain carries less technical risk than the others. |
+| **Sagar Biswas** | 45% | Carries the heaviest technical load: system architecture decisions, all 15 AI/ML modules (the core differentiator), CQRS/Event Sourcing, database design (50+ tables with RLS/pgvector), Docker/CI-CD/monitoring stack, and the full backend skeleton. The AI layer alone (GBR ONNX, Sahayak agentic mode, RAG, Opportunity Engine) represents 30–45% of PRISM's unique value. |
+| **Member B** | 20% | The frontend spans two frameworks (Next.js 15 + React Native), three rendering strategies (RSC, PPR, Client), full bilingual UI (Bengali/English), live commerce overlays, short-form video feed, POS PWA, and the entire vendor and buyer dashboard experience. This is a very large surface area. |
+| **Member C** | 20% | Payment integration is where the money flows — and where bugs are catastrophic. Owns bKash, Nagad, SSLCommerz, Bangla QR, Rocket, escrow accounting, KYC pipeline, WhatsApp templates, all five 3PL APIs, COD intelligence, BNPL, and VAT reporting. Legal/regulatory liability sits here. |
+| **Member D** | 15% | Testing, vendor acquisition, and PRISM Academy are essential but involve less raw engineering complexity. Member D's QA work protects the whole team, and their BD work fills the platform with real users — but the domain carries less technical risk than the others. |
 
 > ⚠️ **IMPORTANT — Founders' Agreement:**
 > This is a **founding equity split, not a salary**. Every member works for free during development. Once the platform generates revenue, distribution follows this split. The team should formalize this in a written **Founders' Agreement** (a simple one-page document) signed by all four members **before Month 2**. Member D is responsible for drafting the first version in Month 1.
@@ -69,7 +69,7 @@ Each role card below shows the primary domains owned, and a phase-by-phase break
 
 ---
 
-## Sagar Biswas — Full-Stack Architect & AI Lead (40%)
+## Sagar Biswas — Full-Stack Architect & AI Lead (45%)
 
 ### Primary Domains
 
@@ -169,7 +169,7 @@ Each role card below shows the primary domains owned, and a phase-by-phase break
 
 ---
 
-## Member B — Frontend Lead & Mobile Developer (21%)
+## Member B — Frontend Lead & Mobile Developer (20%)
 
 ### Primary Domains
 
@@ -264,7 +264,7 @@ Each role card below shows the primary domains owned, and a phase-by-phase break
 
 ---
 
-## Member C — Backend Dev: Payments, Compliance & Logistics (21%)
+## Member C — Backend Dev: Payments, Compliance & Logistics (20%)
 
 ### Primary Domains
 
@@ -790,7 +790,7 @@ Every PR **must** follow these rules before it can be merged into `develop` or `
 - **Minimum 1 reviewer approval** required (prefer 2 for payment-related code)
 - **All CI checks must pass:** lint (ESLint), TypeScript compile, unit tests, integration tests
 - **PR description must include:** What changed · Why · How to test · Screenshots (for UI changes)
-- **No PR larger than 400 lines** of code changes — break large features into smaller PRs
+- **No PR larger than 450 lines** of code changes — break large features into smaller PRs
 - **Payment and escrow code** requires Sagar AND Member C to both approve before merge
 - **Security-sensitive code** (auth, RLS, webhook verification) requires Sagar to approve
 - Delete feature branch after merging — keep the repo clean

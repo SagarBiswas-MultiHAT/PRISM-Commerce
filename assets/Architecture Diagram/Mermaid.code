@@ -1,0 +1,152 @@
+flowchart TB
+  %% =========================
+  %% PRISM Commerce Architecture
+  %% =========================
+
+  subgraph A["1) Team Formation & Legal Gate"]
+    A1["Candidate Sourcing"]
+    A2["Universal Outreach"]
+    A3["Role-Specific Outreach
+    - Frontend Lead
+    - Backend/Compliance Lead
+    - QA + Growth Lead"]
+    A4["Mutual NDA Execution
+    (Confidentiality + Limited Non-Compete + Non-Solicit)"]
+    A5["Full Plan Disclosure"]
+    A6["Vesting Agreement Execution
+    (Role equity + 15-month vesting + active contributor rules)"]
+
+    A1 --> A2 --> A3 --> A4 --> A5 --> A6
+  end
+
+  subgraph B["2) Founding Org Structure"]
+    B1["Founder / Full-Stack + AI Lead
+    Equity: 45%"]
+    B2["Frontend & Mobile Lead
+    Equity: 20%"]
+    B3["Backend / Payments / Compliance / Logistics Lead
+    Equity: 20%"]
+    B4["QA + Growth Lead
+    Equity: 15%"]
+
+    B1 --- B2
+    B1 --- B3
+    B1 --- B4
+  end
+
+  subgraph C["3) Product & Platform Stack"]
+    C1["Experience Layer
+    - Web App (Next.js)
+    - Mobile App (React Native)
+    - Bilingual UX (Bangla + English)
+    - Vendor AI Dashboard / Live Commerce UI / POS Mode"]
+
+    C2["Core Platform Services
+    - User/Vendor Management
+    - Catalog & Orders
+    - Pricing/Commissions
+    - Notifications"]
+
+    C3["AI Intelligence Layer
+    - Demand Forecasting
+    - Assistant (Sahayak)
+    - RAG Knowledge Pipeline
+    - Opportunity & Bundle Engines"]
+
+    C4["Data Layer
+    - PostgreSQL
+    - Redis
+    - Queue/Jobs
+    - Analytics & Reporting"]
+
+    C1 --> C2 --> C3
+    C2 --> C4
+    C3 --> C4
+  end
+
+  subgraph D["4) Bangladesh Market Integrations"]
+    D1["Payments
+    bKash / Nagad / SSLCommerz / Rocket / Bangla QR"]
+    D2["Escrow
+    (Regulatory-aligned flow)"]
+    D3["KYC & Compliance
+    NID / Trade License / TIN"]
+    D4["Logistics APIs
+    Pathao / RedX / Paperfly / Steadfast / eCourier"]
+    D5["WhatsApp Business API
+    Bangla + English templates"]
+    D6["VAT & Reporting
+    Monthly compliance outputs"]
+    D7["COD Fraud Intelligence"]
+
+    D1 --> D2
+    D3 --> D2
+    D2 --> D6
+    D4 --> C2
+    D5 --> C2
+    D7 --> C2
+  end
+
+  subgraph E["5) Delivery Governance (15-Month Execution)"]
+    E1["Phase-based roadmap"]
+    E2["Monthly vesting checkpoints
+    (3-month cliff + monthly vesting)"]
+    E3["Revenue Gates
+    G1 vendor traction -> G5 public launch"]
+    E4["Quality & Security
+    Unit/E2E/Load + security testing"]
+    E5["Go-to-Market
+    Field sales + Academy + social growth"]
+
+    E1 --> E2 --> E3
+    E4 --> E3
+    E5 --> E3
+  end
+
+  subgraph F["6) Economic & Legal Control Plane"]
+    F1["Revenue Waterfall
+    1) Operating costs
+    2) Reserve fund (20%)
+    3) Distribution by vested equity"]
+    F2["Dispute Path
+    Good-faith negotiation -> Arbitration (Dhaka)
+    + emergency injunctive relief carve-out"]
+    F3["IP Assignment
+    Project owns contributions"]
+    F4["Confidentiality Survival
+    Post-termination protections"]
+
+    F1 --- F2
+    F2 --- F3
+    F3 --- F4
+  end
+
+  %% Cross-domain links
+  A6 --> B1
+  A6 --> B2
+  A6 --> B3
+  A6 --> B4
+
+  B2 --> C1
+  B3 --> C2
+  B3 --> D1
+  B3 --> D2
+  B3 --> D3
+  B3 --> D4
+  B3 --> D6
+  B3 --> D7
+
+  B1 --> C3
+  B1 --> E1
+  B4 --> E4
+  B4 --> E5
+
+  C2 --> D1
+  C2 --> D3
+  C2 --> D4
+  C2 --> D5
+  C2 --> F1
+
+  E3 --> F1
+  A4 --> F4
+  A4 --> F2

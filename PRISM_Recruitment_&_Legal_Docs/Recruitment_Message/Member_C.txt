@@ -24,7 +24,7 @@ Stack: **NestJS · PostgreSQL 16 · BullMQ · Redis · Prisma**
 
 Eta boring "CRUD" backend না — real payment flows, real regulatory compliance, real money movement। যার bug হলে consequence আছে তাই এটা real engineering।
 
-Payments & Compliance Lead হিসেবে **21% founding equity** offer করতে চাইছি। Platform revenue generate করলে সেটাতে real share থাকবে।
+Payments & Compliance Lead হিসেবে **20% founding equity** offer করতে চাইছি। Platform revenue generate করলে সেটাতে real share থাকবে।
 
 আগ্রহী হলে একটু জানাও। details বলব, NDA sign করার পর full architecture share করব।
 
@@ -51,7 +51,7 @@ Stack: **NestJS · PostgreSQL 16 · BullMQ · Redis · Prisma**
 
 This isn't boring CRUD. This is real payment flows, real regulatory compliance, real money movement. Bugs here have real consequences — which means the engineering challenge is real too.
 
-As Payments & Compliance Lead, you'd hold **21% founding equity** — real ownership when the platform generates revenue.
+As Payments & Compliance Lead, you'd hold **20% founding equity** — real ownership when the platform generates revenue.
 
 Interested? Let's talk. Full architecture details after a quick NDA.
 
