@@ -1,5 +1,5 @@
 flowchart TB
-  %% Diagram 05: Production Deployment Architecture (Hetzner + Cloudflare + External Services)
+  %% Diagram 05: Production Deployment Architecture (Readable Layout)
 
   Users[Buyers, Vendors, Admins\nWeb + Mobile Clients]
 
@@ -17,6 +17,7 @@ flowchart TB
       API[NestJS API Service]
       WRK[BullMQ Workers]
       OLL[Ollama LLM Runtime]
+      INT[Integration Connector Layer]
     end
 
     subgraph DATANODE[Data Node]
@@ -28,10 +29,11 @@ flowchart TB
     end
 
     subgraph OBS[Observability]
+      OTel[OTel Collector]
       PRM[Prometheus]
-      GRF[Grafana]
       LOK[Loki]
       TMP[Tempo]
+      GRF[Grafana]
       SEN[Sentry Agent]
     end
   end
@@ -66,40 +68,40 @@ flowchart TB
   WRK -->|SQL| PGB
   PGB -->|Write| PGP
   PGB -->|Read| PGR
-  API <--> |Cache + Queue| RED
-  API <--> |Search| MEI
-  WRK <--> |Jobs| RED
-  WRK -->|Async DB Ops| PGP
-  API <--> |LLM Calls| OLL
   PGP -->|Streaming Replication| PGR
+  API <--> |Cache + Queue| RED
+  WRK <--> |Jobs| RED
+  API <--> |Search| MEI
+  API <--> |LLM Calls| OLL
+  OLL -.tiered fallback.-> GPT
 
-  API -->|Metrics| PRM
-  API -->|Structured Logs| LOK
-  API -->|Traces| TMP
-  API -->|Errors| SEN
-  WRK -->|Metrics| PRM
+  API --> INT
+  INT -->|HTTPS + Webhooks| PAY
+  INT -->|HTTPS Templates| WA
+  INT -->|HTTPS Shipments| L3
+  INT -->|HTTPS Forecast Data| WEA
+  INT -->|WSS/HTTPS Tokens| LIV
+  INT -->|HTTPS Sync| SOC
+
+  API -->|Upload Media/Docs| R2
+  WRK -->|Async Video Processing| R2
+  R2 -->|CDN Delivery| CDN
+
+  API --> OTel
+  WEB --> OTel
+  WRK --> OTel
+  OTel --> PRM
+  OTel --> LOK
+  OTel --> TMP
   PRM --> GRF
   LOK --> GRF
   TMP --> GRF
-
-  API -->|HTTPS + Webhooks| PAY
-  API -->|HTTPS Templates| WA
-  API -->|HTTPS Shipments| L3
-  API -->|HTTPS Forecast Data| WEA
-  API -->|WSS/HTTPS Tokens| LIV
-  API -->|HTTPS Sync| SOC
-  OLL -.tiered fallback.-> GPT
-
-  API -->|Upload Media/Docs| R2
-  R2 -->|CDN Delivery| CDN
-  WRK -->|Async Video Processing| R2
+  API --> SEN
 
   PGP -->|Encrypted Scheduled Backup| ENC
-  ENC --> DR
-  DR --> STBY
+  ENC --> DR --> STBY
 
   FW -.enforced at edge and host firewall.-> LB
   SCALE -.capacity planning trigger.-> API
   SCALE -.capacity planning trigger.-> WRK
-  ADMIN_ACCESS -.restricted to.-> APPNODE
-  ADMIN_ACCESS -.restricted to.-> DATANODE
+  ADMIN_ACCESS -.restricted to production nodes.-> HETZNER

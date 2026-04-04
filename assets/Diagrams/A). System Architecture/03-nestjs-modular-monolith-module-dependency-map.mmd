@@ -1,8 +1,12 @@
-flowchart LR
-  %% Diagram 03: NestJS Modular Monolith - Module Dependency Map (Production-Grade)
+flowchart TB
+  %% Diagram 03: NestJS Modular Monolith - Module Dependency Map (Readable Layout)
+
+  subgraph ACCESS[Access and Governance]
+    Auth[AuthModule]
+    Compliance[ComplianceModule]
+  end
 
   subgraph CORE[Core Commerce Modules]
-    Auth[AuthModule]
     User[UserModule]
     Product[ProductModule]
     Inventory[InventoryModule]
@@ -12,20 +16,16 @@ flowchart LR
     Logistics[LogisticsModule]
   end
 
-  subgraph TRUST[Trust and Governance]
-    Compliance[ComplianceModule]
-    Audit[AuditModule]
-  end
-
-  subgraph INTEL[Intelligence and Insights]
-    AI[AIModule]
-    Analytics[AnalyticsModule]
-  end
-
   subgraph PLATFORM[Cross-Cutting Platform]
     CQRS[CqrsModule\nCommands + Queries + Sagas]
     EventStore[EventStoreModule\nAppend-Only Domain Events]
     Notify[NotificationModule]
+    Audit[AuditModule]
+  end
+
+  subgraph INTEL[Intelligence and Insights]
+    Analytics[AnalyticsModule]
+    AI[AIModule]
   end
 
   subgraph ADMIN[Control Plane]
@@ -44,10 +44,6 @@ flowchart LR
   Compliance --> Payment
   Compliance --> Escrow
 
-  Order --> Notify
-  Payment --> Notify
-  Analytics --> AI
-
   Order --> CQRS
   Payment --> CQRS
   Escrow --> CQRS
@@ -58,6 +54,10 @@ flowchart LR
   EventStore --> Analytics
   EventStore --> AI
   EventStore --> Audit
+
+  Order -.business notifications.-> Notify
+  Payment -.payment notifications.-> Notify
+  Analytics --> AI
 
   Auth --> Admin
   Compliance --> Admin

@@ -1,11 +1,8 @@
 flowchart TB
-  %% Diagram 01: PRISM V4 - High-Level System Architecture Overview (Production-Grade)
+  %% Diagram 01: PRISM V4 - High-Level System Architecture Overview (Readable Layout)
 
   subgraph EXP[Experience Layer]
-    BuyerWeb[Buyer Web App\nNext.js 15]
-    VendorWeb[Vendor Web App\nNext.js 15]
-    AdminWeb[Admin Console\nNext.js 15]
-    Mobile[React Native App\nExpo]
+    Clients[Buyer/Vendor/Admin Web + Mobile Apps]
   end
 
   subgraph EDGE[Edge and Access Layer]
@@ -15,13 +12,13 @@ flowchart TB
   end
 
   subgraph APP[Application Layer]
-    Nest[NestJS Modular Monolith\nCQRS Commands + Queries]
+    API[NestJS Modular Monolith\nCQRS Commands + Queries]
     Worker[BullMQ Workers\nAsync Jobs + Projections]
   end
 
   subgraph DATA[Data and Search Layer]
     PGB[PgBouncer\nConnection Pool]
-    PGW[(PostgreSQL Primary\nWrite Model + Event Store Table)]
+    PGW[(PostgreSQL Primary\nWrite Model + Event Store)]
     PGR[(PostgreSQL Read Replica\nQuery Offload)]
     Redis[(Redis 7\nCache + Queue + Pub/Sub)]
     Mei[(Meilisearch\nLexical Search)]
@@ -45,68 +42,63 @@ flowchart TB
   end
 
   subgraph OBS[Observability]
+    OTel[OTel Collector]
     Prom[Prometheus]
-    Graf[Grafana]
     Loki[Loki]
-    Tempo[Tempo\nOpenTelemetry Traces]
+    Tempo[Tempo]
+    Graf[Grafana]
     Sentry[Sentry]
   end
 
   KPI[Targets\np95 API < 200ms\n10K+ Concurrent Users]
   SEC[Security Baseline\nJWT + MFA + RLS + Idempotency]
 
-  BuyerWeb -->|HTTPS| CF
-  VendorWeb -->|HTTPS| CF
-  AdminWeb -->|HTTPS| CF
-  Mobile -->|HTTPS| CF
-
+  Clients -->|HTTPS| CF
   CF -->|HTTPS| APIGW
-  APIGW -->|HTTPS Internal| Nest
+  APIGW -->|REST| API
   APIGW -->|WSS/SSE Upgrade| RTGW
-  RTGW -->|Realtime Streams| BuyerWeb
-  RTGW -->|Realtime Streams| VendorWeb
-  RTGW -->|Realtime Streams| AdminWeb
-  RTGW -->|Realtime Streams| Mobile
+  RTGW -->|Realtime Streams| Clients
 
-  Nest -->|SQL via Prisma| PGB
-  Worker -->|SQL for Jobs/Projections| PGB
+  API -->|SQL| PGB
+  Worker -->|SQL| PGB
   PGB -->|Writes| PGW
   PGB -->|Reads| PGR
   PGW -->|Streaming Replication| PGR
 
-  Nest <--> |Cache + Queue + Pub/Sub| Redis
+  API <--> |Cache + Queue + Pub/Sub| Redis
   Worker <--> |Jobs + Pub/Sub| Redis
-  Nest <--> |Index/Search| Mei
-  Nest <--> |Vector Search| Vec
+  API <--> |Index/Search| Mei
+  API <--> |Vector Search| Vec
   Worker -->|Projection Refresh| Mei
   Worker -->|Projection Refresh| PGR
 
-  Nest -->|Upload Images/Videos/Docs| ObjStore
-  Worker -->|Video Processing| ObjStore
+  API -->|Upload Media/Docs| ObjStore
+  Worker -->|Async Processing| ObjStore
   ObjStore -->|CDN Delivery| CF
 
-  Nest <--> |In-Process Calls| ONNX
-  Nest <--> |Tool Calling| SAH
+  API <--> |In-Process Inference| ONNX
+  API <--> |Tool Calling| SAH
   SAH -.Fallback.-> GPT
 
-  Nest -->|REST + Webhooks| Pay
-  Nest -->|Template Messaging| WA
-  Nest -->|Shipment Create/Track| L3
-  Nest -->|Weather Signals| Weather
+  API -->|REST + Webhooks| Pay
+  API -->|Template Messaging| WA
+  API -->|Shipment Create/Track| L3
+  API -->|Weather Signals| Weather
   RTGW -->|Live Events| Live
-  Nest -->|Catalog/Order Sync| Social
+  API -->|Catalog/Order Sync| Social
 
+  API --> OTel
+  Worker --> OTel
+  RTGW --> OTel
+  OTel --> Prom
+  OTel --> Loki
+  OTel --> Tempo
   Prom --> Graf
   Loki --> Graf
   Tempo --> Graf
-  Nest --> Prom
-  Nest --> Loki
-  Nest --> Tempo
-  Nest --> Sentry
-  Worker --> Prom
-  RTGW --> Prom
+  API --> Sentry
 
   KPI -.applies to.-> APIGW
-  KPI -.applies to.-> Nest
+  KPI -.applies to.-> API
   SEC -.applies to.-> APIGW
   SEC -.applies to.-> PGW
