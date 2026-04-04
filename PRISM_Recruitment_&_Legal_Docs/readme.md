@@ -23,7 +23,7 @@
 
 ### 📄 PRISM_Vesting_Agreement.docx
 13টা section — founder-grade:
-- Role-specific equity table (40/22/22/16 breakdown)
+- Role-specific equity table (40/21/21/18 breakdown)
 - **Vesting schedule table** — 3-month cliff → monthly over 12 months
 - **Active Contributor Standard** — কতটুকু কাজ না করলে vesting আটকে যাবে
 - "For Cause" termination সংজ্ঞা (breach, দীর্ঘ non-performance)

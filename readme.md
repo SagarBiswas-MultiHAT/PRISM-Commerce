@@ -74,9 +74,9 @@ How to use
 Contents
 - [PRISM_Recruitment_&_Legal_Docs/readme.md](PRISM_Recruitment_&_Legal_Docs/readme.md) — overview (this file)
 - [PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Universal.txt](PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Universal.txt) — initial outreach template
-- [PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_B.txt](PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_B.txt) — Frontend Lead template (22% equity example)
-- [PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_C.txt](PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_C.txt) — Backend (Payments & Compliance) template (22% equity example)
-- [PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_D.txt](PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_D.txt) — QA & Growth template (16% equity example)
+- [PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_B.txt](PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_B.txt) — Frontend Lead template (21% equity example)
+- [PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_C.txt](PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_C.txt) — Backend (Payments & Compliance) template (21% equity example)
+- [PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_D.txt](PRISM_Recruitment_&_Legal_Docs/Recruitment_Message/Member_D.txt) — QA & Growth template (18% equity example)
 - [PRISM_Recruitment_&_Legal_Docs/Legal_Docs/PRISM_NDA_v2_0_0.docx](PRISM_Recruitment_&_Legal_Docs/Legal_Docs/PRISM_NDA_v2_0_0.docx) — Mutual NDA template (2-year confidentiality; 12‑month non-compete/non-solicit)
 - [PRISM_Recruitment_&_Legal_Docs/Legal_Docs/PRISM_Vesting_Agreement_v2_0_0.docx](PRISM_Recruitment_&_Legal_Docs/Legal_Docs/PRISM_Vesting_Agreement_v2_0_0.docx) — Equity Vesting Agreement (15-month schedule; 3-month cliff)
 

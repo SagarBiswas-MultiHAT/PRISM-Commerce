@@ -20,7 +20,7 @@ Key Hook    : Next.js 15, React Native, TikTok-style UI — specific stack দ�
 
 Stack: **Next.js 15 · React Native (Expo) · Tailwind CSS · shadcn/ui · Recharts · LiveKit**
 
-Eta purely CV/portfolio-র কথা না ভাবলে — Frontend Lead হিসেবে **22% founding equity** দেওয়ার plan আছে। Platform থেকে revenue আসলে সেটাতে real stake থাকবে।
+Eta purely CV/portfolio-র কথা না ভাবলে — Frontend Lead হিসেবে **21% founding equity** দেওয়ার plan আছে। Platform থেকে revenue আসলে সেটাতে real stake থাকবে।
 
 15 months-এ launch করার plan। আত্মীয় ভাবে কাজ করব, সেটার guarantee।
 
@@ -45,7 +45,7 @@ Here's a glimpse of what you'd own:
 
 Stack: **Next.js 15 · React Native (Expo) · Tailwind CSS · shadcn/ui · Recharts · LiveKit**
 
-This isn't just a portfolio piece. As Frontend Lead, you'd hold **22% founding equity** — real ownership that pays out when the platform generates revenue.
+This isn't just a portfolio piece. As Frontend Lead, you'd hold **21% founding equity** — real ownership that pays out when the platform generates revenue.
 
 Launch plan: 15 months. Small tight-knit team. Real product.
 
