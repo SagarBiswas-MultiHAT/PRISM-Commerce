@@ -1,0 +1,15 @@
+flowchart TB
+  %% Diagram 67A: Social Commerce Business-Friendly Attribution Map
+
+  Connect[Vendor connects Facebook, TikTok, and YouTube channels]
+  Sync[Catalog sync keeps social listings up to date]
+  Engage[Shoppers interact through videos, lives, and affiliate links]
+  Order[Valid interactions become attributed orders]
+  Payout[Attribution and commission payout signals are recorded]
+
+  Retry[Failed sync items are retried automatically]
+  Review[Invalid codes or fraud-like activity go to review]
+
+  Connect --> Sync --> Engage --> Order --> Payout
+  Sync --> Retry --> Sync
+  Engage --> Review --> Payout

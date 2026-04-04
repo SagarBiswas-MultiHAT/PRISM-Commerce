@@ -1,0 +1,23 @@
+flowchart LR
+  %% Diagram 81: Geographic Expansion Rollout Strategy Flow
+
+  Dhaka[Launch city: Dhaka]
+  Gate1{Capacity + logistics + support ready?}
+  Chattogram[Expand to Chattogram]
+  Gate2{Vendor density and service quality stable?}
+  Sylhet[Expand to Sylhet]
+  Gate3{Expansion KPIs healthy?}
+  Nationwide[Nationwide rollout]
+
+  Hold[Hold expansion]
+  Fix[Remediation plan\noperations/logistics/support]
+
+  Dhaka --> Gate1
+  Gate1 -- Yes --> Chattogram --> Gate2
+  Gate1 -- No --> Hold --> Fix --> Gate1
+
+  Gate2 -- Yes --> Sylhet --> Gate3
+  Gate2 -- No --> Hold
+
+  Gate3 -- Yes --> Nationwide
+  Gate3 -- No --> Hold

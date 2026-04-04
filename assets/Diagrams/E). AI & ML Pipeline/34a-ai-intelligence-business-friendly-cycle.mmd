@@ -1,0 +1,23 @@
+flowchart LR
+  %% Diagram 34A: AI Intelligence Business-Friendly Cycle
+
+  Data[Business data\nsales + inventory + festivals + weather] --> Forecast[AI predicts near-term demand]
+  Forecast --> Insights[Platform creates clear insights\nrestock, discount, bundle, pricing]
+  Insights --> Advisor[Sahayak explains actions\nin Bangla/English]
+  Advisor --> Decision{Vendor approves action?}
+
+  Decision -- Yes --> Execute[Platform executes approved actions]
+  Decision -- No --> Observe[Keep monitoring and suggest alternatives]
+
+  Execute --> Results[Track outcomes\nsales, stock health, fulfillment quality]
+  Observe --> Results
+
+  Results --> Feedback[Weekly feedback loop\ncompare prediction vs actual]
+  Feedback --> Improve[Model improves or safely falls back]
+  Improve --> Forecast
+
+  Guard1[Privacy guard\nCross-vendor analytics require >= 3 vendors]
+  Guard2[Safety guard\nNo irreversible mutation without confirmation]
+
+  Guard1 -.applies to.-> Insights
+  Guard2 -.applies to.-> Decision

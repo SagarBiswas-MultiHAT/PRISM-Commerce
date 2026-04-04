@@ -1,0 +1,16 @@
+flowchart TB
+  %% Diagram 71A: Reliability and Recovery Business-Friendly Journey
+
+  Build[New release prepared]
+  Deploy[Release deployed safely]
+  Watch[System health is continuously monitored]
+  Issue{Any service issue detected?}
+
+  Respond[On-call team investigates and responds]
+  Recover[Rollback or restore path keeps business running]
+  Learn[Team improves runbooks and controls after review]
+  Stable[Service remains stable for users]
+
+  Build --> Deploy --> Watch --> Issue
+  Issue -- No --> Stable
+  Issue -- Yes --> Respond --> Recover --> Learn --> Stable

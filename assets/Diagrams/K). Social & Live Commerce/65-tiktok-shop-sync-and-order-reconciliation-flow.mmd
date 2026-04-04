@@ -1,0 +1,32 @@
+sequenceDiagram
+  %% Diagram 65: TikTok Shop Sync and Order Reconciliation Flow
+
+  autonumber
+  actor V as Vendor
+  participant API as /api/social/sync/tiktok
+  participant TT as TikTok Shop API
+  participant Map as Catalog Mapping Store
+  participant Order as Order Reconciliation Service
+  participant Inv as Inventory Service
+  participant Pay as Payout Attribution Service
+
+  V->>API: Connect TikTok and sync catalog
+  API->>TT: Push catalog mapping payload
+  TT-->>API: Mapping status
+  API->>Map: Save channel product mappings
+
+  TT->>Order: External order webhook/event
+  Order->>Map: Resolve external SKU to PRISM product
+  alt Mapping conflict or missing
+    Order-->>V: Manual reconciliation required
+  else Mapping resolved
+    Order->>Order: Idempotency check
+    alt Duplicate external order
+      Order-->>TT: 200 idempotent no-op
+    else New order
+      Order->>Inv: Decrement inventory
+      Order->>Pay: Record channel payout attribution signal
+      Pay-->>Order: Attribution persisted
+      Order-->>V: Reconciled order created
+    end
+  end

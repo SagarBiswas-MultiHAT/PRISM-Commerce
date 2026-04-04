@@ -1,0 +1,69 @@
+flowchart TB
+  %% Diagram 06A: System Resilience and Scale Trigger Map
+
+  subgraph TRAFFIC[Traffic and Reliability Controls]
+    Edge[Cloudflare Edge\nWAF + DDoS + CDN]
+    Gateway[API Gateway\nRate Limit + Auth + Versioning]
+    Breaker[Circuit Breakers\nExternal Dependency Protection]
+    Retry[Retry Queue\nExponential Backoff]
+  end
+
+  subgraph RUNTIME[Runtime Services]
+    API[NestJS API]
+    Worker[BullMQ Workers]
+    RT[Realtime Gateway]
+    Cache[(Redis)]
+    Search[(Meilisearch)]
+    DB[(PostgreSQL + Read Replica\nvia PgBouncer)]
+  end
+
+  subgraph OBS[SLO and Incident Signals]
+    SLO[SLO Monitors\nLatency, Error Rate, Saturation]
+    Alert[Alerting + On-Call]
+    Dash[Grafana + Tempo + Loki + Sentry]
+  end
+
+  subgraph SCALE[Scale Triggers]
+    T1[p95 API above target for sustained window]
+    T2[Queue depth grows without recovery]
+    T3[Read replica lag exceeds query tolerance]
+    T4[WSS connection churn spikes]
+  end
+
+  subgraph ACTION[Response Paths]
+    A1[Tune Cache, Search, and Query Plans]
+    A2[Increase Worker Concurrency]
+    A3[Split Hot Modules to Independent Services]
+    A4[Compose to Kubernetes Migration Gate]
+  end
+
+  Edge --> Gateway --> API
+  API --> Cache
+  API --> Search
+  API --> DB
+  Worker --> Cache
+  Worker --> DB
+  RT --> API
+
+  API --> Breaker
+  Breaker --> Retry
+  Retry --> Worker
+
+  API --> SLO
+  Worker --> SLO
+  RT --> SLO
+  SLO --> Dash
+  SLO --> Alert
+
+  SLO --> T1
+  SLO --> T2
+  SLO --> T3
+  SLO --> T4
+
+  T1 --> A1
+  T2 --> A2
+  T3 --> A1
+  T4 --> A2
+  A1 --> A3
+  A2 --> A3
+  A3 --> A4

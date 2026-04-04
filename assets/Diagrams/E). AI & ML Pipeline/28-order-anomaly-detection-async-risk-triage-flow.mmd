@@ -1,0 +1,33 @@
+flowchart TB
+  %% Diagram 28: Order Anomaly Detection Async Risk and Admin Triage Flow
+
+  OrderEvent[Order created event]
+  Enqueue[Enqueue BullMQ anomaly job]
+  Extract[Extract 6 signals\norder_frequency_z\nquantity_z\naddress_mismatch\npayment_method_age\ndevice_fingerprint_score\ncod_history_score]
+
+  SignalCheck{All signal sources available?}
+  Partial[Run partial scoring\nSet degraded-risk marker]
+
+  Score[Compute per-signal Z scores\nBuild composite risk score]
+  CodFormula[cod_history_score =\nsuccessful_cod_deliveries / total_cod_orders]
+  RiskDecision{Composite score > 2.5?}
+
+  SafePath[Proceed with normal order pipeline]
+
+  Pause[Soft-pause order]
+  Notify[Notify Admin Anomaly Dashboard]
+  Triage{Admin action}
+  Clear[Clear -> resume order]
+  Escalate[Escalate -> manual investigation queue]
+  Audit[Write immutable triage audit log]
+
+  OrderEvent --> Enqueue --> Extract --> SignalCheck
+  SignalCheck -- Yes --> Score
+  SignalCheck -- No --> Partial --> Score
+
+  Score --> CodFormula --> RiskDecision
+
+  RiskDecision -- No --> SafePath
+  RiskDecision -- Yes --> Pause --> Notify --> Triage
+  Triage -- Clear --> Clear --> Audit
+  Triage -- Escalate --> Escalate --> Audit

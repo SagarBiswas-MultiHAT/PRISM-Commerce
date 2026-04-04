@@ -1,0 +1,43 @@
+flowchart TB
+  %% Diagram 19: Payment Gateway Integration Flow
+
+  Start([Buyer Checkout]) --> Select{Select Payment Method}
+
+  Select --> BK[bKash PGW]
+  Select --> NG[Nagad PGW]
+  Select --> SSL[SSLCommerz]
+  Select --> BQR[Bangla QR]
+  Select --> RK[Rocket]
+
+  BK --> PI[Create Payment Intent]
+  NG --> PI
+  SSL --> PI
+  BQR --> PI
+  RK --> PI
+
+  PI --> Auth[Buyer Authenticates at Provider]
+  Auth --> Callback[Gateway Callback or Webhook]
+
+  Callback --> Sig{Signature Valid?}
+  Sig -- No --> Reject[Reject Callback\nLog Security Event]
+  Reject --> Support[Fraud Monitoring and Support Review]
+  Sig -- Yes --> Verify{Provider Transaction Verified?}
+
+  Verify -- No --> Decline[Provider Timeout or Decline]
+  Decline --> Failed[Mark Payment Failed\nKeep Order Unconfirmed]
+  Failed --> EmitFail[Emit PaymentFailed Event\nReturn Recovery Options]
+  Verify -- Yes --> Idem{Duplicate Callback for Same Reference?}
+  Idem -- Yes --> NoOp[Return 200 Idempotent No-Op]
+  Idem -- No --> Confirm[Mark Payment Confirmed]
+
+  Confirm --> Emit[Emit PaymentConfirmed Event]
+  Emit --> Saga[Continue Order Saga\nHold Escrow for Prepaid Orders]
+  Saga --> Notify[Notify Buyer and Vendor]
+
+  EmitFail --> RetryChoice{Retry Same Method?}
+  RetryChoice -- Yes --> PI
+  RetryChoice -- No --> Select
+
+  Emit --> Audit[Append Audit Trail + Correlation ID]
+  EmitFail --> Audit
+  NoOp --> Audit

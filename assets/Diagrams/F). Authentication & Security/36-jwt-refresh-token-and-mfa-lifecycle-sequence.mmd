@@ -1,0 +1,41 @@
+sequenceDiagram
+  %% Diagram 36: JWT, Refresh Token, and MFA Lifecycle
+
+  autonumber
+  actor U as User
+  participant A as Auth API
+  participant M as MFA Verifier
+  participant T as Token Service
+  participant S as Session Store
+
+  U->>A: POST /api/auth/login (credentials)
+  A->>A: Verify credentials
+  alt MFA required
+    A->>M: Challenge TOTP
+    M-->>A: MFA result
+    alt MFA failed
+      A-->>U: 401 Unauthorized
+    else MFA passed
+      A->>T: Issue access (15m) + refresh
+      T-->>A: Tokens
+      A->>S: Persist refresh token family
+      A-->>U: Login success
+    end
+  else MFA not required
+    A->>T: Issue access (15m) + refresh
+    T-->>A: Tokens
+    A->>S: Persist refresh token family
+    A-->>U: Login success
+  end
+
+  U->>A: Access token expires after 15m
+  U->>A: POST /api/auth/refresh (refresh token)
+  A->>S: Validate refresh family and replay status
+  A->>T: Rotate refresh token and issue new access
+  alt Refresh valid
+    T-->>A: New access + refresh
+    A->>S: Invalidate old refresh token
+    A-->>U: Rotated token pair
+  else Refresh invalid or expired
+    A-->>U: Re-authentication required
+  end

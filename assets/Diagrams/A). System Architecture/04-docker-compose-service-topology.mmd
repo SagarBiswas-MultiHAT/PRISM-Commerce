@@ -1,0 +1,107 @@
+flowchart TB
+  %% Diagram 04: Docker Compose Service Topology (Production-Grade)
+
+  subgraph APPS[Ingress and Application Services]
+    WEB[web\nNext.js Container]
+    API[api\nNestJS Container]
+    WRK[worker\nBullMQ Worker Process]
+  end
+
+  subgraph DATA[Stateful Data Services]
+    PGB[pgbouncer]
+    PGP[(postgres-primary)]
+    PGR[(postgres-replica)]
+    RED[(redis)]
+    MEI[(meilisearch)]
+  end
+
+  subgraph AI[AI Service]
+    OLL[ollama]
+  end
+
+  subgraph OBS[Observability Services]
+    PRM[prometheus]
+    GRF[grafana]
+    LOK[loki]
+    TMP[tempo]
+  end
+
+  subgraph VOL[Persistent Volumes]
+    VPG[(vol-postgres-primary)]
+    VPR[(vol-postgres-replica)]
+    VRED[(vol-redis)]
+    VMEI[(vol-meilisearch)]
+    VGRAF[(vol-grafana)]
+    VLOK[(vol-loki)]
+  end
+
+  NET[compose network: prism_internal]
+  SEC[secrets and env\n.env + Docker secrets]
+  HC[healthcheck\nweb, api, pgbouncer, postgres, redis, meili]
+  RP[restart policy\nunless-stopped]
+  BOOT[startup order\ndata -> api -> web -> worker]
+
+  WEB -->|HTTPS Internal| API
+  API -->|SQL| PGB
+  WRK -->|SQL| PGB
+  PGB -->|Write| PGP
+  PGB -->|Read| PGR
+  API <--> |Cache/Queue/PubSub| RED
+  WRK <--> |Jobs| RED
+  API <--> |Index/Search| MEI
+  API <--> |LLM Runtime| OLL
+
+  PGP -->|Streaming Replication| PGR
+
+  API -->|metrics| PRM
+  WEB -->|metrics| PRM
+  WRK -->|metrics| PRM
+  API -->|logs| LOK
+  WEB -->|logs| LOK
+  WRK -->|logs| LOK
+  API -->|traces| TMP
+  WEB -->|traces| TMP
+
+  PRM --> GRF
+  LOK --> GRF
+  TMP --> GRF
+
+  PGP --> VPG
+  PGR --> VPR
+  RED --> VRED
+  MEI --> VMEI
+  GRF --> VGRAF
+  LOK --> VLOK
+
+  NET -.attached.-> WEB
+  NET -.attached.-> API
+  NET -.attached.-> WRK
+  NET -.attached.-> PGB
+  NET -.attached.-> PGP
+  NET -.attached.-> PGR
+  NET -.attached.-> RED
+  NET -.attached.-> MEI
+  NET -.attached.-> OLL
+
+  SEC -.injected.-> WEB
+  SEC -.injected.-> API
+  SEC -.injected.-> WRK
+  SEC -.injected.-> PGB
+
+  HC -.applies to.-> WEB
+  HC -.applies to.-> API
+  HC -.applies to.-> PGB
+  HC -.applies to.-> PGP
+  HC -.applies to.-> RED
+  HC -.applies to.-> MEI
+
+  RP -.applies to.-> WEB
+  RP -.applies to.-> API
+  RP -.applies to.-> WRK
+
+  BOOT -.sequence.-> PGP
+  BOOT -.sequence.-> RED
+  BOOT -.sequence.-> MEI
+  BOOT -.sequence.-> API
+  BOOT -.sequence.-> WEB
+  BOOT -.sequence.-> WRK

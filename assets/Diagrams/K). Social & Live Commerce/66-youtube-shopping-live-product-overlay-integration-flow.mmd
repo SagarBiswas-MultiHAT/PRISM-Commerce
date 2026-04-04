@@ -1,0 +1,21 @@
+flowchart TB
+  %% Diagram 66: YouTube Shopping and Live Product Overlay Integration Flow
+
+  Setup[Vendor selects products for live/video]
+  Map[Map PRISM product IDs to YouTube shopping items]
+  MappingOK{All mappings valid?}
+
+  Publish[Publish shoppable overlays]
+  Viewers[Viewers click product overlay]
+  Route[Route click to PRISM product/cart flow]
+  Track[Record source attribution and conversion events]
+
+  Suppress[Suppress invalid overlays]
+  Repair[Prompt vendor to repair mapping]
+  Fallback[Fallback destination to vendor storefront]
+
+  Setup --> Map --> MappingOK
+  MappingOK -- Yes --> Publish --> Viewers --> Route --> Track
+  MappingOK -- No --> Suppress --> Repair --> Map
+
+  Route -->|Link integrity failed| Fallback --> Track

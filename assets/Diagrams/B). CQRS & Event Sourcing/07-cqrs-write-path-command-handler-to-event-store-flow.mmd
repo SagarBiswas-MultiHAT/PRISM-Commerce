@@ -1,0 +1,54 @@
+sequenceDiagram
+  %% Diagram 07: CQRS Write Path - Command Handler to Event Store
+
+  autonumber
+  actor U as Client
+  participant G as API Gateway
+  participant I as Idempotency Store
+  participant B as Command Bus
+  participant H as Command Handler
+  participant DB as PostgreSQL Primary
+  participant ES as Event Store
+  participant R as Redis PubSub/Queue
+  participant O as Observability
+
+  U->>G: HTTPS Command Request + idempotency key
+  G->>I: Check idempotency key
+  alt Duplicate command key
+    I-->>G: Existing command outcome
+    G-->>U: Replay-safe prior response
+  else New command key
+    G->>B: Authenticated command dispatch
+    B->>H: Execute command
+
+    H->>H: Validate authorization + business rules
+    alt Validation failed
+      H-->>B: Reject command (domain error)
+      B-->>G: 4xx response + correlation ID
+      G-->>U: Failure response
+    else Validation passed
+      H->>DB: Begin transaction + write state changes
+      alt DB write failed
+        DB-->>H: Write error
+        H-->>B: Transaction rolled back
+        H->>O: Emit technical failure log
+        B-->>G: Failure response + correlation ID
+        G-->>U: Failure response
+      else DB write succeeded
+        H->>ES: Append event (aggregate_id, type, version, payload)
+        alt Event append failed
+          ES-->>H: Append error
+          H->>DB: Rollback transaction (atomicity)
+          H->>O: Emit critical append failure log
+          H-->>B: Command failed, no state committed
+          B-->>G: Failure response + correlation ID
+          G-->>U: Failure response
+        else Event append succeeded
+          H->>R: Publish event for projectors/side effects
+          H-->>B: Command success + aggregate version
+          B-->>G: 2xx response + correlation ID
+          G-->>U: Success response
+        end
+      end
+    end
+  end

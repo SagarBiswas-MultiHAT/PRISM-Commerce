@@ -1,0 +1,117 @@
+erDiagram
+  %% Diagram 16: Engagement Tables ERD
+  %% Note: products_featured and tagged_products are reference lists (non-strict FK arrays).
+
+  VENDORS ||--o{ LIVE_STREAMS : hosts
+  VENDORS ||--o{ SHORT_FORM_VIDEOS : publishes
+  USERS ||--o{ CHAT_MESSAGES : sends
+  USERS ||--o{ CHAT_MESSAGES : receives
+  ORDERS ||--o{ CHAT_MESSAGES : context_order
+  USERS ||--o{ NOTIFICATIONS : receives
+  USERS ||--o{ AFFILIATE_TRACKING : affiliate_actor
+  PRODUCTS ||--o{ AFFILIATE_TRACKING : tracked_product
+  USERS ||--o{ REFERRAL_CODES : owns
+  VENDORS ||--o{ ACADEMY_PROGRESS : learning_progress
+  VENDORS ||--o{ POS_TRANSACTIONS : performs_sale
+  PRODUCTS ||--o{ POS_TRANSACTIONS : sold_product
+  PRODUCT_VARIANTS ||--o{ POS_TRANSACTIONS : sold_variant
+
+  LIVE_STREAMS {
+    uuid id PK
+    uuid vendor_id FK
+    string title
+    string status
+    int viewer_count
+    int duration
+    string replay_url
+    jsonb products_featured_ref
+  }
+
+  SHORT_FORM_VIDEOS {
+    uuid id PK
+    uuid vendor_id FK
+    string video_url
+    string thumbnail_url
+    jsonb tagged_products_ref
+    int view_count
+    int like_count
+    int duration
+  }
+
+  CHAT_MESSAGES {
+    uuid id PK
+    uuid sender_id FK
+    uuid receiver_id FK
+    uuid order_id FK
+    string content
+    boolean is_ai_auto_response
+    datetime read_at
+  }
+
+  NOTIFICATIONS {
+    uuid id PK
+    uuid user_id FK
+    string type
+    string channel
+    string content
+    string locale
+    boolean delivered
+    datetime read_at
+  }
+
+  AFFILIATE_TRACKING {
+    uuid id PK
+    uuid affiliate_id FK
+    uuid product_id FK
+    int click_count
+    int conversion_count
+    decimal commission_earned
+  }
+
+  REFERRAL_CODES {
+    uuid id PK
+    uuid user_id FK
+    string code
+    string type
+    int used_count
+    decimal reward_given
+  }
+
+  ACADEMY_PROGRESS {
+    uuid id PK
+    uuid vendor_id FK
+    string module_id
+    string status
+    datetime completed_at
+  }
+
+  POS_TRANSACTIONS {
+    uuid id PK
+    uuid vendor_id FK
+    uuid product_id FK
+    uuid variant_id FK
+    int quantity
+    decimal amount
+    string payment_method
+    string barcode_scanned
+  }
+
+  USERS {
+    uuid id PK
+  }
+
+  VENDORS {
+    uuid id PK
+  }
+
+  PRODUCTS {
+    uuid id PK
+  }
+
+  PRODUCT_VARIANTS {
+    uuid id PK
+  }
+
+  ORDERS {
+    uuid id PK
+  }

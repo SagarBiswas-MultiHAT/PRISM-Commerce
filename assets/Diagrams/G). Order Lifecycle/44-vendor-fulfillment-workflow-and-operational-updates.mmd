@@ -1,0 +1,30 @@
+flowchart TB
+  %% Diagram 44: Vendor Fulfillment Workflow and Operational Updates
+
+  Alert[Vendor receives new order alert]
+  Decision{Accept order?}
+
+  Reject[Reject order path]
+  RejectNotify[Notify buyer and release reserved inventory]
+  Accept[Accept order]
+  PickPack[Pick, pack, quality check]
+  Label[Generate shipping label]
+  Assign3PL[Assign logistics partner]
+  Pickup[3PL pickup]
+  PickupFail[Pickup failed or delayed]
+  Reassign[Reassign 3PL and reschedule pickup]
+  Status[Real-time status updates]
+  Realtime[WebSocket plus in-app updates]
+
+  InvUpdate[Inventory decrement per variant]
+  Signals[Trigger AI operational updates\nvelocity, ROP, opportunities]
+  Notify[Notify buyer and vendor channels]
+
+  Alert --> Decision
+  Decision -- No --> Reject --> RejectNotify
+  Decision -- Yes --> Accept --> PickPack --> Label --> Assign3PL --> Pickup
+
+  Pickup -->|Success| Status
+  Pickup -->|Failure| PickupFail --> Reassign --> Pickup
+
+  Status --> Realtime --> InvUpdate --> Signals --> Notify

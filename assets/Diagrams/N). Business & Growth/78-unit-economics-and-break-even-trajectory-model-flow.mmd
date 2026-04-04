@@ -1,0 +1,18 @@
+flowchart TB
+  %% Diagram 78: Unit Economics and Break-Even Trajectory Model Flow
+
+  Input[Monthly inputs\nrevenue, burn, CAC, LTV, gross margin]
+  Compute[Compute net position\nrevenue - cost]
+  Trend[Compute moving trajectory to break-even]
+  BE{Break-even on track for Month 16-18?}
+
+  OnTrack[Continue planned execution]
+  Report[Publish finance and investor-ready dashboard]
+
+  OffTrack[Trajectory drift detected]
+  Mitigate[Mitigation plan\nreduce burn, improve conversion, pricing adjustments]
+  Reforecast[Reforecast next milestone window]
+
+  Input --> Compute --> Trend --> BE
+  BE -- Yes --> OnTrack --> Report
+  BE -- No --> OffTrack --> Mitigate --> Reforecast --> Report

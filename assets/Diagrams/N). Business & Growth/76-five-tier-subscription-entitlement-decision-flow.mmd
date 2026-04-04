@@ -1,0 +1,27 @@
+flowchart TB
+  %% Diagram 76: Five-Tier Subscription Entitlement Decision Flow
+
+  Select[Vendor selects current plan]
+  Tier{Current tier}
+
+  Free[Free entitlements]
+  Starter[Starter entitlements]
+  Growth[Growth entitlements]
+  Pro[Pro entitlements]
+  Enterprise[Enterprise entitlements]
+
+  FeatureReq[Runtime feature request]
+  Check{Feature allowed for tier?}
+  Allow[Grant access]
+  Prompt[Show upgrade prompt]
+
+  Select --> Tier
+  Tier -- Free --> Free --> FeatureReq
+  Tier -- Starter --> Starter --> FeatureReq
+  Tier -- Growth --> Growth --> FeatureReq
+  Tier -- Pro --> Pro --> FeatureReq
+  Tier -- Enterprise --> Enterprise --> FeatureReq
+
+  FeatureReq --> Check
+  Check -- Yes --> Allow
+  Check -- No --> Prompt

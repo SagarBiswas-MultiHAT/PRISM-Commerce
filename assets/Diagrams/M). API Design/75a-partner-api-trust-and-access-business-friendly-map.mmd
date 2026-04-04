@@ -1,0 +1,18 @@
+flowchart TB
+  %% Diagram 75A: Partner API Trust and Access Business-Friendly Map
+
+  Request[Partner requests API access]
+  Approve[Platform approves allowed permissions]
+  Key[Secure API key issued and protected]
+  Use[Partner uses API for approved operations]
+  Check[System checks scope and rate limits on every call]
+
+  Good{Request compliant?}
+  Allow[Request succeeds]
+  Deny[Request blocked safely]
+  Rotate[Keys are rotated regularly]
+  Revoke[Compromised keys are revoked immediately]
+
+  Request --> Approve --> Key --> Use --> Check --> Good
+  Good -- Yes --> Allow --> Rotate --> Use
+  Good -- No --> Deny --> Revoke

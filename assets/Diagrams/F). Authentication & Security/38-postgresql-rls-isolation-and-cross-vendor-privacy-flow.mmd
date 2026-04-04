@@ -1,0 +1,29 @@
+flowchart TB
+  %% Diagram 38: PostgreSQL RLS Isolation and Cross-Vendor Privacy Flow
+
+  Req[Authenticated query request]
+  Ctx[Attach actor_id and tenant_id to DB session]
+  QueryType{Query type}
+
+  VendorRead[Vendor scoped table query]
+  BuyerRead[Buyer order history query]
+  AggregateRead[Cross-vendor analytics query]
+
+  RLS{RLS policy condition passes?}
+  OwnRows[Return tenant-scoped rows only]
+  Denied[Block cross-tenant access]
+
+  AggCheck{vendor_count >= 3 and aggregate-only fields?}
+  AggOK[Return privacy-safe aggregate analytics]
+  AggBlock[Suppress result and return policy notice]
+
+  Req --> Ctx --> QueryType
+  QueryType -- Vendor --> VendorRead --> RLS
+  QueryType -- Buyer --> BuyerRead --> RLS
+  QueryType -- Aggregate --> AggregateRead --> AggCheck
+
+  RLS -- Yes --> OwnRows
+  RLS -- No --> Denied
+
+  AggCheck -- Yes --> AggOK
+  AggCheck -- No --> AggBlock

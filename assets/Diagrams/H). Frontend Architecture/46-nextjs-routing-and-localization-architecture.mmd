@@ -1,0 +1,26 @@
+flowchart TB
+  %% Diagram 46: Next.js Routing and Localization Architecture
+
+  Req[Incoming request]
+  Router[Next.js App Router]
+  Detect[Resolve locale from URL, browser, and saved preference]
+  Locale{Locale supported?}
+
+  EN[Route group /en/...]
+  BN[Route group /bn/...]
+  Fallback[Redirect to default locale route]
+  Persist[Persist locale preference after sign-in]
+
+  RoleSeg[Role-scoped route segments]
+  BuyerExp[Buyer experience pages]
+  VendorExp[Vendor experience pages]
+  AdminExp[Admin experience pages]
+
+  Req --> Router --> Detect --> Locale
+  Locale -- en --> EN --> Persist --> RoleSeg
+  Locale -- bn --> BN --> Persist --> RoleSeg
+  Locale -- no --> Fallback --> RoleSeg
+
+  RoleSeg --> BuyerExp
+  RoleSeg --> VendorExp
+  RoleSeg --> AdminExp

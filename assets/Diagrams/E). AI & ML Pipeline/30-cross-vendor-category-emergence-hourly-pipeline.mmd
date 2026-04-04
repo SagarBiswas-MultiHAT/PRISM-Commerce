@@ -1,0 +1,25 @@
+flowchart TB
+  %% Diagram 30: Cross-Vendor Category Emergence Hourly Pipeline
+
+  Cron[Hourly CRON]
+  Read[Read order_items aggregates by category]
+  Compute[Compute category_velocity_score\nand vendor_count]
+  PrivacyGate{vendor_count >= 3?}
+
+  Publish[Publish aggregate category signal]
+  Persist[(Write category_velocity table)]
+  Cache[Redis cache TTL 1h]
+  FeatureInject[Inject as GBR feature #13\ncategory_velocity_score]
+
+  Suppress[Suppress category aggregate output\nfor privacy]
+  Fallback[Fallback to vendor-local signals only\nfor affected categories]
+
+  InternalOnly[Internal-only module\nNo public endpoint]
+
+  Cron --> Read --> Compute --> PrivacyGate
+
+  PrivacyGate -- Yes --> Publish --> Persist --> Cache --> FeatureInject
+  PrivacyGate -- No --> Suppress --> Fallback
+
+  Publish --> InternalOnly
+  Suppress --> InternalOnly

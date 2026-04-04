@@ -1,0 +1,111 @@
+erDiagram
+  %% Diagram 14: Trust and Compliance Tables ERD
+
+  ORDERS ||--o{ ESCROW_TRANSACTIONS : escrow_for
+  USERS ||--o{ ESCROW_TRANSACTIONS : buyer_side
+  VENDORS ||--o{ ESCROW_TRANSACTIONS : vendor_side
+  VENDORS ||--o{ VERIFICATION_LEVELS : kyc_tiers
+  VENDORS ||--o{ COMPLIANCE_DOCUMENTS : submits
+  USERS ||--o{ VERIFICATION_LEVELS : verifies_vendor
+  USERS ||--o{ COMPLIANCE_DOCUMENTS : verifies_document
+  ORDERS ||--o{ BUYER_PROTECTION_CLAIMS : claim_on
+  USERS ||--o{ BUYER_PROTECTION_CLAIMS : files
+  VENDORS ||--o{ BUYER_PROTECTION_CLAIMS : claimed_against
+  VENDORS ||--o{ BRAND_AUTHORIZATIONS : brand_eligibility
+  PRODUCTS ||--o{ COUNTERFEIT_REPORTS : reported_product
+  USERS ||--o{ COUNTERFEIT_REPORTS : reporter
+  VENDORS ||--o{ BANGLA_QR_CODES : qr_profiles
+  VENDORS ||--o{ VAT_RECORDS : monthly_vat
+
+  ESCROW_TRANSACTIONS {
+    uuid id PK
+    uuid order_id FK
+    uuid buyer_id FK
+    uuid vendor_id FK
+    decimal amount
+    string status
+    datetime held_at
+    datetime released_at
+  }
+
+  VERIFICATION_LEVELS {
+    uuid id PK
+    uuid vendor_id FK
+    string level
+    jsonb documents
+    string status
+    uuid verified_by FK
+    datetime verified_at
+  }
+
+  COMPLIANCE_DOCUMENTS {
+    uuid id PK
+    uuid vendor_id FK
+    string type
+    string document_url
+    boolean is_verified
+    uuid verified_by FK
+  }
+
+  BUYER_PROTECTION_CLAIMS {
+    uuid id PK
+    uuid order_id FK
+    uuid buyer_id FK
+    uuid vendor_id FK
+    string reason
+    jsonb evidence_urls
+    string status
+    string resolution
+    decimal amount_refunded
+  }
+
+  BRAND_AUTHORIZATIONS {
+    uuid id PK
+    uuid vendor_id FK
+    string brand_name
+    string authorization_doc_url
+    boolean is_verified
+  }
+
+  COUNTERFEIT_REPORTS {
+    uuid id PK
+    uuid product_id FK
+    uuid reporter_id FK
+    string evidence
+    string status
+    string action_taken
+  }
+
+  BANGLA_QR_CODES {
+    uuid id PK
+    uuid vendor_id FK
+    string qr_data
+    string payment_reference
+    decimal amount
+    string status
+  }
+
+  VAT_RECORDS {
+    uuid id PK
+    uuid vendor_id FK
+    string month
+    decimal taxable_amount
+    decimal vat_amount
+    string report_url
+  }
+
+  ORDERS {
+    uuid id PK
+  }
+
+  USERS {
+    uuid id PK
+  }
+
+  VENDORS {
+    uuid id PK
+  }
+
+  PRODUCTS {
+    uuid id PK
+  }

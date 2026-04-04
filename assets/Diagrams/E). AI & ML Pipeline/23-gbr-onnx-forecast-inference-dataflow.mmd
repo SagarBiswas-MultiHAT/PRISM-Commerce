@@ -1,0 +1,48 @@
+flowchart TB
+  %% Diagram 23: GBR ONNX Forecast Inference Dataflow
+
+  Vendor[Vendor Dashboard or API Client]
+  Endpoint[GET /api/ai/forecast/:productId]
+  CacheCheck{Redis Forecast Cache\n24h TTL Hit?}
+  ReturnCache[Return Cached Forecast]
+
+  FeatureBuilder[Build 13-Feature Vector]
+  Hist[Sales History Features\nquantity_7d/14d/30d\nrolling_mean_7d, rolling_std_7d\ntrend_slope, day_of_week]
+  Fest[Festival Features\nis_festival_week\ndays_to_next_festival\nfestival_type]
+  Wthr[Weather Features\ntemperature_avg\nprecipitation_mm]
+  Emergence[Category Feature\ncategory_velocity_score]
+  ContextCheck{Festival/Weather/Category Context Complete?}
+  ContextFallback[Use Last Valid Cached Context\nMark Confidence as Degraded]
+  ObsContext[Log Degraded Context to Observability]
+
+  ONNX[ONNX Runtime Inference\nonnxruntime-node\nTarget: <80ms]
+  RuntimeFail{Runtime Failure?}
+
+  Persist[(PostgreSQL ai_forecasts)]
+  CacheSet[Write Redis Cache\nTTL 24h]
+  Response[Return Forecast Payload\nforecast_7d, forecast_14d, forecast_30d\nconfidence, feature_importance\nmodel_version, data_quality_score]
+
+  FailSafe[Return Controlled Failure\nNo Forecast Persisted]
+  ObsRuntime[Log Runtime Error to Observability]
+  ResponseFail[Return Failure Response\nwith Retry Guidance]
+
+  Vendor --> Endpoint --> CacheCheck
+  CacheCheck -- Yes --> ReturnCache --> Response
+  CacheCheck -- No --> FeatureBuilder
+
+  FeatureBuilder --> Hist
+  FeatureBuilder --> Fest
+  FeatureBuilder --> Wthr
+  FeatureBuilder --> Emergence
+
+  Hist --> ContextCheck
+  Fest --> ContextCheck
+  Wthr --> ContextCheck
+  Emergence --> ContextCheck
+
+  ContextCheck -- Yes --> ONNX
+  ContextCheck -- No --> ContextFallback --> ObsContext --> ONNX
+
+  ONNX --> RuntimeFail
+  RuntimeFail -- No --> Persist --> CacheSet --> Response
+  RuntimeFail -- Yes --> FailSafe --> ObsRuntime --> ResponseFail

@@ -1,0 +1,53 @@
+sequenceDiagram
+  %% Diagram 08: CQRS Read Path - Query Handler to Materialized Views
+
+  autonumber
+  actor U as Client
+  participant G as API Gateway
+  participant QB as Query Bus
+  participant QH as Query Handler
+  participant C as Redis Cache
+  participant RV as Read Replica / Materialized Views
+  participant MS as Meilisearch
+  participant O as Observability
+
+  U->>G: HTTPS Query Request (e.g., GetVendorDashboardQuery)
+  G->>QB: Authenticated query dispatch
+  QB->>QH: Execute query
+
+  QH->>C: Check cache key
+  alt Cache hit
+    C-->>QH: Cached DTO
+    QH-->>QB: Return response DTO
+    QB-->>G: 200 + trace/correlation ID
+    G-->>U: Query response (low latency)
+  else Cache miss
+    alt Query requires full-text search
+      QH->>MS: Search index query
+      MS-->>QH: Ranked search docs
+      QH->>RV: Read supporting projection fields
+      RV-->>QH: Projection rows
+    else Query is analytics/history lookup
+      QH->>RV: Read projection/materialized view
+      alt Read source unavailable
+        RV-->>QH: Timeout or unavailable
+        QH->>C: Try stale snapshot fallback
+        C-->>QH: Last known response + stale marker
+        QH->>O: Emit degraded read-path telemetry
+        QH-->>QB: Return degraded response DTO
+        QB-->>G: 200 + stale-response marker
+        G-->>U: Query response (degraded)
+      else Read source available
+        RV-->>QH: Projection rows
+      end
+    end
+
+    QH->>QH: Compose response DTO (no writes)
+    QH->>C: Refresh cache with TTL
+    QH-->>QB: Return response DTO
+    QB-->>G: 200 + trace/correlation ID
+    G-->>U: Query response
+  end
+
+  Note over QH,C: Read path is side-effect free on command model
+  Note over C: TTL policy: forecast 24h, category 1h, weather 6h, opportunity 15m

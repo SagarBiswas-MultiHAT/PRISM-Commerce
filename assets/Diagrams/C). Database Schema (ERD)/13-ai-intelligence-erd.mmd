@@ -1,0 +1,118 @@
+erDiagram
+  %% Diagram 13: AI and Intelligence Tables ERD
+  %% Note: festival/weather links are feature-source references (non-strict FK).
+
+  PRODUCTS ||--o{ AI_FORECASTS : forecast_target
+  AI_FORECASTS ||--o{ FORECAST_ACCURACY : measured_by
+  CATEGORIES ||--o{ CATEGORY_VELOCITY : aggregated_for
+  PRODUCTS ||--o{ SYNTHETIC_SALES_SEED : cold_start_seed
+  VENDORS ||--o{ OPPORTUNITY_ALERTS : receives
+  PRODUCTS ||--o{ OPPORTUNITY_ALERTS : flagged_product
+  VENDORS ||--o{ BUNDLE_SUGGESTIONS : gets_bundle_set
+  USERS ||--o{ SAHAYAK_CONVERSATIONS : owns_conversation
+  FESTIVAL_CALENDAR }o--o{ AI_FORECASTS : feature_source_reference
+  WEATHER_CACHE }o--o{ AI_FORECASTS : feature_source_reference
+
+  AI_FORECASTS {
+    uuid id PK
+    uuid product_id FK
+    decimal forecast_7d
+    decimal forecast_14d
+    decimal forecast_30d
+    decimal confidence
+    jsonb feature_importance
+    string model_version
+    decimal data_quality_score
+  }
+
+  FORECAST_ACCURACY {
+    uuid id PK
+    uuid forecast_id FK
+    decimal actual_7d
+    decimal forecast_error
+    decimal rolling_avg_error
+    datetime computed_at
+  }
+
+  FESTIVAL_CALENDAR {
+    uuid id PK
+    string name_en
+    string name_bn
+    date festival_date
+    int surge_window_days
+    jsonb demand_multiplier
+    boolean is_active
+  }
+
+  CATEGORY_VELOCITY {
+    uuid id PK
+    uuid category_id FK
+    decimal velocity_score
+    int vendor_count
+    datetime computed_at
+  }
+
+  WEATHER_CACHE {
+    uuid id PK
+    string location
+    decimal temperature_avg
+    decimal precipitation_mm
+    boolean is_monsoon
+    jsonb forecast_json
+    datetime cached_at
+  }
+
+  SYNTHETIC_SALES_SEED {
+    uuid id PK
+    uuid product_id FK
+    int units_sold
+    date period_start
+    date period_end
+    boolean is_deprecated
+  }
+
+  OPPORTUNITY_ALERTS {
+    uuid id PK
+    uuid vendor_id FK
+    uuid product_id FK
+    string alert_type
+    string severity
+    string recommendation
+    boolean is_actioned
+    datetime created_at
+  }
+
+  BUNDLE_SUGGESTIONS {
+    uuid id PK
+    uuid vendor_id FK
+    jsonb product_ids_ref
+    decimal suggested_price
+    decimal discount_pct
+    decimal confidence
+    int co_purchase_count
+  }
+
+  SAHAYAK_CONVERSATIONS {
+    uuid id PK
+    uuid user_id FK
+    jsonb messages
+    jsonb tool_calls
+    int tokens_used
+    datetime created_at
+  }
+
+  PRODUCTS {
+    uuid id PK
+  }
+
+  CATEGORIES {
+    uuid id PK
+  }
+
+  VENDORS {
+    uuid id PK
+  }
+
+  USERS {
+    uuid id PK
+  }

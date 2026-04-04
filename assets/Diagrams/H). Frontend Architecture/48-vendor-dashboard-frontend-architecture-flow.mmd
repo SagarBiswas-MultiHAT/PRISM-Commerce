@@ -1,0 +1,33 @@
+flowchart TB
+  %% Diagram 48: Vendor Dashboard Frontend Architecture Flow
+
+  Dashboard[Vendor Dashboard Shell]
+  KPI[KPI and forecast widgets]
+  Opp[Opportunity panel]
+  Catalog[Product and stock management]
+  Sahayak[Sahayak panel]
+  Live[Live/Reels controls]
+  POS[POS entry]
+
+  ReadAPI[Forecast/opportunity read APIs]
+  ActionIntent[Coupon/pricing/inventory action intent]
+  Confirm{User confirms state-changing action?}
+  ActionAPI[Execute mutation APIs]
+  Abort[Abort mutation]
+  ActionFail[Mutation failed]
+  Recover[Show rollback-safe UI and retry option]
+  Refresh[Refresh dashboard state]
+
+  Dashboard --> KPI --> ReadAPI
+  Dashboard --> Opp --> ReadAPI
+  Dashboard --> Catalog --> ActionIntent
+  Dashboard --> Sahayak --> ActionIntent
+  Dashboard --> Live
+  Dashboard --> POS
+
+  ActionIntent --> Confirm
+  Confirm -- Yes --> ActionAPI
+  Confirm -- No --> Abort
+
+  ActionAPI -->|Success| Refresh
+  ActionAPI -->|Failure| ActionFail --> Recover --> ActionIntent

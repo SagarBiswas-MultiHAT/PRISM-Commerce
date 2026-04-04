@@ -1,0 +1,49 @@
+sequenceDiagram
+  %% Diagram 42: Order Creation to Confirmation Saga Sequence
+
+  autonumber
+  actor B as Buyer
+  participant API as Order API
+  participant Idem as Idempotency Store
+  participant Inv as Inventory Service
+  participant Pay as Payment Gateway
+  participant Esc as Escrow Service
+  participant Ev as Event Bus
+  participant Noti as Notification Fanout
+
+  B->>API: POST /api/orders
+  API->>Idem: Check request idempotency key
+  alt Duplicate key
+    Idem-->>API: Existing order outcome
+    API-->>B: Replay-safe prior response
+  else New key
+    API->>Inv: Validate and reserve inventory
+    alt Inventory unavailable
+      Inv-->>API: Reservation failed
+      API->>Ev: Emit order-rejected event
+      API-->>B: Reject order
+    else Inventory reserved
+      API->>Pay: Initiate payment
+      Pay-->>API: Webhook callback
+      API->>API: Verify callback signature and transaction status
+      alt Payment verification failed
+        API->>Inv: Compensate release inventory
+        API->>Ev: Emit payment-failed and order-failed
+        API-->>B: Payment failed with retry options
+      else Payment verified
+        API->>Esc: Hold escrow for prepaid path
+        alt Escrow hold failed
+          Esc-->>API: Hold rejected
+          API->>Pay: Trigger refund compensation
+          API->>Inv: Release inventory reservation
+          API->>Ev: Emit order-failed-compensated
+          API-->>B: Order failed and compensated
+        else Escrow held
+          Esc-->>API: Hold confirmed
+          API->>Ev: Emit order-created and payment-confirmed
+          Ev->>Noti: Fanout buyer and vendor updates
+          API-->>B: Order confirmed
+        end
+      end
+    end
+  end

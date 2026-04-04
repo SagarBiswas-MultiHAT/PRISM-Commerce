@@ -1,0 +1,146 @@
+flowchart LR
+  %% Diagram 18: Full Cross-Domain Database Relationship Map
+  %% Includes all tables explicitly documented in V4 Section 14.
+
+  subgraph CORE[Core Commerce]
+    users
+    vendors
+    products
+    product_variants
+    categories
+    orders
+    order_items
+    coupons
+    reviews
+    wishlists
+  end
+
+  subgraph AI[AI and Intelligence]
+    ai_forecasts
+    forecast_accuracy
+    festival_calendar
+    category_velocity
+    weather_cache
+    synthetic_sales_seed
+    opportunity_alerts
+    bundle_suggestions
+    sahayak_conversations
+  end
+
+  subgraph TRUST[Trust and Compliance]
+    escrow_transactions
+    verification_levels
+    compliance_documents
+    buyer_protection_claims
+    brand_authorizations
+    counterfeit_reports
+    bangla_qr_codes
+    vat_records
+  end
+
+  subgraph FIN[Financial]
+    wallets
+    wallet_transactions
+    vendor_disbursements
+    subscription_billing
+    commission_records
+    flash_sale_slots
+  end
+
+  subgraph ENG[Engagement]
+    live_streams
+    short_form_videos
+    chat_messages
+    notifications
+    affiliate_tracking
+    referral_codes
+    academy_progress
+    pos_transactions
+  end
+
+  subgraph SYS[System]
+    audit_logs
+    event_store
+    api_keys
+    content_moderation_queue
+  end
+
+  PRIV[Privacy Guard\nCross-vendor aggregates require min 3 vendors]
+  IMMUT[Immutable History\nevent_store and audit_logs are append-only]
+
+  users --> vendors
+  users --> orders
+  vendors --> products
+  categories --> categories
+  categories --> products
+  products --> product_variants
+  orders --> order_items
+  products --> order_items
+  product_variants --> order_items
+  vendors --> coupons
+  users --> reviews
+  products --> reviews
+  orders --> reviews
+  users --> wishlists
+  products --> wishlists
+
+  products --> ai_forecasts
+  ai_forecasts --> forecast_accuracy
+  categories --> category_velocity
+  category_velocity --> PRIV
+  products --> synthetic_sales_seed
+  vendors --> opportunity_alerts
+  products --> opportunity_alerts
+  vendors --> bundle_suggestions
+  users --> sahayak_conversations
+  festival_calendar --> ai_forecasts
+  weather_cache --> ai_forecasts
+
+  orders --> escrow_transactions
+  users --> escrow_transactions
+  vendors --> escrow_transactions
+  vendors --> verification_levels
+  vendors --> compliance_documents
+  orders --> buyer_protection_claims
+  users --> buyer_protection_claims
+  vendors --> buyer_protection_claims
+  vendors --> brand_authorizations
+  products --> counterfeit_reports
+  users --> counterfeit_reports
+  vendors --> bangla_qr_codes
+  vendors --> vat_records
+
+  users --> wallets
+  wallets --> wallet_transactions
+  vendors --> vendor_disbursements
+  vendors --> subscription_billing
+  orders --> commission_records
+  vendors --> commission_records
+  vendors --> flash_sale_slots
+  products --> flash_sale_slots
+
+  vendors --> live_streams
+  vendors --> short_form_videos
+  users --> chat_messages
+  orders --> chat_messages
+  users --> notifications
+  users --> affiliate_tracking
+  products --> affiliate_tracking
+  users --> referral_codes
+  vendors --> academy_progress
+  vendors --> pos_transactions
+  products --> pos_transactions
+  product_variants --> pos_transactions
+
+  users --> audit_logs
+  vendors --> api_keys
+  users --> content_moderation_queue
+  event_store --> orders
+  event_store --> escrow_transactions
+  event_store --> commission_records
+  audit_logs -.tracks.-> orders
+  audit_logs -.tracks.-> escrow_transactions
+  audit_logs -.tracks.-> vendor_disbursements
+
+  event_store --> IMMUT
+  audit_logs --> IMMUT

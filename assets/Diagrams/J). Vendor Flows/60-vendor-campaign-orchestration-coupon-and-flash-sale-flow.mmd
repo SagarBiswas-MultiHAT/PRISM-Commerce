@@ -1,0 +1,29 @@
+flowchart TB
+  %% Diagram 60: Vendor Campaign Orchestration (Coupon and Flash Sale)
+
+  Goal[Vendor chooses objective\nclear stock/boost conversion/festival push]
+  Input[Select products and campaign window]
+  Optimize[POST /api/ai/coupon-optimize]
+  Suggest[Suggested discount + expected movement]
+
+  PolicyGate{Discount within policy bounds?}
+  Clamp[Clamp or reject out-of-policy discount]
+
+  FlashCheck{Flash sale slot requested?}
+  StockGate{Stock sufficient for slot cap?}
+  Adjust[Adjust slot cap or reject schedule]
+
+  Confirm[Vendor confirms campaign]
+  Publish[Publish coupon/flash sale]
+  Live[Campaign live with countdown]
+
+  Goal --> Input --> Optimize --> Suggest --> PolicyGate
+  PolicyGate -- No --> Clamp --> Suggest
+  PolicyGate -- Yes --> FlashCheck
+
+  FlashCheck -- No --> Confirm
+  FlashCheck -- Yes --> StockGate
+  StockGate -- No --> Adjust --> Input
+  StockGate -- Yes --> Confirm
+
+  Confirm --> Publish --> Live

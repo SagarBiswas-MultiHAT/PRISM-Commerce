@@ -1,0 +1,15 @@
+flowchart TB
+  %% Diagram 56A: Realtime and Notifications Business-Friendly Journey
+
+  Start[Customer activity happens]
+  Live[Platform sends live updates for order status, chat, and live events]
+  Notify[System chooses the best notification channel]
+  Delivered{Primary message delivered?}
+
+  Fallback[Automatically switch to a backup channel]
+  Seen[User receives the update and can act quickly]
+  Trust[Delivery and read status are tracked for reliability]
+
+  Start --> Live --> Notify --> Delivered
+  Delivered -- Yes --> Seen --> Trust
+  Delivered -- No --> Fallback --> Seen

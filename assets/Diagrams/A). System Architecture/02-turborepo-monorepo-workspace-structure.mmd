@@ -1,0 +1,96 @@
+flowchart TB
+  %% Diagram 02: Turborepo Monorepo Workspace Structure (Production-Grade)
+
+  Root[PRISM-Commerce Monorepo]
+
+  subgraph ROOTCFG[Root Configuration]
+    TurboCfg[turbo.json]
+    PnpmWs[pnpm-workspace.yaml]
+    TsBase[tsconfig.base.json]
+    EnvSchema[Environment Schema]
+  end
+
+  subgraph APPS[apps]
+    Web[web\nNext.js 15 + next-intl]
+    Api[api\nNestJS 10 + CQRS]
+  end
+
+  subgraph PKG[packages]
+    UI[ui\nShared UI + Design Tokens]
+    Types[types\nShared DTOs + Domain Types]
+    SDK[sdk\nTyped API Client]
+    Config[config\nESLint + TypeScript + Env Contracts]
+  end
+
+  subgraph INFRA[infra]
+    Docker[docker\nCompose + Dockerfiles]
+    Mon[monitoring\nPrometheus/Grafana/Loki/Tempo]
+    Scripts[scripts\nMigrate/Backup/Deploy]
+  end
+
+  subgraph DOCS[docs]
+    Diag[diagrams\nMermaid Sources + Index]
+  end
+
+  subgraph PIPE[Pipelines]
+    Lint[lint]
+    Typecheck[typecheck]
+    Test[test]
+    Build[build]
+    Deploy[deploy]
+  end
+
+  CI[GitHub Actions]
+  Cache[Turbo Cache\nLocal + Remote]
+  SDKGen[OpenAPI -> SDK Generation]
+  Boundary[Workspace Boundary\nWeb consumes API contracts through packages/sdk]
+
+  Root --> ROOTCFG
+  Root --> APPS
+  Root --> PKG
+  Root --> INFRA
+  Root --> DOCS
+
+  Web --> UI
+  Web --> Types
+  Web --> SDK
+  Web --> Config
+
+  Api --> Types
+  Api --> Config
+  Api --> SDKGen
+
+  SDKGen --> SDK
+  SDK --> Types
+
+  CI --> Lint
+  Lint --> Typecheck
+  Typecheck --> Test
+  Test --> Build
+  Build --> Deploy
+
+  Lint --> Web
+  Lint --> Api
+  Typecheck --> Web
+  Typecheck --> Api
+  Test --> Api
+  Build --> Web
+  Build --> Api
+  Build --> UI
+  Build --> SDK
+
+  Lint --> Cache
+  Typecheck --> Cache
+  Test --> Cache
+  Build --> Cache
+
+  Docker --> Web
+  Docker --> Api
+  Mon --> Api
+  Scripts --> Api
+  Scripts --> Docker
+  Diag --> DOCS
+
+  Boundary -.enforced by dependency rules.-> Web
+  Boundary -.enforced by dependency rules.-> Api
+  Boundary -.enforced by dependency rules.-> SDK

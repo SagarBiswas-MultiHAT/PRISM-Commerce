@@ -1,0 +1,28 @@
+flowchart TB
+  %% Diagram 49: Admin Console Frontend Architecture Flow
+
+  AdminHome[Admin Console]
+  KYC[KYC and compliance review]
+  Anomaly[Anomaly triage dashboard]
+  Finance[Escrow and disbursement operations]
+  Moderation[Content moderation queue]
+  Analytics[Platform analytics]
+
+  Guard[Role-restricted action controls]
+  Sensitive{Finance or compliance sensitive action?}
+  DualApproval{Second approver confirmed?}
+  Execute[Execute admin action]
+  Audit[(Append admin audit log)]
+  Deny[Unauthorized UI denial state]
+
+  AdminHome --> KYC --> Guard --> Sensitive
+  AdminHome --> Anomaly --> Guard --> Sensitive
+  AdminHome --> Finance --> Guard --> Sensitive
+  AdminHome --> Moderation --> Guard --> Sensitive
+  AdminHome --> Analytics --> Guard --> Sensitive
+
+  Guard -->|not allowed| Deny
+  Sensitive -- No --> Execute --> Audit
+  Sensitive -- Yes --> DualApproval
+  DualApproval -- Yes --> Execute --> Audit
+  DualApproval -- No --> Deny

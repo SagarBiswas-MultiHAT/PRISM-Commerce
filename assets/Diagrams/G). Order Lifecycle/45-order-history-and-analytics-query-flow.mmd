@@ -1,0 +1,37 @@
+flowchart LR
+  %% Diagram 45: Order History and Analytics Query Flow
+
+  Buyer[Buyer UI]
+  Vendor[Vendor UI]
+  Admin[Admin UI]
+
+  Query[Query API Layer\nRead-only endpoints]
+  Authz[Role and scope authorization]
+  Cache[(Redis/Materialized Cache)]
+  Read[(PostgreSQL Read Replica)]
+  Search[(Search/Denormalized Views)]
+  Assemble[Assemble response DTO]
+  Trace[Attach trace id and latency markers]
+  NoWrite[No write-model mutation allowed]
+
+  CacheHit{Cache hit?}
+  SlowPath[Fallback read path\nwith higher latency]
+  SourceOK{Read source available?}
+  Stale[Serve stale snapshot with degraded flag]
+
+  Buyer --> Query
+  Vendor --> Query
+  Admin --> Query
+
+  Query --> Authz --> CacheHit
+  CacheHit -- Yes --> Cache --> Assemble
+  CacheHit -- No --> SourceOK
+  SourceOK -- Yes --> Read --> Search --> SlowPath --> Assemble
+  SourceOK -- No --> Stale --> Assemble
+
+  Assemble --> Trace
+  Trace --> Buyer
+  Trace --> Vendor
+  Trace --> Admin
+
+  Query -.enforces.-> NoWrite

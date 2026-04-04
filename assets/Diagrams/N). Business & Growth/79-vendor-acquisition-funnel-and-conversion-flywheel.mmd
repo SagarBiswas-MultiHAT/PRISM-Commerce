@@ -1,0 +1,20 @@
+flowchart LR
+  %% Diagram 79: Vendor Acquisition Funnel and Conversion Flywheel
+
+  Awareness[Awareness\nfield sales + Facebook groups + referrals + academy content]
+  Lead[Qualified lead]
+  Demo[Product demo]
+  Onboard[Onboarded vendor]
+  Active[Active revenue-generating vendor]
+  Refer[Referral to new vendors]
+
+  Drop{Funnel drop-off?}
+  Recover[Targeted intervention\nfollow-up, incentives, training]
+
+  Awareness --> Lead --> Demo --> Onboard --> Active --> Refer --> Awareness
+
+  Lead --> Drop
+  Demo --> Drop
+  Onboard --> Drop
+  Drop -- Yes --> Recover --> Lead
+  Drop -- No --> Active

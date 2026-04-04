@@ -1,0 +1,36 @@
+flowchart TB
+  %% Diagram 75: API Key Lifecycle and Partner Access Control Flow
+
+  Request[Vendor/admin requests API key]
+  Approve{Scope request approved?}
+  Generate[Generate scoped key]
+  Hash[(Store key hash + permissions + rate-limit policy in api_keys)]
+  Deliver[Deliver key once]
+
+  Runtime[Partner calls API with key]
+  Validate[Validate key hash + status]
+  Active{Key active and not revoked?}
+  Scope{Requested action within scope?}
+  Rate{Within rate limit?}
+
+  Allow[Allow API operation]
+  Deny[Deny request]
+
+  Rotate[Rotate key]
+  Revoke[Revoke key on compromise]
+  Emergency[Emergency revoke and notify owner]
+
+  Request --> Approve
+  Approve -- No --> Deny
+  Approve -- Yes --> Generate --> Hash --> Deliver --> Runtime
+
+  Runtime --> Validate --> Active
+  Active -- No --> Deny
+  Active -- Yes --> Scope
+  Scope -- No --> Deny
+  Scope -- Yes --> Rate
+  Rate -- No --> Deny
+  Rate -- Yes --> Allow
+
+  Allow --> Rotate --> Runtime
+  Validate -->|Compromise signal| Revoke --> Emergency --> Deny

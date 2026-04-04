@@ -1,0 +1,36 @@
+flowchart TB
+  %% Diagram 68: CI/CD Build-Test-Deploy Pipeline Flow
+
+  subgraph CTRL[Control Plane - CI/CD]
+    Push[Source change trigger\nCommit push or pull request]
+    CI[Pipeline orchestrator]
+    Lint[Lint checks]
+    Typecheck[Type checks]
+    Test[Unit and integration tests]
+    Build[Build artifacts and container images]
+    Gate{All quality gates passed?}
+    Deploy[Deploy to target environment]
+    Smoke[Post-deploy smoke and health checks]
+    Healthy{Deployment healthy?}
+  end
+
+  subgraph RUN[Runtime Plane]
+    Runtime[web/api/worker runtime services]
+    Prev[Previous stable release]
+  end
+
+  Block[Block deployment and report failure]
+  Rollback[Rollback to previous stable release]
+  Done[Release successful]
+
+  Push --> CI --> Lint --> Typecheck --> Test --> Build --> Gate
+  Gate -- No --> Block
+  Gate -- Yes --> Deploy --> Smoke --> Healthy
+
+  Healthy -- Yes --> Done --> Runtime
+  Healthy -- No --> Rollback --> Prev --> Runtime
+
+  classDef ctrl fill:#eaf3ff,stroke:#2a4b8d,stroke-width:1px;
+  classDef run fill:#eaf8ea,stroke:#1b6b2f,stroke-width:1px;
+  class Push,CI,Lint,Typecheck,Test,Build,Gate,Deploy,Smoke,Healthy ctrl;
+  class Runtime,Prev run;

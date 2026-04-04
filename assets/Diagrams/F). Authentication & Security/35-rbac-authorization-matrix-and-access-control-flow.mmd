@@ -1,0 +1,33 @@
+flowchart TB
+  %% Diagram 35: RBAC Authorization Matrix and Access Control Flow
+
+  User[User signs in]
+  Token[JWT with role and permissions]
+  Request[Protected API request]
+  Route[Endpoint requires role scope]
+  Guard[Roles guard @Roles]
+  Check{Role and scope allowed?}
+
+  Allow[Allow handler execution]
+  Deny[Return 403 forbidden]
+  DomainCheck{Resource ownership or domain rule passes?}
+
+  VendorOK[Vendor can manage own products]
+  FinanceOK[Finance admin can release escrow and process disbursement]
+  ModOK[Content mod or super admin can moderate content]
+  SuperAdmin[Super admin can access all admin paths]
+
+  Audit[(Append immutable audit log)]
+  Matrix[Role set\nSuper Admin, Vendor, Buyer, Support, Delivery, Affiliate, Finance Admin, Content Mod]
+
+  User --> Token --> Request --> Route --> Guard --> Check
+  Check -- No --> Deny --> Audit
+  Check -- Yes --> DomainCheck
+  DomainCheck -- No --> Deny
+  DomainCheck -- Yes --> Allow --> Audit
+
+  Allow --> VendorOK
+  Allow --> FinanceOK
+  Allow --> ModOK
+  Allow --> SuperAdmin
+  Matrix -.applies to.-> Guard

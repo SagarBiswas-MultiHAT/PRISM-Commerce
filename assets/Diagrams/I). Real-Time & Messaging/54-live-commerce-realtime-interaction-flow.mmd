@@ -1,0 +1,37 @@
+sequenceDiagram
+  %% Diagram 54: Live Commerce Realtime Interaction Flow
+
+  autonumber
+  actor V as Vendor
+  actor B as Buyer
+  participant API as Live API
+  participant LK as Live Streaming Layer
+  participant Meta as Session Metadata Store
+  participant Chat as Realtime Chat
+  participant Order as Cart and Order Service
+
+  V->>API: Start live session
+  API->>LK: Create stream room and access policy
+  API->>Meta: Save session status=live viewer_count=0
+  LK-->>V: Publish stream
+
+  B->>API: Join live session
+  API->>LK: Issue viewer token
+  API->>Meta: Increment viewer_count and presence
+  LK-->>B: Stream subscribed
+
+  B->>Chat: Send message and reaction
+  Chat-->>V: Realtime interaction updates
+
+  V->>LK: Pin product overlay
+  LK-->>B: Shoppable overlay update
+
+  B->>Order: Add to cart or quick checkout from overlay
+  Order-->>B: Cart or order updated
+  Order->>Meta: Update conversion metrics for session
+
+  alt Stream disruption
+    B->>LK: Reconnect with backoff
+    LK-->>B: Resume session continuity
+    API->>Meta: Restore viewer presence
+  end

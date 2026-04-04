@@ -1,0 +1,26 @@
+flowchart TB
+  %% Diagram 71: Backup, Restore, and Disaster Recovery Flow
+
+  Schedule[Scheduled backup job]
+  Create[Create encrypted backup\nPostgreSQL + event store snapshots]
+  Verify[Integrity verification]
+  Valid{Backup valid?}
+
+  Store[Store backup in retention chain]
+  Catalog[Update immutable backup catalog and retention policy]
+  Drill[Periodic restore rehearsal]
+  Restore[Restore to isolated recovery environment]
+  Validate[Recovery validation\nDB consistency + event replay smoke checks]
+  Measure[Measure RTO/RPO]
+  Meets{RTO/RPO targets met?}
+
+  Fallback[Fallback to previous valid backup chain]
+  Incident[Open DR incident and escalate]
+  Improve[Update DR runbook and controls]
+
+  Schedule --> Create --> Verify --> Valid
+  Valid -- Yes --> Store --> Catalog --> Drill --> Restore --> Validate --> Measure --> Meets
+  Valid -- No --> Fallback --> Incident
+
+  Meets -- Yes --> Improve
+  Meets -- No --> Incident --> Improve

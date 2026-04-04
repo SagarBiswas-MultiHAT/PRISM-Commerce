@@ -1,0 +1,26 @@
+flowchart TB
+  %% Diagram 59: Vendor Catalog Publish and Moderation Pipeline
+
+  Submit[Vendor submits product listing]
+  Validate[Validate required fields\nimages/video/brand claims]
+  PolicyScan[Policy and counterfeit signal scan]
+  Flagged{Flagged for moderation?}
+
+  AutoPublish[Auto-publish listing]
+  Queue[content_moderation_queue enqueue]
+  Review[Moderator review]
+  Decision{Approved by moderation?}
+
+  Publish[Publish to catalog]
+  Index[Update Meilisearch + semantic index]
+  Reject[Reject listing with reason]
+  FixLoop[Vendor correction and resubmission]
+  Escalate[Escalate to compliance takedown path]
+
+  Submit --> Validate --> PolicyScan --> Flagged
+  Flagged -- No --> AutoPublish --> Index
+  Flagged -- Yes --> Queue --> Review --> Decision
+
+  Decision -- Yes --> Publish --> Index
+  Decision -- No --> Reject --> FixLoop --> Submit
+  Review -->|Severe counterfeit risk| Escalate

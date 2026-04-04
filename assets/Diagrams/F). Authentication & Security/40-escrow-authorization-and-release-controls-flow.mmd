@@ -1,0 +1,38 @@
+flowchart TB
+  %% Diagram 40: Escrow Authorization and Release Controls Flow
+
+  Start[Escrow in held state]
+  ReleaseSeen{Release already processed?}
+  AutoCheck{Delivery confirmed + 48h elapsed?}
+  AutoRelease[Auto-release escrow]
+
+  ManualReq[Manual release request]
+  RoleCheck{Requester is Finance Admin?}
+  PolicyCheck{Policy allows release now?}
+  DualGate{Sensitive case needs dual approval?}
+  DualApproved{Second approver confirmed?}
+  Approved[Manual release approved]
+  Blocked[Release blocked + escalation]
+
+  Dispute{Active dispute?}
+  Freeze[Freeze funds until resolution]
+  Audit[(Append immutable audit log)]
+  NoOp[Return idempotent no-op]
+
+  Start --> ReleaseSeen
+  ReleaseSeen -- Yes --> NoOp --> Audit
+  ReleaseSeen -- No --> Dispute
+  Dispute -- Yes --> Freeze --> Audit
+  Dispute -- No --> AutoCheck
+
+  AutoCheck -- Yes --> AutoRelease --> Audit
+  AutoCheck -- No --> ManualReq --> RoleCheck
+
+  RoleCheck -- No --> Blocked --> Audit
+  RoleCheck -- Yes --> PolicyCheck
+  PolicyCheck -- No --> Blocked
+  PolicyCheck -- Yes --> DualGate
+  DualGate -- No --> Approved --> Audit
+  DualGate -- Yes --> DualApproved
+  DualApproved -- Yes --> Approved --> Audit
+  DualApproved -- No --> Blocked --> Audit

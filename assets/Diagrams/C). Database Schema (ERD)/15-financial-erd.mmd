@@ -1,0 +1,84 @@
+erDiagram
+  %% Diagram 15: Financial Tables ERD
+
+  USERS ||--o{ WALLETS : owns
+  WALLETS ||--o{ WALLET_TRANSACTIONS : ledger_entries
+  VENDORS ||--o{ VENDOR_DISBURSEMENTS : payout_history
+  VENDORS ||--o{ SUBSCRIPTION_BILLING : billing_plan
+  ORDERS ||--o{ COMMISSION_RECORDS : commission_for_order
+  VENDORS ||--o{ COMMISSION_RECORDS : commission_vendor
+  VENDORS ||--o{ FLASH_SALE_SLOTS : schedules
+  PRODUCTS ||--o{ FLASH_SALE_SLOTS : promoted_product
+
+  WALLETS {
+    uuid id PK
+    uuid user_id FK
+    decimal balance
+    string currency
+    boolean is_active
+  }
+
+  WALLET_TRANSACTIONS {
+    uuid id PK
+    uuid wallet_id FK
+    string type
+    decimal amount
+    string source
+    string reference_id
+    datetime created_at
+  }
+
+  VENDOR_DISBURSEMENTS {
+    uuid id PK
+    uuid vendor_id FK
+    decimal amount
+    string method
+    string status
+    datetime processed_at
+  }
+
+  SUBSCRIPTION_BILLING {
+    uuid id PK
+    uuid vendor_id FK
+    string tier
+    decimal amount
+    string billing_cycle
+    date next_billing_date
+    string payment_method
+  }
+
+  COMMISSION_RECORDS {
+    uuid id PK
+    uuid order_id FK
+    uuid vendor_id FK
+    decimal gmv
+    decimal commission_rate
+    decimal commission_amount
+  }
+
+  FLASH_SALE_SLOTS {
+    uuid id PK
+    uuid vendor_id FK
+    uuid product_id FK
+    decimal sale_price
+    int stock_limit
+    datetime start_time
+    datetime end_time
+    int units_sold
+  }
+
+  USERS {
+    uuid id PK
+  }
+
+  VENDORS {
+    uuid id PK
+  }
+
+  ORDERS {
+    uuid id PK
+  }
+
+  PRODUCTS {
+    uuid id PK
+  }

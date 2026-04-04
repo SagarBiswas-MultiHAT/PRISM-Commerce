@@ -1,0 +1,30 @@
+flowchart TB
+  %% Diagram 25: Smart Reorder Point Calculation and Alert Routing
+
+  Trigger[GET /api/ai/reorder/:productId]
+  Inputs[Collect Inputs\nAvg Daily Demand from forecast\nLearned Lead Time\nDemand StdDev\nDays to Festival\nWeather Regime]
+
+  Formula1[ROP equals Avg Daily Demand x Lead Time plus Safety Stock]
+  Formula2[Safety Stock equals Z 1.65 x StdDev x sqrt of Lead Time]
+  Formula3[Apply Multipliers\nfestival if days_to_festival < 14\nweather if monsoon-sensitive category]
+
+  Compute[Compute reorder_point\nreorder_quantity\nurgency_flag]
+  StockCheck{stock_on_hand <= reorder_point?}
+
+  AlertYes[Create Context-Aware Alert\nWhatsApp + In-App]
+  PersistAlert[(Persist Alert and Notification Intent)]
+  ActionYes[Recommend Immediate Restock\nVendor Dashboard CTA]
+
+  NoAlert[Return ROP payload only\nNo urgent action]
+
+  LeadTimeCheck{Lead-time history available?}
+  LeadTimeFallback[Use default lead-time policy\nMark lower confidence]
+
+  Trigger --> Inputs --> LeadTimeCheck
+  LeadTimeCheck -- Yes --> Formula1
+  LeadTimeCheck -- No --> LeadTimeFallback --> Formula1
+
+  Formula1 --> Formula2 --> Formula3 --> Compute --> StockCheck
+
+  StockCheck -- Yes --> AlertYes --> PersistAlert --> ActionYes
+  StockCheck -- No --> NoAlert

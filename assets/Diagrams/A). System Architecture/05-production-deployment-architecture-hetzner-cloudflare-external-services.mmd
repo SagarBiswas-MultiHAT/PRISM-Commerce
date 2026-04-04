@@ -1,0 +1,97 @@
+flowchart TB
+  %% Diagram 05: Production Deployment Architecture (Hetzner + Cloudflare + External Services)
+
+  Users[Buyers, Vendors, Admins\nWeb + Mobile Clients]
+
+  subgraph EDGE[Cloudflare Edge]
+    DNS[DNS]
+    CDN[CDN Caching]
+    WAF[WAF + DDoS Shield]
+    TLS[TLS Termination + Bot Protection]
+  end
+
+  subgraph HETZNER[Hetzner Production Runtime]
+    subgraph APPNODE[App Node]
+      LB[Ingress/API Gateway]
+      WEB[Next.js Web Service]
+      API[NestJS API Service]
+      WRK[BullMQ Workers]
+      OLL[Ollama LLM Runtime]
+    end
+
+    subgraph DATANODE[Data Node]
+      PGB[PgBouncer]
+      PGP[(PostgreSQL Primary)]
+      PGR[(PostgreSQL Read Replica)]
+      RED[(Redis)]
+      MEI[(Meilisearch)]
+    end
+
+    subgraph OBS[Observability]
+      PRM[Prometheus]
+      GRF[Grafana]
+      LOK[Loki]
+      TMP[Tempo]
+      SEN[Sentry Agent]
+    end
+  end
+
+  subgraph EXT[External Services]
+    PAY[Payment Gateways\nbKash, Nagad, SSLCommerz, Bangla QR, Rocket]
+    WA[WhatsApp Cloud API]
+    L3[3PL APIs]
+    WEA[OpenWeatherMap]
+    LIV[LiveKit SFU]
+    SOC[Social APIs\nFacebook/TikTok/YouTube]
+    GPT[OpenAI Fallback]
+  end
+
+  subgraph BKP[Backup and Recovery Plane]
+    ENC[Encrypted Backup Storage\nDB + Event Store Backups]
+    DR[Restore Runbook\nDisaster Recovery Path]
+    STBY[Standby Provisioning\nHost Recreate + Restore]
+  end
+
+  FW[Network Policy\nOnly Cloudflare may reach ingress]
+  SCALE[Scale Path\nCompose now -> Kubernetes later]
+
+  Users -->|HTTPS| DNS --> CDN --> WAF --> TLS --> LB
+  LB --> WEB
+  LB --> API
+
+  WEB -->|HTTPS Internal| API
+  API -->|SQL| PGB
+  WRK -->|SQL| PGB
+  PGB -->|Write| PGP
+  PGB -->|Read| PGR
+  API <--> |Cache + Queue| RED
+  API <--> |Search| MEI
+  WRK <--> |Jobs| RED
+  WRK -->|Async DB Ops| PGP
+  API <--> |LLM Calls| OLL
+  PGP -->|Streaming Replication| PGR
+
+  API -->|Metrics| PRM
+  API -->|Structured Logs| LOK
+  API -->|Traces| TMP
+  API -->|Errors| SEN
+  WRK -->|Metrics| PRM
+  PRM --> GRF
+  LOK --> GRF
+  TMP --> GRF
+
+  API -->|HTTPS + Webhooks| PAY
+  API -->|HTTPS Templates| WA
+  API -->|HTTPS Shipments| L3
+  API -->|HTTPS Forecast Data| WEA
+  API -->|WSS/HTTPS Tokens| LIV
+  API -->|HTTPS Sync| SOC
+  OLL -.tiered fallback.-> GPT
+
+  PGP -->|Encrypted Scheduled Backup| ENC
+  ENC --> DR
+  DR --> STBY
+
+  FW -.enforced at edge and host firewall.-> LB
+  SCALE -.capacity planning trigger.-> API
+  SCALE -.capacity planning trigger.-> WRK

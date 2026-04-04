@@ -1,0 +1,32 @@
+sequenceDiagram
+  %% Diagram 39: Payment Webhook Verification and Idempotent Processing
+
+  autonumber
+  participant GW as Payment Gateway
+  participant API as /api/payments/webhook
+  participant Verify as Signature + Provider Verification
+  participant Store as Payment Store
+  participant Event as Event Bus
+
+  GW->>API: Webhook payload
+  API->>Verify: Verify signature/HMAC
+  alt Signature invalid
+    Verify-->>API: Mismatch
+    API-->>GW: Reject + security log
+  else Signature valid
+    API->>Verify: Server-side transaction verification
+    alt Provider says invalid
+      Verify-->>API: Not completed
+      API-->>GW: No state change
+    else Provider confirmed
+      API->>Store: Idempotency check by payment reference
+      alt Duplicate callback
+        Store-->>API: Already processed
+        API-->>GW: 200 idempotent no-op
+      else First valid callback
+        API->>Store: Mark payment confirmed
+        API->>Event: Emit payment-confirmed event
+        API-->>GW: 200 processed
+      end
+    end
+  end

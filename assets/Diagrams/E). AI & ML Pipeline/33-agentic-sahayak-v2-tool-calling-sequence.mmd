@@ -1,0 +1,58 @@
+sequenceDiagram
+  %% Diagram 33: Agentic Sahayak V2 Tool-Calling Orchestration Sequence
+
+  autonumber
+  actor V as Vendor
+  participant API as POST /api/ai/sahayak/chat
+  participant LLM as Ollama Llama 3.2
+  participant GPT as OpenAI GPT fallback
+  participant RAG as RAG Context (pgvector + search)
+  participant Vel as GET /api/ai/velocity
+  participant Coup as POST /api/ai/coupon-optimize
+  participant Bulk as POST /api/coupons/bulk-create
+  participant Conv as sahayak_conversations
+  participant Audit as audit_logs
+
+  V->>API: Bangla/English intent message
+  API->>LLM: Parse intent and tool plan
+  alt Ollama unavailable and tier allows fallback
+    API->>GPT: Fallback inference
+    GPT-->>API: Intent + tool plan
+  else Ollama available
+    LLM-->>API: Intent + tool plan
+  end
+
+  API->>RAG: Retrieve vendor-specific context
+  RAG-->>API: Grounding context
+
+  API->>Vel: Fetch slow-moving products
+  Vel-->>API: Product velocity set
+  API->>Coup: Compute optimized discount options
+  Coup-->>API: Discount recommendations
+
+  alt Any tool call fails or times out
+    API->>Audit: Log advisory-only fallback due to tool failure
+    API->>Conv: Persist partial tool results and failure context
+    API-->>V: Partial advisory response\nNo mutation performed
+  else Tool calls succeed
+    API-->>V: Proposed actions for confirmation
+
+    alt Vendor confirms mutation
+      API->>Bulk: Create coupons in bulk
+      alt Bulk creation succeeds
+        Bulk-->>API: Coupons created
+        API->>Audit: Log agent action (mutation)
+        API->>Conv: Persist messages + tool_calls + outcome
+        API-->>V: Success summary
+      else Bulk creation fails
+        Bulk-->>API: Error response
+        API->>Audit: Log failed mutation attempt
+        API->>Conv: Persist partial execution and failure
+        API-->>V: Controlled failure with retry options
+      end
+    else Vendor declines or tool path incomplete
+      API->>Audit: Log no-mutation decision
+      API->>Conv: Persist advisory-only interaction
+      API-->>V: Advisory response without state changes
+    end
+  end

@@ -1,0 +1,29 @@
+flowchart TB
+  %% Diagram 47: Buyer Frontend Experience Composition Flow
+
+  Home[Buyer Homepage]
+  Search[Search and discovery]
+  Reels[Reels and live discovery]
+  Product[Product detail page]
+  Cart[Cart and coupon stage]
+  Checkout[Checkout]
+  Tracking[Order tracking]
+  Chat[Buyer-vendor chat entry]
+
+  API[REST query/data APIs]
+  WS[Realtime order status subscription]
+  Error[Recoverable error UI state]
+  Retry[Retry fetch with backoff]
+  Cached[Show cached snapshot while retrying]
+
+  Home --> Search --> Product --> Cart --> Checkout --> Tracking
+  Home --> Reels --> Product
+  Tracking --> Chat
+
+  Search --> API
+  Product --> API
+  Cart --> API
+  Checkout --> API
+  Tracking --> WS
+
+  API -->|fetch failed| Error --> Cached --> Retry --> API

@@ -1,0 +1,31 @@
+flowchart TB
+  %% Diagram 70: Incident Detection, Alerting, and On-Call Response Workflow
+
+  Trigger[Alert threshold breach\nSLO/SLA or error spike]
+  Notify[Notify on-call responder]
+  Triage[Initial triage]
+  Severity{Severity level?}
+
+  Low[Low severity handling]
+  High[High severity incident bridge]
+  Mitigate[Mitigation actions]
+  Verify[Recovery verification]
+  Resolved{Service restored?}
+  TimeGate{Recovered within response time window?}
+
+  Escalate[Escalate to broader response team]
+  Tune[Close as false positive and tune alert rule]
+  PIR[Post-incident review and action items]
+  Close[Incident closed with action tracking]
+
+  Trigger --> Notify --> Triage --> Severity
+  Severity -- Low --> Low --> Mitigate
+  Severity -- High --> High --> Mitigate
+
+  Mitigate --> Verify --> Resolved
+  Resolved -- Yes --> TimeGate
+  TimeGate -- Yes --> PIR --> Close
+  TimeGate -- No --> Escalate --> Mitigate
+  Resolved -- No --> Escalate --> Mitigate
+
+  Triage -->|False positive| Tune --> Close

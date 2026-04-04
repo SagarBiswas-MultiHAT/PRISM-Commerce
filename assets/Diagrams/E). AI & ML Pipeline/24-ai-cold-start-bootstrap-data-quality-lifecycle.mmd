@@ -1,0 +1,33 @@
+stateDiagram-v2
+  %% Diagram 24: AI Cold-Start Bootstrap and Data Quality Lifecycle
+
+  [*] --> Tier1: Onboarding complete
+
+  state Tier1 {
+    [*] --> SeedOnly
+    SeedOnly: Tier 1\nSeed-only mode\nsynthetic_sales_seed active\nLow-confidence baseline
+  }
+
+  Tier1 --> MissingSeed: Seed not submitted
+  MissingSeed: Fallback baseline path\nPrompt vendor for seed entry
+  MissingSeed --> Tier1: Seed submitted
+
+  Tier1 --> Tier2: Real orders begin (Week 1+)
+
+  state Tier2 {
+    [*] --> MixedData
+    MixedData: Tier 2\nReal + seed blended\ndata_quality_score rising
+  }
+
+  Tier2 --> SparseReal: Real volume remains sparse
+  SparseReal: Continue mixed mode\nConfidence constrained
+  SparseReal --> Tier2: More real data arrives
+
+  Tier2 --> Tier3: Day 90+ reached
+
+  state Tier3 {
+    [*] --> RealOnly
+    RealOnly: Tier 3\nSeed deprecated\ndata_quality_score = 1.0
+  }
+
+  Tier3 --> [*]

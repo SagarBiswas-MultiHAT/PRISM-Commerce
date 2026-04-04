@@ -1,0 +1,23 @@
+flowchart TB
+  %% Diagram 56: Unified Notification Center Orchestration Flow
+
+  Event[Incoming domain event]
+  Classify[Classify event type and severity]
+  Prefs[Evaluate user channel preferences]
+  Matrix[Build primary and fallback channel matrix]
+
+  Channels[Available channels\nIn-app, WhatsApp, Push/Web]
+  PrimarySend[Send via selected primary channel]
+
+  Delivered[(Update notification center state delivered)]
+  Read[(Update notification center state read)]
+  Fail{Primary channel delivered?}
+  Reroute[Reroute to allowed fallback channels]
+  FallbackSend[Send through fallback channels]
+
+  Event --> Classify --> Prefs --> Matrix --> Channels --> PrimarySend
+
+  PrimarySend --> Fail
+
+  Fail -- Yes --> Delivered --> Read
+  Fail -- No --> Reroute --> FallbackSend --> Delivered --> Read

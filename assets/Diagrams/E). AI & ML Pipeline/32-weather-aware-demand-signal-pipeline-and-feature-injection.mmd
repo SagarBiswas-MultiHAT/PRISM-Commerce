@@ -1,0 +1,25 @@
+flowchart TB
+  %% Diagram 32: Weather-Aware Demand Signal Pipeline and Feature Injection
+
+  Cron[Daily CRON at 6 AM\nBangladesh time]
+  Fetch[Call OpenWeatherMap 5-day API]
+  FetchOK{Fetch successful?}
+
+  Derive[Derive weather features\ntemperature_avg\nprecipitation_mm\nis_monsoon]
+  Persist[(Update weather_cache)]
+  Cache[Write Redis cache\nTTL 6h]
+
+  ImpactMatrix[Apply category impact matrix\nMonsoon: rain gear up\nOutdoor demand down]
+  Inject[Inject weather features into\nForecast and ROP modules]
+
+  UseStale{Recent cached weather available?}
+  FallbackCache[Use last valid cached weather\nMark stale-data flag]
+  Degrade[Use neutral weather defaults\nMark stale-data and lower confidence]
+  Alert[Emit observability alert]
+
+  Cron --> Fetch --> FetchOK
+  FetchOK -- Yes --> Derive --> Persist --> Cache --> ImpactMatrix --> Inject
+
+  FetchOK -- No --> UseStale
+  UseStale -- Yes --> FallbackCache --> ImpactMatrix --> Inject
+  UseStale -- No --> Degrade --> Alert --> ImpactMatrix --> Inject

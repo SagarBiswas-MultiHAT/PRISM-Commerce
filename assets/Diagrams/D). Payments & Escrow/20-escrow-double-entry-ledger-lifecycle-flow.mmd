@@ -1,0 +1,35 @@
+flowchart TB
+  %% Diagram 20: Escrow System - Double-Entry Ledger and Lifecycle
+
+  P0([Payment Confirmed]) --> H0[Create Escrow Hold\nstatus=held]
+  H0 --> L1[Ledger Entry A\nDebit: Payment Clearing\nCredit: Escrow Liability]
+  L1 --> F1[Order Fulfillment and Delivery]
+
+  F1 --> DQ{Dispute Filed Within Window?}
+
+  DQ -- No --> AR{Buyer Confirms or 48h Auto-Release?}
+  AR -- Yes --> R0[Release Escrow\nstatus=released]
+  R0 --> L2[Ledger Entry B\nDebit: Escrow Liability\nCredit: Vendor Payable]
+  L2 --> M2[Mirror Settlement Entry\nVendor Disbursement Payable]
+  M2 --> Payout[Trigger Vendor Disbursement Pipeline]
+  AR -- No --> HoldWait[Remain in Held State\nAwait confirmation window]
+  HoldWait --> AR
+
+  DQ -- Yes --> D0[Freeze Escrow\nstatus=disputed]
+  D0 --> L3[Ledger Entry C\nNo release while disputed]
+  L3 --> Investigate[Support Investigation and Evidence Review]
+
+  Investigate --> Outcome{Dispute Outcome}
+  Outcome -- Buyer Wins --> RF[Refund Escrow\nstatus=refunded]
+  RF --> L4[Ledger Entry D\nDebit: Escrow Liability\nCredit: Buyer Refund Payable]
+  L4 --> M4[Mirror Settlement Entry\nBuyer Wallet or Refund Rail]
+  M4 --> BuyerRefund[Execute Buyer Refund]
+
+  Outcome -- Vendor Wins --> RV[Release Escrow\nstatus=released]
+  RV --> L5[Ledger Entry E\nDebit: Escrow Liability\nCredit: Vendor Payable]
+  L5 --> M5[Mirror Settlement Entry\nVendor Disbursement Payable]
+  M5 --> Payout
+
+  Payout --> Reconcile[Daily Reconciliation\nEscrow Releases vs Payout Credits]
+  BuyerRefund --> Reconcile
+  Reconcile --> Audit[Append Audit Log + Finance Dashboard Update]

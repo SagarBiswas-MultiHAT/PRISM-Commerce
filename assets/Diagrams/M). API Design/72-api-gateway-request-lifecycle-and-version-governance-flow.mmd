@@ -1,0 +1,30 @@
+sequenceDiagram
+  %% Diagram 72: API Gateway Request Lifecycle and Version Governance Flow
+
+  autonumber
+  actor C as Client
+  participant G as API Gateway
+  participant Policy as Version Policy
+  participant Sec as Auth + Throttle + Validation
+  participant R as Route Resolver
+  participant H as Domain Handler
+  participant Shape as Response Shaper
+
+  C->>G: Request /api/v1/... with token
+  G->>R: Resolve API version and route
+  R->>Policy: Check version support and deprecation window
+  alt Unsupported/deprecated version
+    Policy-->>G: Version not supported
+    G-->>C: Version error + migration guidance
+  else Version valid
+    G->>Sec: Apply auth, rate limit, DTO validation
+    alt Security gate fails
+      Sec-->>G: Reject reason
+      G-->>C: 401/403/429/400 response
+    else Security gate passes
+      G->>H: Execute domain operation
+      H->>Shape: Apply response contract and headers
+      Shape-->>G: Versioned response + trace id
+      G-->>C: Versioned response
+    end
+  end

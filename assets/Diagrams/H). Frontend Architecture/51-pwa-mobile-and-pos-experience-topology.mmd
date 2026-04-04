@@ -1,0 +1,32 @@
+flowchart TB
+  %% Diagram 51: PWA, Mobile, and POS Experience Topology
+
+  PWA[Web PWA Experience]
+  Mobile[Mobile App Experience]
+  POS[POS Mode Experience\nBarcode and QR assisted sales]
+
+  API[Shared Backend APIs]
+  Orders[(Orders and state)]
+  Inventory[(Inventory and variants)]
+
+  Sync[Cross-channel synchronization]
+  LinkLoss{Connectivity interruption?}
+  OfflineMode[Continue in constrained mode\nlocal queue for POS and cart actions]
+  Resync[Reconcile on reconnect]
+  Conflict{State conflict detected?}
+  Resolve[Resolve conflict by latest server version plus audit marker]
+
+  PWA --> API
+  Mobile --> API
+  POS --> API
+
+  API --> Orders
+  API --> Inventory
+  Orders --> Sync
+  Inventory --> Sync
+
+  POS --> LinkLoss
+  LinkLoss -- Yes --> OfflineMode --> Resync --> Conflict
+  Conflict -- Yes --> Resolve --> API
+  Conflict -- No --> API
+  LinkLoss -- No --> API

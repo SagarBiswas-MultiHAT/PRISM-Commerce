@@ -1,0 +1,18 @@
+flowchart TB
+  %% Diagram 63A: Vendor Operations Business-Friendly Journey
+
+  Join[Vendor joins and submits KYC documents]
+  Approve[Verification approved and dashboard unlocked]
+  Plan[Vendor selects subscription and feature plan]
+  Sell[Vendor publishes products and runs campaigns]
+  Stock[AI guidance supports inventory and reorder timing]
+  Finance[Escrow release, payout, and reconciliation complete]
+  Learn[Academy progress unlocks badges and growth milestones]
+
+  Issue{Any issue appears?}
+  Resolve[Support, compliance, or finance resolves the issue]
+  Growth[Vendor growth continues]
+
+  Join --> Approve --> Plan --> Sell --> Stock --> Finance --> Learn --> Issue
+  Issue -- No --> Growth
+  Issue -- Yes --> Resolve --> Growth

@@ -1,0 +1,32 @@
+flowchart TB
+  %% Diagram 31: Closed-Loop Forecast Feedback and Retraining Trigger Flow
+
+  WeeklyCron[Weekly CRON\nSunday midnight]
+  LoadData[Load ai_forecasts + actual sales]
+  ErrorCalc[Compute forecast_error\nabsolute difference between predicted and actual divided by actual]
+  PersistAccuracy[(Write forecast_accuracy table)]
+
+  ProductFlag{rolling_avg_error > 0.25\nfor product?}
+  MarkProduct[Mark product for retrain]
+  KeepProduct[No retrain flag for product]
+  PersistFlags[(Persist product retrain flags)]
+
+  FleetCheck{Flagged products > 30%?}
+  TriggerRetrain[Trigger full model retrain job]
+  RetrainResult{Retrain successful?}
+
+  DeployModel[Deploy new model_version\nfor future inference]
+  KeepCurrent[Keep prior model_version active]
+  Incident[(Log retrain incident + audit trail\nfor follow-up)]
+
+  ContinueLoop[Continue weekly feedback loop]
+
+  WeeklyCron --> LoadData --> ErrorCalc --> PersistAccuracy --> ProductFlag
+  ProductFlag -- Yes --> MarkProduct --> PersistFlags --> FleetCheck
+  ProductFlag -- No --> KeepProduct --> FleetCheck
+
+  FleetCheck -- Yes --> TriggerRetrain --> RetrainResult
+  RetrainResult -- Yes --> DeployModel --> ContinueLoop
+  RetrainResult -- No --> KeepCurrent --> Incident --> ContinueLoop
+
+  FleetCheck -- No --> ContinueLoop

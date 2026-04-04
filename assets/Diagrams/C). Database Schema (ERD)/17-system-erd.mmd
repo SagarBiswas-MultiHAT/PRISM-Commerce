@@ -1,0 +1,54 @@
+erDiagram
+  %% Diagram 17: System Tables ERD
+
+  USERS ||--o{ AUDIT_LOGS : actor_events
+  VENDORS ||--o{ API_KEYS : owns_api_key
+  USERS ||--o{ CONTENT_MODERATION_QUEUE : moderator_actions
+
+  AUDIT_LOGS {
+    uuid id PK
+    uuid actor_id FK
+    string action_type
+    string entity_type
+    uuid entity_id
+    jsonb payload
+    boolean is_agent_action
+    datetime created_at
+  }
+
+  EVENT_STORE {
+    uuid id PK
+    uuid aggregate_id
+    string aggregate_type
+    string event_type
+    jsonb event_data
+    int version
+    datetime created_at
+  }
+
+  API_KEYS {
+    uuid id PK
+    uuid vendor_id FK
+    string key_hash
+    jsonb permissions
+    int rate_limit
+    datetime last_used_at
+  }
+
+  CONTENT_MODERATION_QUEUE {
+    uuid id PK
+    string content_type
+    uuid content_id
+    string reason
+    string status
+    uuid moderator_id FK
+    datetime resolved_at
+  }
+
+  USERS {
+    uuid id PK
+  }
+
+  VENDORS {
+    uuid id PK
+  }

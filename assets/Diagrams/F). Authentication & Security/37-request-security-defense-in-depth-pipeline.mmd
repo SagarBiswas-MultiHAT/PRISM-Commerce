@@ -1,0 +1,24 @@
+flowchart TB
+  %% Diagram 37: Request Security Defense-in-Depth Pipeline
+
+  In[Incoming Request]
+  TLS[HTTPS/TLS + Edge WAF]
+  CORS[CORS Origin Validation]
+  Rate[Rate Limiter\nauth/checkout/AI tier]
+  DTO[DTO Validation + Sanitization]
+  SQL[Parameterized DB Access]
+  AuthZ[RBAC + Domain Authorization]
+  Handler[Application Handler]
+
+  Reject401[401 Unauthorized]
+  Reject403[403 Forbidden]
+  Reject429[429 Too Many Requests]
+  Reject400[400 Bad Request]
+
+  In --> TLS --> CORS --> Rate --> DTO --> SQL --> AuthZ --> Handler
+
+  CORS -->|Invalid origin| Reject403
+  Rate -->|Limit exceeded| Reject429
+  DTO -->|Invalid payload| Reject400
+  AuthZ -->|No permission| Reject403
+  TLS -->|Auth missing/invalid| Reject401

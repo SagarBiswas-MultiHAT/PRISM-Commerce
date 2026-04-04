@@ -1,0 +1,33 @@
+flowchart TB
+  %% Diagram 61: Vendor Inventory Replenishment and Lead-Time Learning Flow
+
+  Monitor[Monitor stock + forecast context]
+  ROP[Compute smart reorder point]
+  Breach{stock_on_hand <= ROP?}
+
+  Recommend[Issue reorder recommendation]
+  PlacePO[Vendor places supplier order]
+  Receive[Receive stock delivery]
+  Learn[Update learned lead-time model\nfrom expected vs actual receipt]
+  Sync[Inventory updated and alerts cleared]
+
+  NoAction[No urgent reorder action]
+
+  SupplierHistory{Supplier lead-time history available?}
+  DefaultLT[Use default lead-time baseline\nmark lower confidence]
+
+  Delay{Delivery delayed?}
+  Escalate[Escalate urgency and suggest safety buffer]
+
+  Monitor --> SupplierHistory
+  SupplierHistory -- Yes --> ROP
+  SupplierHistory -- No --> DefaultLT --> ROP
+
+  ROP --> Breach
+  Breach -- No --> NoAction
+  Breach -- Yes --> Recommend --> PlacePO --> Receive --> Delay
+
+  Delay -- Yes --> Escalate --> Learn
+  Delay -- No --> Learn
+
+  Learn --> Sync

@@ -1,0 +1,18 @@
+flowchart TB
+  %% Diagram 77: Revenue Waterfall and Reserve Allocation Flow
+
+  Inflow[Gross platform inflows\nsubscriptions + commissions + addons]
+  OpCost[Cover operating costs]
+  Enough{Revenue >= operating costs?}
+
+  Reserve[Allocate 20% reserve fund]
+  Distributable[Compute distributable remainder]
+  Report[Finance reporting and governance update]
+
+  Shortfall[Revenue shortfall state]
+  Control[Cost-control and spend-priority actions]
+  Escalate[Executive finance escalation]
+
+  Inflow --> OpCost --> Enough
+  Enough -- Yes --> Reserve --> Distributable --> Report
+  Enough -- No --> Shortfall --> Control --> Escalate

@@ -1,0 +1,29 @@
+flowchart TB
+  %% Diagram 67: Influencer Affiliate and Referral Attribution Lifecycle
+
+  Issue[Issue affiliate/referral link or code]
+  Click[Track click event]
+  Visit[Buyer session attribution]
+  CodeCheck{Code valid and unexpired?}
+  Convert{Order conversion happened?}
+
+  Validate[Validate attribution window + anti-fraud checks]
+  Valid{Attribution valid?}
+
+  Reward[Post affiliate commission/reward]
+  PayoutSignal[Emit commission payout signal]
+  Ledger[(Update affiliate_tracking/referral_codes)]
+  Report[Expose payout and performance report]
+
+  NoCredit[No attribution credit]
+  Review[Hold for fraud or anomaly review]
+
+  Issue --> Click --> Visit --> CodeCheck
+  CodeCheck -- No --> NoCredit
+  CodeCheck -- Yes --> Convert
+  Convert -- No --> NoCredit
+  Convert -- Yes --> Validate --> Valid
+
+  Valid -- Yes --> Reward --> PayoutSignal --> Ledger --> Report
+  Valid -- No --> NoCredit
+  Validate -->|Fraud-like anomaly| Review --> NoCredit

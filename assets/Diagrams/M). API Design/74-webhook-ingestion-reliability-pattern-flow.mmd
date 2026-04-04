@@ -1,0 +1,43 @@
+sequenceDiagram
+  %% Diagram 74: Webhook Ingestion Reliability Pattern Flow
+
+  autonumber
+  participant Src as Payment Gateway or Partner Callback Source
+  participant In as Webhook Endpoint
+  participant Ver as Signature Verifier
+  participant Idem as Idempotency Store
+  participant Proc as Processor
+  participant Retry as Retry Queue
+  participant DLQ as Dead Letter Queue
+
+  Src->>In: Webhook payload
+  In->>Ver: Verify signature and source
+  alt Signature invalid
+    Ver-->>In: Invalid
+    In-->>Src: Reject and security log
+  else Signature valid
+    In->>Idem: Check event idempotency
+    alt Duplicate event
+      Idem-->>In: Already processed
+      In-->>Src: 200 idempotent no-op
+    else New event
+      In->>Proc: Process event
+      alt Transient failure
+        Proc-->>Retry: Schedule retry with backoff
+        Retry->>Proc: Reprocess attempt
+        alt Retry succeeds
+          Proc-->>In: Processed after retry
+          In-->>Src: 200 success
+        else Retry exhausted
+          Proc-->>DLQ: Move to dead-letter/manual queue
+          In-->>Src: 202 accepted for manual handling
+        end
+      else Permanent failure
+        Proc-->>DLQ: Move to manual intervention queue
+        In-->>Src: 202 accepted for manual handling
+      else Success
+        Proc-->>In: Processed
+        In-->>Src: 200 success
+      end
+    end
+  end

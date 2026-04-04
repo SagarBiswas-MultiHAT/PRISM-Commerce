@@ -55,6 +55,14 @@ Local:    Bengali (বাংলা) · Festival Intelligence · Weather-Aware ·
 28. [Self-Funding Viability Plan](#28-self-funding-viability-plan)
 29. [Growth Playbook](#29-growth-playbook)
 30. [Glossary](#30-glossary)
+31. [Diagram Clarification Spec (Batch A: IDs 1-11)](#31-diagram-clarification-spec-batch-a-ids-1-11)
+32. [Diagram Clarification Spec (Batch B: IDs 12-22)](#32-diagram-clarification-spec-batch-b-ids-12-22)
+33. [Diagram Clarification Spec (Batch C: IDs 23-34)](#33-diagram-clarification-spec-batch-c-ids-23-34)
+34. [Diagram Clarification Spec (Batch D: IDs 35-45)](#34-diagram-clarification-spec-batch-d-ids-35-45)
+35. [Diagram Clarification Spec (Batch E: IDs 46-56)](#35-diagram-clarification-spec-batch-e-ids-46-56)
+36. [Diagram Clarification Spec (Batch F: IDs 57-67)](#36-diagram-clarification-spec-batch-f-ids-57-67)
+37. [Diagram Clarification Spec (Batch G: IDs 68-75)](#37-diagram-clarification-spec-batch-g-ids-68-75)
+38. [Diagram Clarification Spec (Batch H: IDs 76-84)](#38-diagram-clarification-spec-batch-h-ids-76-84)
 
 ---
 
@@ -1700,3 +1708,1826 @@ Layer 4 (NEW V4): AGENTIC INTELLIGENCE
 *Document Version: 4.0.0 | April 2026*  
 *Author: Sagar Biswas*  
 *"The platform that makes Daraz, Shopify, and Netstock unnecessary for Bangladeshi SMEs."*
+
+---
+
+## 31. Diagram Clarification Spec (Batch A: IDs 1-11)
+
+This section is the normative diagram specification for Mermaid Diagram IDs 1-11. It is added to make every connection, protocol, dependency, and failure path explicit before diagram generation.
+
+### 31.1 Scope and Conventions
+
+- **Scope:** System Architecture and CQRS/Event Sourcing diagram set (IDs 1-11).
+- **Authority:** This section extends Sections 8, 13, 14, 15, 17, and 18 for visualization precision.
+- **Protocol labels:**
+  - `HTTPS REST`: Client and admin API calls.
+  - `WSS`: Real-time chat/order push and live interactions.
+  - `Redis protocol`: cache and queue transport.
+  - `PostgreSQL protocol`: database reads/writes/replication.
+  - `Webhook HTTPS`: payment callback integrations.
+- **Write path principle:** Commands always append events and commit write model first.
+- **Read path principle:** Queries prefer Redis/meilisearch/read replica; no command-side mutations.
+- **Failure notation:** Every critical flow must include negative path plus compensating action.
+
+### 31.2 Diagram 1 — PRISM V4 High-Level System Architecture Overview
+
+Required layers and components:
+
+1. **Experience Layer**: Buyer Web (Next.js), Vendor Web (Next.js), Admin Console, React Native Mobile App.
+2. **Edge Layer**: Cloudflare CDN/WAF + API Gateway (Nginx/Kong style responsibilities).
+3. **Application Layer**: NestJS Modular Monolith (Auth, Product, Order, Payment, Escrow, AI, Notification, Compliance, Analytics).
+4. **Data and Search Layer**: PostgreSQL Primary, PostgreSQL Read Replica, Redis, Meilisearch, pgvector extension.
+5. **Intelligence Layer**: ONNX Runtime (GBR inference), Sahayak Agentic Runtime (Ollama primary, GPT fallback).
+6. **Integration Layer**: Payment gateways, WhatsApp Cloud API, 3PL providers, OpenWeatherMap, LiveKit, social channels.
+7. **Observability Layer**: Prometheus, Grafana, Loki, Sentry, OpenTelemetry/Tempo.
+
+Required edges:
+
+- Clients -> Cloudflare (`HTTPS`)
+- Cloudflare -> API Gateway (`HTTPS`)
+- API Gateway -> NestJS (`HTTPS` internal)
+- NestJS -> PostgreSQL Primary (`write`)
+- NestJS -> PostgreSQL Replica (`read`)
+- NestJS <-> Redis (`cache`, `queue`, `pub/sub`)
+- NestJS <-> Meilisearch (`index`, `search`)
+- NestJS <-> ONNX Runtime (`in-process inference`)
+- NestJS <-> LLM runtime (`tool-calling`, `response generation`)
+- NestJS -> External providers (`HTTPS API` / `Webhook callback`)
+
+### 31.3 Diagram 2 — Turborepo Monorepo Workspace Structure
+
+Required monorepo structure (authoritative for diagrams):
+
+```text
+PRISM-Commerce/
+  apps/
+    web/                 # Next.js 15 (buyer/vendor/admin web app)
+    api/                 # NestJS modular monolith
+  packages/
+    ui/                  # shared UI primitives and design tokens
+    config/              # shared tsconfig/eslint/prettier/env schema
+    types/               # shared DTO and domain types
+    sdk/                 # typed API client and helpers
+  infra/
+    docker/              # compose files and docker assets
+    monitoring/          # grafana/prometheus/loki/tempo configs
+    scripts/             # deploy, backup, migration scripts
+  docs/
+    diagrams/            # diagram sources and conventions
+```
+
+Required workspace relationships:
+
+- `apps/web` depends on `packages/ui`, `packages/types`, `packages/sdk`, `packages/config`.
+- `apps/api` depends on `packages/types`, `packages/config`.
+- `packages/sdk` depends on `packages/types`.
+- Turborepo cache is shared across `build`, `lint`, `test`, and `typecheck` pipelines.
+
+### 31.4 Diagram 3 — NestJS Modular Monolith Module Dependency Map
+
+Required modules:
+
+- `AuthModule`
+- `UserModule`
+- `ProductModule`
+- `OrderModule`
+- `PaymentModule`
+- `EscrowModule`
+- `LogisticsModule`
+- `AIModule`
+- `NotificationModule`
+- `ComplianceModule`
+- `AnalyticsModule`
+- `AdminModule`
+- `EventStoreModule`
+
+Required dependency rules:
+
+- `OrderModule` depends on `ProductModule`, `PaymentModule`, `EscrowModule`, `LogisticsModule`, `NotificationModule`, `EventStoreModule`.
+- `PaymentModule` depends on `ComplianceModule` and `EventStoreModule`.
+- `AIModule` reads from `AnalyticsModule` and `EventStoreModule` projections, then emits recommendations via `NotificationModule`.
+- `AdminModule` orchestrates cross-module operations but must not bypass `AuthModule` and `ComplianceModule` authorization checks.
+- Cyclic dependency is prohibited; cross-cutting interactions happen through commands/events.
+
+### 31.5 Diagram 4 — Docker Compose Service Topology
+
+Required compose services for architecture diagrams:
+
+- `web` (Next.js app)
+- `api` (NestJS API)
+- `postgres-primary`
+- `postgres-replica`
+- `redis`
+- `meilisearch`
+- `ollama`
+- `prometheus`
+- `grafana`
+- `loki`
+- `tempo`
+
+Required service dependencies:
+
+- `web` depends on `api`.
+- `api` depends on `postgres-primary`, `redis`, `meilisearch`.
+- `postgres-replica` replicates from `postgres-primary`.
+- `prometheus`, `loki`, and `tempo` scrape/collect from `api`, `web`, and data services.
+- `grafana` reads from `prometheus`, `loki`, and `tempo`.
+
+Required resilience labels:
+
+- healthcheck probes on `web`, `api`, `postgres-primary`, `redis`, `meilisearch`.
+- restart policy for critical services (`unless-stopped` equivalent behavior).
+
+### 31.6 Diagram 5 — Production Deployment Architecture
+
+Required production topology components:
+
+1. **User traffic edge**: DNS + CDN + WAF at Cloudflare.
+2. **Compute**: Hetzner VPS cluster path (initially single VPS in Phase 1/2, scale-ready layout shown).
+3. **Runtime containers**: web/api/worker and supporting data/search/monitoring stack.
+4. **External managed systems**: payment gateways, WhatsApp, weather provider, live/video/social APIs.
+5. **Backup plane**: encrypted backup target for PostgreSQL and event-store retention.
+
+Required network/control paths:
+
+- Public traffic only enters via Cloudflare.
+- Direct DB public exposure is disallowed.
+- Outbound egress from API to external services is allowlisted.
+- Admin access to infrastructure is restricted to secure channels.
+
+### 31.7 Diagram 6 — Service Communication Map (Protocol and Purpose)
+
+The map must include both protocol and business purpose labels on each edge:
+
+- `Client -> API Gateway` (`HTTPS REST`, purpose: user/business operations)
+- `API Gateway -> API` (`HTTPS`, purpose: route + auth + throttling)
+- `API -> PostgreSQL Primary` (`PostgreSQL`, purpose: command-side writes)
+- `API -> PostgreSQL Replica` (`PostgreSQL`, purpose: query-side reads)
+- `API <-> Redis` (`Redis protocol`, purpose: cache/session/queue/pubsub)
+- `API <-> Meilisearch` (`HTTP`, purpose: lexical search index/query)
+- `API <-> ONNX Runtime` (`local runtime`, purpose: forecast inference)
+- `API <-> LLM Runtime` (`HTTP`, purpose: tool-calling assistant responses)
+- `API -> Payment Gateways` (`HTTPS`, purpose: payment initiate/verify)
+- `Payment Gateways -> API` (`Webhook HTTPS`, purpose: payment status callback)
+- `API -> WhatsApp` (`HTTPS`, purpose: templated notifications)
+- `API -> 3PL` (`HTTPS`, purpose: shipment create/track)
+
+### 31.8 Diagram 7 — CQRS Write Path (Command Handler to Event Store)
+
+Required write-flow sequence:
+
+1. Client submits command (`PlaceOrderCommand`, `ApplyCouponCommand`, etc.).
+2. API gateway authenticates and forwards.
+3. Command bus dispatches to command handler.
+4. Handler validates business rules and authorization.
+5. Handler writes transactional changes on primary write model.
+6. Handler appends domain event to `event_store` with aggregate/version metadata.
+7. Event publish to queue/pubsub for projectors and side effects.
+8. Response returns command outcome and correlation ID.
+
+Required failure branches:
+
+- validation failure -> reject command, no write, no event append.
+- transaction failure -> rollback, emit technical failure log.
+- event append failure after write attempt -> transaction rollback policy applies (write + append atomicity requirement).
+
+### 31.9 Diagram 8 — CQRS Read Path (Query Handler to Materialized Views)
+
+Required read-flow sequence:
+
+1. Client submits query.
+2. Query bus dispatches to query handler.
+3. Handler checks Redis/materialized cache first.
+4. On cache miss, handler reads from read replica and/or meilisearch.
+5. Handler assembles DTO response (no write-side mutation).
+6. Optional cache refresh with TTL.
+
+Required behavior notes:
+
+- read path must remain side-effect free.
+- stale data tolerance is explicit: forecast cache 24h, category velocity 1h, weather 6h, opportunity 15m.
+
+### 31.10 Diagram 9 — Event Store (Aggregate Types and Projection Flow)
+
+Required aggregate types in visualization:
+
+- `OrderAggregate`
+- `PaymentAggregate`
+- `EscrowAggregate`
+- `InventoryAggregate`
+- `VendorAggregate`
+
+Required event metadata fields:
+
+- `aggregate_id`
+- `aggregate_type`
+- `event_type`
+- `event_data`
+- `version`
+- `created_at`
+
+Required projection flow:
+
+1. Event appended to `event_store`.
+2. Projector consumes event.
+3. Read models/materialized views updated (`orders`, analytics summaries, search documents, notification state).
+4. Cache invalidation or refresh is triggered for affected keys.
+
+### 31.11 Diagram 10 — Order Saga (5 Steps + Compensations)
+
+Required distributed transaction steps:
+
+1. Reserve inventory.
+2. Process payment.
+3. Hold escrow.
+4. Confirm order.
+5. Assign logistics.
+
+Required compensations:
+
+- If Step 2 fails: release inventory.
+- If Step 3 fails: refund payment and release inventory.
+- If Step 5 fails: refund payment, release inventory, and mark order failed.
+
+Required messaging outputs:
+
+- buyer/vendor notification on both success and failure.
+- finance/admin alert on escrow or payment compensation paths.
+
+### 31.12 Diagram 11 — Saga Failure Recovery Flowchart
+
+Required decision nodes:
+
+1. Inventory reserved?
+2. Payment captured?
+3. Escrow held?
+4. Logistics assigned?
+5. Compensation completed?
+
+Required terminal states:
+
+- `OrderConfirmed` (all saga steps passed)
+- `OrderFailedCompensated` (rollback completed)
+- `OrderFailedManualIntervention` (compensation did not fully complete)
+
+Required manual intervention branch:
+
+- If any compensation fails, create incident, freeze related financial records, and escalate to support/finance for controlled reconciliation.
+
+### 31.13 Diagram Generation Compliance Checklist (for IDs 1-11)
+
+- Include actors, systems, and stores explicitly.
+- Label every connection with protocol and purpose.
+- Include at least one failure branch in each process-heavy diagram.
+- Keep command and query paths separate where CQRS applies.
+- Preserve module boundaries and avoid implying cyclic dependencies.
+
+---
+
+## 32. Diagram Clarification Spec (Batch B: IDs 12-22)
+
+This section is the normative diagram specification for Mermaid Diagram IDs 12-22. It extends Sections 10, 11, 12, 14, 15, 17, and 20 with explicit ERD relationships and payment/escrow execution paths.
+
+### 32.1 Scope and Conventions
+
+- **Scope:** Database schema ERDs (12-18) and payment/escrow flows (19-22).
+- **Authority:** This section is authoritative for visualization details in Batch B.
+- **ERD notation:**
+  - `PK` and `FK` fields are mandatory in ERD table definitions.
+  - Cardinality must be explicit on all relationship edges.
+  - Array/json references (for example `product_ids[]`) are modeled as reference lists, not strict FK constraints.
+- **Flow notation:**
+  - All payment flows include success path, gateway/webhook verification, and failure path.
+  - Escrow/disbursement flows include financial controls, audit logs, and retry/escalation behavior.
+
+### 32.2 Diagram 12 - Core Commerce ERD
+
+Required entities:
+
+- `users`
+- `vendors`
+- `products`
+- `product_variants`
+- `categories`
+- `orders`
+- `order_items`
+- `coupons`
+- `reviews`
+- `wishlists`
+
+Required relationships:
+
+- `users (1) -> (0..1) vendors` via `vendors.user_id`
+- `users (1) -> (0..N) orders` via `orders.buyer_id`
+- `vendors (1) -> (0..N) products` via `products.vendor_id`
+- `categories (1) -> (0..N) products` via `products.category_id`
+- `categories (1) -> (0..N) categories` via `categories.parent_id`
+- `products (1) -> (0..N) product_variants` via `product_variants.product_id`
+- `orders (1) -> (1..N) order_items` via `order_items.order_id`
+- `products (1) -> (0..N) order_items` via `order_items.product_id`
+- `product_variants (1) -> (0..N) order_items` via `order_items.variant_id`
+- `vendors (1) -> (0..N) coupons` via `coupons.vendor_id`
+- `users (1) -> (0..N) reviews` via `reviews.buyer_id`
+- `products (1) -> (0..N) reviews` via `reviews.product_id`
+- `orders (1) -> (0..N) reviews` via `reviews.order_id`
+- `users (1) -> (0..N) wishlists` via `wishlists.buyer_id`
+- `products (1) -> (0..N) wishlists` via `wishlists.product_id`
+
+### 32.3 Diagram 13 - AI and Intelligence ERD
+
+Required entities:
+
+- `ai_forecasts`
+- `forecast_accuracy`
+- `festival_calendar`
+- `category_velocity`
+- `weather_cache`
+- `synthetic_sales_seed`
+- `opportunity_alerts`
+- `bundle_suggestions`
+- `sahayak_conversations`
+
+Required relationships:
+
+- `products (1) -> (0..N) ai_forecasts` via `ai_forecasts.product_id`
+- `ai_forecasts (1) -> (0..N) forecast_accuracy` via `forecast_accuracy.forecast_id`
+- `categories (1) -> (0..N) category_velocity` via `category_velocity.category_id`
+- `products (1) -> (0..N) synthetic_sales_seed` via `synthetic_sales_seed.product_id`
+- `vendors (1) -> (0..N) opportunity_alerts` via `opportunity_alerts.vendor_id`
+- `products (1) -> (0..N) opportunity_alerts` via `opportunity_alerts.product_id`
+- `vendors (1) -> (0..N) bundle_suggestions` via `bundle_suggestions.vendor_id`
+- `users (1) -> (0..N) sahayak_conversations` via `sahayak_conversations.user_id`
+
+Reference-list note:
+
+- `bundle_suggestions.product_ids[]` is modeled as a product reference list for recommendation groups.
+
+### 32.4 Diagram 14 - Trust and Compliance ERD
+
+Required entities:
+
+- `escrow_transactions`
+- `verification_levels`
+- `compliance_documents`
+- `buyer_protection_claims`
+- `brand_authorizations`
+- `counterfeit_reports`
+- `bangla_qr_codes`
+- `vat_records`
+
+Required relationships:
+
+- `orders (1) -> (0..N) escrow_transactions` via `escrow_transactions.order_id`
+- `users (1) -> (0..N) escrow_transactions` via `escrow_transactions.buyer_id`
+- `vendors (1) -> (0..N) escrow_transactions` via `escrow_transactions.vendor_id`
+- `vendors (1) -> (0..N) verification_levels` via `verification_levels.vendor_id`
+- `vendors (1) -> (0..N) compliance_documents` via `compliance_documents.vendor_id`
+- `orders (1) -> (0..N) buyer_protection_claims` via `buyer_protection_claims.order_id`
+- `users (1) -> (0..N) buyer_protection_claims` via `buyer_protection_claims.buyer_id`
+- `vendors (1) -> (0..N) buyer_protection_claims` via `buyer_protection_claims.vendor_id`
+- `vendors (1) -> (0..N) brand_authorizations` via `brand_authorizations.vendor_id`
+- `products (1) -> (0..N) counterfeit_reports` via `counterfeit_reports.product_id`
+- `users (1) -> (0..N) counterfeit_reports` via `counterfeit_reports.reporter_id`
+- `vendors (1) -> (0..N) bangla_qr_codes` via `bangla_qr_codes.vendor_id`
+- `vendors (1) -> (0..N) vat_records` via `vat_records.vendor_id`
+
+### 32.5 Diagram 15 - Financial ERD
+
+Required entities:
+
+- `wallets`
+- `wallet_transactions`
+- `vendor_disbursements`
+- `subscription_billing`
+- `commission_records`
+- `flash_sale_slots`
+
+Required relationships:
+
+- `users (1) -> (0..N) wallets` via `wallets.user_id`
+- `wallets (1) -> (0..N) wallet_transactions` via `wallet_transactions.wallet_id`
+- `vendors (1) -> (0..N) vendor_disbursements` via `vendor_disbursements.vendor_id`
+- `vendors (1) -> (0..N) subscription_billing` via `subscription_billing.vendor_id`
+- `orders (1) -> (0..N) commission_records` via `commission_records.order_id`
+- `vendors (1) -> (0..N) commission_records` via `commission_records.vendor_id`
+- `vendors (1) -> (0..N) flash_sale_slots` via `flash_sale_slots.vendor_id`
+- `products (1) -> (0..N) flash_sale_slots` via `flash_sale_slots.product_id`
+
+### 32.6 Diagram 16 - Engagement ERD
+
+Required entities:
+
+- `live_streams`
+- `short_form_videos`
+- `chat_messages`
+- `notifications`
+- `affiliate_tracking`
+- `referral_codes`
+- `academy_progress`
+- `pos_transactions`
+
+Required relationships:
+
+- `vendors (1) -> (0..N) live_streams` via `live_streams.vendor_id`
+- `vendors (1) -> (0..N) short_form_videos` via `short_form_videos.vendor_id`
+- `users (1) -> (0..N) chat_messages` via `chat_messages.sender_id`
+- `users (1) -> (0..N) chat_messages` via `chat_messages.receiver_id`
+- `orders (1) -> (0..N) chat_messages` via `chat_messages.order_id`
+- `users (1) -> (0..N) notifications` via `notifications.user_id`
+- `users (1) -> (0..N) affiliate_tracking` via `affiliate_tracking.affiliate_id`
+- `products (1) -> (0..N) affiliate_tracking` via `affiliate_tracking.product_id`
+- `users (1) -> (0..N) referral_codes` via `referral_codes.user_id`
+- `vendors (1) -> (0..N) academy_progress` via `academy_progress.vendor_id`
+- `vendors (1) -> (0..N) pos_transactions` via `pos_transactions.vendor_id`
+- `products (1) -> (0..N) pos_transactions` via `pos_transactions.product_id`
+- `product_variants (1) -> (0..N) pos_transactions` via `pos_transactions.variant_id`
+
+Reference-list note:
+
+- `short_form_videos.tagged_products[]` and `live_streams.products_featured[]` are modeled as product reference lists.
+
+### 32.7 Diagram 17 - System ERD
+
+Required entities:
+
+- `audit_logs`
+- `event_store`
+- `api_keys`
+- `content_moderation_queue`
+
+Required relationships:
+
+- `users (1) -> (0..N) audit_logs` via `audit_logs.actor_id`
+- `vendors (1) -> (0..N) api_keys` via `api_keys.vendor_id`
+- `users (1) -> (0..N) content_moderation_queue` via `content_moderation_queue.moderator_id`
+
+System behavior notes for diagram labeling:
+
+- `event_store` is append-only and stores aggregate/event version history for CQRS.
+- `audit_logs` is append-only with agent action flagging.
+- `content_moderation_queue` tracks lifecycle `queued -> under_review -> resolved`.
+
+### 32.8 Diagram 18 - Full Cross-Domain Relationship Map
+
+Diagram 18 must include all domain tables explicitly documented in Section 14 and show cross-domain links.
+
+Required domain groups:
+
+- Core Commerce
+- AI and Intelligence
+- Trust and Compliance
+- Financial
+- Engagement
+- System
+
+Required cross-domain relationship spine:
+
+- Commerce transactions (`orders`, `order_items`) drive AI, financial, and trust records.
+- Trust records (`escrow_transactions`, `buyer_protection_claims`) bind to order/vendor/buyer entities.
+- Financial records (`commission_records`, `vendor_disbursements`, `wallet_transactions`) derive from completed commerce and escrow outcomes.
+- Engagement records link to users/vendors/products and feed analytics/AI context.
+- System records (`event_store`, `audit_logs`) capture immutable operational history across domains.
+
+### 32.9 Diagram 19 - Payment Gateway Integration Flow
+
+Required channels in one diagram:
+
+- `bKash`
+- `Nagad`
+- `SSLCommerz`
+- `Bangla QR`
+- `Rocket`
+
+Required flow steps:
+
+1. Buyer initiates checkout and selects payment method.
+2. Platform creates payment intent and redirects or displays payment payload.
+3. Buyer authorizes payment through provider.
+4. Provider returns callback/webhook.
+5. Platform performs server-side signature and transaction verification.
+6. On success: emit payment-confirmed event and continue saga.
+7. On failure: emit payment-failed event and return recovery options.
+
+Required failure branches:
+
+- webhook signature mismatch -> reject callback and log security event.
+- provider timeout/decline -> mark payment failed and keep order unconfirmed.
+
+### 32.10 Diagram 20 - Escrow System (Double-Entry Ledger and Lifecycle)
+
+Required lifecycle states:
+
+- `Held`
+- `Released`
+- `Disputed`
+- `Refunded`
+
+Required lifecycle transitions:
+
+- `Held -> Released` (buyer confirms or 48h auto-release post-delivery)
+- `Held -> Disputed` (buyer files claim)
+- `Disputed -> Refunded` (claim accepted)
+- `Disputed -> Released` (claim rejected)
+
+Required accounting controls:
+
+- escrow ledger entry on hold, release, dispute freeze, refund.
+- mirrored wallet/disbursement entries for net settlement.
+- daily reconciliation check between escrow releases and payout credits.
+
+### 32.11 Diagram 21 - Vendor Disbursement Pipeline
+
+Required pipeline sequence:
+
+1. Escrow release event received.
+2. Compute deductions: commission and applicable fees.
+3. Create disbursement record (`pending`).
+4. Queue payout job by selected method (`bKash`/`Nagad`).
+5. Execute provider payout API.
+6. Update disbursement status (`processed`/`failed`).
+7. Notify vendor and append audit log.
+
+Required failure handling:
+
+- payout failure -> retry with backoff and maintain immutable attempt history.
+- repeated failure threshold -> move to manual finance review queue.
+
+### 32.12 Diagram 22 - Bangla QR Payment Flow (POS and Online)
+
+Required dual entry paths in one diagram:
+
+- **In-store POS path**
+  - POS generates Bangla QR payload.
+  - Buyer scans via banking/MFS app.
+  - Bank confirms payment.
+  - POS marks transaction paid and updates inventory.
+- **Online checkout path**
+  - Checkout renders Bangla QR intent.
+  - Buyer scans and pays.
+  - Callback/webhook verified server-side.
+  - Order payment status confirmed and escrow hold applied for prepaid order.
+
+Required controls:
+
+- unique payment reference correlation between QR intent and settlement callback.
+- duplicate callback/idempotency protection.
+
+### 32.13 Diagram Generation Compliance Checklist (for IDs 12-22)
+
+- Use ERD diagrams for IDs 12-17 and include explicit PK/FK markers.
+- Include required cardinalities for all listed relationships.
+- Ensure Diagram 18 includes all Section 14 domain tables and cross-domain links.
+- Include success and failure branches for payment/escrow/disbursement flows (19-22).
+- Label financial control points (verification, reconciliation, idempotency, audit).
+
+---
+
+## 33. Diagram Clarification Spec (Batch C: IDs 23-34)
+
+This section is the normative diagram specification for Mermaid Diagram IDs 23-34. It extends Sections 8.4, 9.2, 10, 12.1, 13, 14, 15, 17, and 20 to make AI/ML and agentic workflow behavior explicit before diagram generation.
+
+### 33.1 Scope and Conventions
+
+- **Scope:** AI/ML inference, feedback, aggregation, optimization, and agentic orchestration diagrams (23-34).
+- **Authority:** This section is authoritative for Batch C visualization details.
+- **Flow labeling requirements:**
+  - Include endpoint labels for API interactions (for example, `GET /api/ai/forecast/:productId`).
+  - Include cadence labels for scheduled jobs (`hourly`, `15min`, `daily 6 AM`, `weekly Sunday midnight`).
+  - Include cache TTL labels (`24h`, `6h`, `1h`, `15m`) where applicable.
+- **Control requirements:**
+  - Include at least one failure/degradation path for each process-heavy diagram.
+  - Show state persistence targets explicitly (`ai_forecasts`, `forecast_accuracy`, `category_velocity`, `weather_cache`, `opportunity_alerts`, `bundle_suggestions`, `sahayak_conversations`, `audit_logs`).
+
+### 33.2 Diagram 23 - GBR ONNX Forecast Inference Dataflow
+
+Required components:
+
+- Vendor Dashboard or API consumer
+- Forecast endpoint (`GET /api/ai/forecast/:productId`)
+- Feature assembly stage with all 13 features
+- ONNX runtime inference (`onnxruntime-node`)
+- `ai_forecasts` persistence
+- Redis forecast cache (24h TTL)
+
+Required flows:
+
+1. Request arrives for product forecast.
+2. Cache lookup performed.
+3. On miss, feature vector is assembled from sales history + festival + weather + category velocity.
+4. ONNX inference executes and returns `{ forecast_7d, forecast_14d, forecast_30d, confidence, feature_importance, model_version, data_quality_score }`.
+5. Result persisted to `ai_forecasts` and cached.
+
+Required failure/degradation branches:
+
+- If model runtime fails, return controlled failure and log to observability.
+- If upstream context is partially unavailable, continue with last valid cached context where policy allows and mark degraded confidence.
+
+### 33.3 Diagram 24 - Cold-Start Bootstrap and Data Quality Lifecycle
+
+Required lifecycle stages:
+
+- Tier 1: onboarding seed (`synthetic_sales_seed`)
+- Tier 2: mixed real + seed data
+- Tier 3: fully real data (seed deprecated at day 90+)
+
+Required transitions:
+
+- Onboarding -> first real orders
+- Week 1+ blending period with rising `data_quality_score`
+- Day 90+ transition to `data_quality_score = 1.0`
+
+Required decision/fallback branches:
+
+- If vendor does not submit seed, system must show low-confidence baseline behavior path.
+- If real order volume remains sparse, continue mixed-mode forecasting with explicit confidence constraints.
+
+### 33.4 Diagram 25 - Smart Reorder Point (ROP) and Alert Routing
+
+Required formula blocks:
+
+- `ROP = (Avg Daily Demand x Lead Time) + Safety Stock`
+- `Safety Stock = Z(1.65) x StdDev x sqrt(Lead Time)`
+- Festival and weather multipliers explicitly shown
+
+Required inputs:
+
+- Forecast demand from Module 01
+- Learned lead time
+- Festival proximity (`days_to_festival < 14`)
+- Weather regime impact
+
+Required outputs/decisions:
+
+- `reorder_point`, `reorder_quantity`, `urgency_flag`
+- Decision branch for `stock_on_hand <= ROP`
+- Alert fanout path to WhatsApp / in-app notifications
+
+Required fallback branch:
+
+- If lead-time learning data is missing, use default lead-time policy and mark output as lower-confidence.
+
+### 33.5 Diagram 26 - Sales Velocity Ranking and Trend Classification
+
+Required flow elements:
+
+- `GET /api/ai/velocity` request path
+- Exponential smoothing over rolling 7-day sales rate
+- Trend classification (`accelerating`, `stable`, `decelerating`)
+- Ranked output for dashboard consumption
+
+Required action branches:
+
+- Accelerating -> buyer-side trending shelf + positive vendor signal
+- Decelerating -> warning + coupon optimization trigger path
+
+Required cache annotation:
+
+- Redis 1h TTL for velocity response.
+
+### 33.6 Diagram 27 - Coupon Optimization Advisor Decision Flow
+
+Required entry points:
+
+- Direct API call (`POST /api/ai/coupon-optimize`)
+- Auto-trigger when supply days > 45
+- Sahayak-initiated call path
+
+Required logic blocks:
+
+- `Optimal Discount = (Surplus Ratio - 1) / Price Elasticity`
+- Festival urgency modifier
+- Max discount guardrail
+
+Required outputs:
+
+- `recommended_discount_pct`
+- `expected_units_moved`
+- `expected_revenue`
+- `estimated_days_to_clear`
+- `coupon_code_suggestion`
+
+Required failure/guard branch:
+
+- If suggested discount violates policy bounds, return constrained recommendation and rationale.
+
+### 33.7 Diagram 28 - Order Anomaly Detection and Admin Triage
+
+Required asynchronous pipeline:
+
+- Order event -> BullMQ anomaly job -> signal extraction -> composite scoring -> admin action
+
+Required signal set (all six shown):
+
+- `order_frequency_z`
+- `quantity_z`
+- `address_mismatch`
+- `payment_method_age`
+- `device_fingerprint_score`
+- `cod_history_score`
+
+Required decision nodes:
+
+- Composite score > 2.5 -> suspicious, soft-pause order
+- Composite score <= 2.5 -> proceed
+
+Required triage actions:
+
+- Admin dashboard `Clear` / `Escalate`
+- Auditability of triage decision
+
+Required failure branch:
+
+- If one signal source is unavailable, use partial scoring with explicit degraded-risk marker.
+
+### 33.8 Diagram 29 - Vendor Performance Score (VPS) Computation and Tiering
+
+Required inputs and weights:
+
+- Fulfillment Rate (35%)
+- Avg Rating (25%)
+- Response-to-Ship Time (15%)
+- Delivery Accuracy (15%)
+- Dispute Rate (10%)
+
+Required schedule paths:
+
+- Recalculate on each delivery event
+- Weekly full refresh
+
+Required tier decisions:
+
+- Platinum (85+)
+- Gold (70-84)
+- Silver (50-69)
+- Watch (<50)
+
+Required action branches:
+
+- Platinum incentives path
+- Watch warning/suspension-risk path
+
+### 33.9 Diagram 30 - Cross-Vendor Category Emergence (Hourly Aggregation)
+
+Required pipeline:
+
+1. Hourly CRON reads `order_items` aggregates by category.
+2. Computes `category_velocity_score`.
+3. Enforces privacy threshold (`vendor_count >= 3`).
+4. Writes `category_velocity` table + Redis cache (1h TTL).
+5. Publishes feature for GBR injection.
+
+Required privacy branch:
+
+- Categories below threshold must be excluded from published aggregate output.
+
+### 33.10 Diagram 31 - Closed-Loop Forecast Feedback and Retraining Trigger
+
+Required cadence and computations:
+
+- Weekly CRON (Sunday midnight)
+- Compare predicted vs actual
+- `forecast_error = abs(predicted - actual) / actual`
+- Update `forecast_accuracy`
+
+Required trigger logic:
+
+- Product-level flag if `rolling_avg_error > 0.25`
+- Full retrain trigger if >30% products flagged
+
+Required failure branch:
+
+- Retrain failure path must keep prior model version active and record incident for follow-up.
+
+### 33.11 Diagram 32 - Weather-Aware Demand Signal Pipeline
+
+Required flow:
+
+1. Daily CRON fetch from OpenWeatherMap at 6 AM Bangladesh time.
+2. Derive `temperature_avg`, `precipitation_mm`, `is_monsoon`.
+3. Persist/update `weather_cache` and Redis (6h TTL).
+4. Inject weather-derived signals into demand and ROP calculations.
+
+Required mapping annotation:
+
+- Include impact-matrix examples (for example monsoon boosts rain gear, suppresses outdoor categories).
+
+Required degradation branch:
+
+- If provider call fails, serve last valid cached weather and flag stale-data condition.
+
+### 33.12 Diagram 33 - Agentic Sahayak V2 Tool-Calling Orchestration
+
+Required sequence participants:
+
+- Vendor (dashboard or chat channel)
+- Sahayak endpoint (`POST /api/ai/sahayak/chat`)
+- LLM runtime (Ollama primary, GPT fallback)
+- RAG retrieval context
+- Tool APIs (`get_velocity`, `coupon_optimize`, coupon creation path)
+- Persistence (`sahayak_conversations`, `audit_logs`)
+
+Required execution sequence:
+
+1. Intent parse in Bangla/English.
+2. RAG/context retrieval for vendor-specific grounding.
+3. Ordered tool calls to compute and stage actions.
+4. Human confirmation step before irreversible mutations.
+5. Final response with action summary.
+
+Required fallback and safety branches:
+
+- LLM fallback policy path (tier-aware GPT fallback).
+- Tool-call failure path that returns partial advisory response without silent mutation.
+
+### 33.13 Diagram 34 - RAG Search + Opportunity + Bundle Intelligence Flow
+
+Required combined pipelines:
+
+- **RAG semantic search path:** embed query -> pgvector similarity -> Meilisearch merge (RRF) -> ranked result set.
+- **Opportunity path:** 15-minute scan -> alert classification (red/yellow/green/blue) -> action suggestions.
+- **Bundle path:** weekly co-purchase computation -> top 5 bundle suggestions.
+
+Required convergence points:
+
+- Vendor dashboard consumption
+- Sahayak context/tool usage
+- Persistence to `opportunity_alerts` and `bundle_suggestions`
+
+Required failure branches:
+
+- Embedding/index lag -> queued regeneration path
+- Opportunity scan miss -> stale alert flag and retry scheduling
+- Bundle computation miss -> retain last successful bundle snapshot with timestamp
+
+### 33.14 Diagram Generation Compliance Checklist (for IDs 23-34)
+
+- Label all endpoints and background cadences explicitly.
+- Include cache TTL annotations where applicable.
+- Include explicit decision nodes for thresholds (`2.5`, `0.25`, `30%`, privacy floor `3 vendors`).
+- Include at least one failure/degradation path per diagram.
+- Preserve agentic safety: no implicit mutation without a visible confirmation/control path.
+
+---
+
+## 34. Diagram Clarification Spec (Batch D: IDs 35-45)
+
+This section is the normative diagram specification for Mermaid Diagram IDs 35-45. It extends Sections 7, 8.2, 8.3, 9.1, 9.3, 9.4, 15, 17, and 19 for security and order-lifecycle visualization precision.
+
+### 34.1 Scope and Conventions
+
+- **Scope:** Authentication/security diagrams (35-40) and order lifecycle diagrams (41-45).
+- **Authority:** This section is authoritative for Batch D visualization details.
+- **Security notation requirements:**
+  - Include verification and authorization gates explicitly.
+  - Include idempotency and audit steps on payment and escrow-sensitive paths.
+- **Lifecycle notation requirements:**
+  - Include the canonical state sequence: `Pending -> Confirmed -> Processing -> Picked Up -> In Transit -> Delivered -> Completed`.
+  - Include failure/dispute branches where applicable.
+
+### 34.2 Diagram 35 - RBAC Authorization Matrix and Access Control Flow
+
+Required role set:
+
+- `Super Admin`
+- `Vendor`
+- `Buyer`
+- `Support`
+- `Delivery`
+- `Affiliate`
+- `Finance Admin`
+- `Content Mod`
+
+Required flow:
+
+1. User authenticates and receives role-bearing token context.
+2. Endpoint request enters guard pipeline.
+3. `@Roles()` check evaluates required permission set.
+4. Allowed requests proceed to handler, denied requests return authorization failure.
+
+Required examples in diagram:
+
+- Vendor product management allowed.
+- Finance admin escrow/disbursement actions allowed.
+- Content moderation actions restricted to content moderator/super admin paths.
+
+### 34.3 Diagram 36 - JWT, Refresh Token, and MFA Lifecycle
+
+Required token lifecycle:
+
+- Access token lifetime: 15 minutes.
+- Refresh token rotation on refresh flow.
+- Optional TOTP MFA for vendor/admin-sensitive sessions.
+
+Required sequence:
+
+1. Login request -> credential verification.
+2. Optional MFA challenge branch.
+3. Access + refresh issuance.
+4. Access expiry branch -> refresh endpoint call.
+5. Refresh success -> rotated token pair.
+
+Required failure branches:
+
+- Invalid/expired refresh token -> re-authentication required.
+- MFA verification failure -> deny session establishment.
+
+### 34.4 Diagram 37 - Request Security Pipeline (Defense in Depth)
+
+Required ordered gates:
+
+1. HTTPS + edge WAF/bot protections.
+2. CORS origin checks.
+3. Rate limiting (`auth`, `checkout`, `AI tier-based`).
+4. DTO input validation and sanitization.
+5. Parameterized DB access path.
+6. RBAC guard and domain authorization checks.
+
+Required outputs:
+
+- Pass path to handler execution.
+- Reject paths with explicit response classes (`401`, `403`, `429`, `400`).
+
+### 34.5 Diagram 38 - PostgreSQL RLS Isolation and Cross-Vendor Privacy
+
+Required policy behavior:
+
+- Vendors see only own rows for vendor-bound entities.
+- Buyer order visibility limited to own orders.
+- Cross-vendor analytics exposure remains aggregate-only.
+- Category velocity privacy floor enforces minimum 3-vendor threshold.
+
+Required sequence:
+
+1. Auth context attached to DB session.
+2. RLS policy evaluation for each query.
+3. Filtered result set returned or denied.
+
+Required branch:
+
+- Attempted cross-tenant data access -> blocked result path.
+
+### 34.6 Diagram 39 - Payment Webhook Verification and Idempotent Processing
+
+Required verification chain:
+
+1. Receive webhook payload.
+2. Verify signature/HMAC.
+3. Verify transaction status server-side with provider.
+4. Apply idempotency check against payment reference.
+5. Commit payment state transition and emit event.
+
+Required failure branches:
+
+- Signature mismatch -> reject + security log.
+- Provider verification failure -> no payment confirmation.
+- Duplicate callback -> idempotent no-op success response.
+
+### 34.7 Diagram 40 - Escrow Authorization and Release Controls
+
+Required release paths:
+
+- Auto-release path: delivery confirmed + 48h cooling elapsed.
+- Manual release path: finance admin authorized action.
+
+Required controls:
+
+- Dual-approval gate for sensitive manual release scenarios.
+- Immutable audit log for each release decision.
+- Dispute freeze path preventing release until resolution.
+
+Required failure/escalation branch:
+
+- Authorization failure or policy breach -> release blocked and escalated.
+
+### 34.8 Diagram 41 - Order Lifecycle State Machine
+
+Required canonical states:
+
+- `Pending`
+- `Confirmed`
+- `Processing`
+- `Picked Up`
+- `In Transit`
+- `Delivered`
+- `Completed`
+
+Required alternative branches:
+
+- Dispute branch from post-delivery/protection scenarios.
+- Cancellation/failure branch where saga compensation applies.
+
+### 34.9 Diagram 42 - Order Creation to Confirmation Sequence
+
+Required participants:
+
+- Buyer client
+- API/order command handler
+- inventory reserve path
+- payment gateway
+- escrow hold path
+- event/notification fanout
+
+Required steps:
+
+1. Place order command received.
+2. Inventory validation and reservation.
+3. Payment initiation and callback verification.
+4. Escrow hold for prepaid path.
+5. Order creation and event emission.
+6. Buyer/vendor notification fanout.
+
+Required failure branches:
+
+- Inventory failure -> reject command.
+- Payment verification failure -> compensation/rollback path.
+
+### 34.10 Diagram 43 - Delivery and COD Intelligence Decision Flow
+
+Required decision elements:
+
+- COD vs prepaid split.
+- COD risk evaluation using anomaly/COD history signals.
+- Delivery acceptance vs dispute handling.
+
+Required outputs:
+
+- Delivery success -> progress to delivered state and escrow timing path.
+- High COD risk -> restricted/advance-payment-required path.
+- Dispute -> escrow freeze and support investigation path.
+
+### 34.11 Diagram 44 - Vendor Fulfillment Workflow and Operational Updates
+
+Required steps:
+
+1. Vendor receives order alert.
+2. Accept/reject decision.
+3. Pick-pack-process stage.
+4. 3PL assignment and pickup.
+5. Real-time status updates and inventory mutation.
+
+Required integrations:
+
+- WebSocket/in-app status update path.
+- AI signal update hooks (velocity/ROP/opportunity).
+
+### 34.12 Diagram 45 - Order History and Analytics Query Flow
+
+Required query paths:
+
+- Buyer order history retrieval.
+- Vendor sales analytics retrieval.
+- Admin platform analytics retrieval.
+
+Required CQRS read behavior:
+
+- Queries served from read-optimized stores/caches.
+- No write-side mutations in history/analytics flow.
+
+Required failure/degradation branch:
+
+- Cache/read-source miss -> fallback to replica/read model with traceable latency path.
+
+### 34.13 Diagram Generation Compliance Checklist (for IDs 35-45)
+
+- Include explicit authz/authn gates on security diagrams.
+- Include explicit status transitions for order lifecycle diagrams.
+- Include webhook verification + idempotency branches where payments are involved.
+- Include audit/logging branches on security-sensitive actions.
+- Include at least one rejection/failure branch per process diagram.
+
+---
+
+## 35. Diagram Clarification Spec (Batch E: IDs 46-56)
+
+This section is the normative diagram specification for Mermaid Diagram IDs 46-56. It extends Sections 8.1, 8.4, 9.1, 9.2, 9.5, 11, 13, 15, and 16 for frontend and real-time/messaging visualization precision.
+
+### 35.1 Scope and Conventions
+
+- **Scope:** Frontend architecture diagrams (46-51) and real-time/messaging diagrams (52-56).
+- **Authority:** This section is authoritative for Batch E visualization details.
+- **Frontend notation requirements:**
+  - Show boundaries for buyer, vendor, and admin experiences.
+  - Show locale and routing behavior for EN/BN explicitly.
+- **Realtime notation requirements:**
+  - Show event transport (`WebSocket`, queue-driven messaging, provider APIs).
+  - Include fallback/degradation branches for delivery failure or transient outages.
+
+### 35.2 Diagram 46 - Next.js Routing and Localization Architecture
+
+Required components:
+
+- Next.js App Router
+- Locale route groups (`/en/...`, `/bn/...`)
+- next-intl locale detection and preference persistence
+- Role-scoped route segments (buyer/vendor/admin experiences)
+
+Required flow:
+
+1. Request enters route resolution.
+2. Locale detection and user preference merge.
+3. Route dispatch to localized page tree.
+
+Required fallback branch:
+
+- Unsupported/missing locale -> default locale route with redirect.
+
+### 35.3 Diagram 47 - Buyer Frontend Experience Composition
+
+Required surfaces:
+
+- Search and discovery
+- Reel/live discovery cards
+- product detail/cart/checkout path
+- order tracking and chat entry points
+
+Required data interactions:
+
+- REST query/data fetch path.
+- Real-time status update subscription path.
+
+Required failure branch:
+
+- API fetch failure path with recoverable UI state.
+
+### 35.4 Diagram 48 - Vendor Dashboard Frontend Architecture
+
+Required surfaces:
+
+- KPI/forecast widgets
+- Opportunity panel
+- Product/stock management panels
+- Sahayak interaction panel
+- Live/reels/POS entry points
+
+Required interactions:
+
+- Forecast/opportunity query endpoints.
+- Action endpoints for coupons/pricing/inventory operations.
+
+Required safety branch:
+
+- Action confirmation path before state-changing operations.
+
+### 35.5 Diagram 49 - Admin Console Frontend Architecture
+
+Required surfaces:
+
+- Compliance and KYC review
+- Anomaly triage dashboard
+- Escrow/finance operations view
+- Content moderation queue
+- Platform analytics view
+
+Required guardrails:
+
+- Role-restricted action controls for finance/compliance actions.
+
+Required failure branch:
+
+- Unauthorized action attempt path and UI denial state.
+
+### 35.6 Diagram 50 - Client State and Data Sync Architecture
+
+Required state layers:
+
+- Local client state (cart/session/UI state)
+- Server state cache/query layer
+- Real-time event updates merged into view state
+
+Required flows:
+
+1. Initial data fetch and cache hydration.
+2. Client mutation request path.
+3. Revalidation/invalidation flow.
+4. Realtime event reconciliation with cached state.
+
+Required degradation branch:
+
+- Offline/transient network mode with queued or deferred sync for supported flows.
+
+### 35.7 Diagram 51 - PWA, Mobile, and POS Experience Topology
+
+Required channels:
+
+- Web PWA experience
+- Mobile app experience
+- POS mode flow (barcode/QR-assisted sales updates)
+
+Required consistency paths:
+
+- Shared backend APIs across channels.
+- Inventory/order state synchronization across online and POS events.
+
+Required failure branch:
+
+- Connectivity interruption path with subsequent resync/reconciliation behavior.
+
+### 35.8 Diagram 52 - WebSocket Event Architecture
+
+Required event domains:
+
+- Order status events
+- Chat messages
+- Alert/notification push events
+- Live viewer/event updates
+
+Required flow:
+
+1. Socket authentication and room assignment.
+2. Event publish/subscribe routing by role/context.
+3. Client acknowledgment/update cycle.
+
+Required failure branch:
+
+- Reconnect/backoff path and missed-event recovery behavior.
+
+### 35.9 Diagram 53 - WhatsApp Dispatch Pipeline (EN/BN Templates)
+
+Required pipeline:
+
+1. Domain event triggers notification intent.
+2. Template selection by locale preference.
+3. Queue dispatch worker sends provider request.
+4. Delivery status callback updates notification state.
+
+Required fallback chain:
+
+- WhatsApp failure -> web push/in-app fallback path.
+
+Required controls:
+
+- Rate-limit and anti-spam policy branch.
+
+### 35.10 Diagram 54 - Live Commerce Real-Time Interaction Flow
+
+Required sequence:
+
+1. Vendor starts live session.
+2. Buyer joins stream.
+3. Real-time chat/reactions/overlay commerce interactions.
+4. Shoppable actions route into cart/order pathways.
+
+Required components:
+
+- Live streaming coordination layer.
+- Session metadata and viewer count updates.
+
+Required failure branch:
+
+- Stream disruption/reconnect path with session continuity handling.
+
+### 35.11 Diagram 55 - Short-Form Video Feed Ranking and Commerce Actions
+
+Required ranking factors (explicitly labeled):
+
+- Buyer interest signals
+- Trend/engagement signals
+- Category affinity
+- Recency
+
+Required actions:
+
+- Feed impression/view update path
+- Product tag click-to-cart path
+- Vendor/profile navigation path
+
+Required degradation branch:
+
+- Ranking-source fallback for sparse-user history scenarios.
+
+### 35.12 Diagram 56 - Unified Notification Center Orchestration
+
+Required channels:
+
+- In-app notifications
+- WhatsApp notifications
+- Push/web notifications
+
+Required flow:
+
+1. Event classification by type/severity.
+2. Channel preference evaluation.
+3. Channel fanout and delivery tracking.
+4. Notification center state update (`delivered`, `read`).
+
+Required failure branch:
+
+- Primary channel failure reroutes to allowed fallback channels.
+
+### 35.13 Diagram Generation Compliance Checklist (for IDs 46-56)
+
+- Show role/experience boundaries clearly for buyer/vendor/admin.
+- Show locale routing behavior for EN/BN where frontend navigation is involved.
+- Show event transport and fallback paths for real-time/messaging diagrams.
+- Include at least one failure/degradation branch per process-heavy diagram.
+- Keep all endpoint/feature names aligned to V4 section terminology.
+
+---
+
+## 36. Diagram Clarification Spec (Batch F: IDs 57-67)
+
+This section is the normative diagram specification for Mermaid Diagram IDs 57-67. It extends Sections 9, 10, 11, 12, 14, 15, 16, 17, 20, and 29 for vendor operations and social/live commerce visualization precision.
+
+### 36.1 Scope and Conventions
+
+- **Scope:** Vendor flow diagrams (57-63) and social/live commerce bridge diagrams (64-67).
+- **Authority:** This section is authoritative for Batch F visualization details.
+- **Flow requirements:**
+  - Include role gates (`Vendor`, `Admin`, `Finance`, `Support`) where actions change compliance or money state.
+  - Include async paths where queues/webhooks/background jobs are required.
+  - Include at least one failure branch per process-heavy diagram.
+
+### 36.2 Diagram 57 - Vendor Onboarding and KYC Verification Workflow
+
+Required steps:
+
+1. Vendor registration (`/api/auth/register`) with locale and role.
+2. KYC submission (`/api/verification/submit`) with NID/trade license/TIN artifacts.
+3. Compliance review queue evaluation.
+4. Approval/rejection decision and reason capture.
+5. Vendor activation and dashboard access on approval.
+
+Required branches:
+
+- Missing/invalid documents -> revision request path.
+- Rejected vendor -> appeal/resubmission path.
+
+### 36.3 Diagram 58 - Subscription Billing and Tier Change Flow
+
+Required tiers:
+
+- Free, Starter, Growth, Pro, Enterprise.
+
+Required flow:
+
+1. Vendor selects tier or upgrade/downgrade action.
+2. Billing engine computes cycle amount and proration policy.
+3. Payment attempt through configured payment rails.
+4. `subscription_billing` update and entitlement update.
+
+Required branches:
+
+- Payment failure -> grace period + retry + downgrade guard path.
+- Feature entitlement mismatch -> reconciliation path.
+
+### 36.4 Diagram 59 - Vendor Catalog Publish and Moderation Pipeline
+
+Required flow:
+
+1. Vendor submits product listing (text/images/video/brand claims).
+2. Validation and policy scan (content, counterfeit risk, required fields).
+3. Moderation queue assignment for flagged items.
+4. Approve -> publish to catalog and search index.
+
+Required branches:
+
+- Rejected listing -> vendor correction loop.
+- Escalated counterfeit suspicion -> compliance takedown path.
+
+### 36.5 Diagram 60 - Vendor Campaign Orchestration (Coupon + Flash Sale)
+
+Required components:
+
+- Coupon Optimization Advisor (`/api/ai/coupon-optimize`).
+- Flash sale slot and stock cap controls.
+
+Required flow:
+
+1. Vendor selects campaign objective (clear stock, boost conversion, festival push).
+2. AI recommendation generated for discount and expected movement.
+3. Vendor confirms campaign and publish window.
+4. Campaign goes live with inventory guardrails.
+
+Required branches:
+
+- Policy-violating discount -> clamp/reject path.
+- Insufficient stock for flash slot -> auto-adjust/reject path.
+
+### 36.6 Diagram 61 - Vendor Inventory Replenishment and Supplier Lead-Time Learning
+
+Required logic:
+
+- Smart reorder point from Module 02.
+- Supplier lead-time learning from actual deliveries.
+
+Required flow:
+
+1. Stock and forecast context evaluated.
+2. ROP breach triggers reorder recommendation.
+3. Vendor places supplier order.
+4. Actual receipt date captured to refine lead-time model.
+
+Required branches:
+
+- Missing supplier history -> default lead-time path.
+- Delayed supplier delivery -> urgency escalation path.
+
+### 36.7 Diagram 62 - Vendor Finance Reconciliation and Disbursement Control Flow
+
+Required components:
+
+- `commission_records`, `escrow_transactions`, `vendor_disbursements`, `wallet_transactions`.
+
+Required flow:
+
+1. Escrow release events aggregated for vendor period.
+2. Fees/commission/net payable computed.
+3. Disbursement execution status checked.
+4. Reconciliation dashboard status updated.
+
+Required branches:
+
+- Mismatch between ledger and payout -> finance hold/escalation path.
+- Failed payout -> retry/manual review path.
+
+### 36.8 Diagram 63 - PRISM Academy Learning and Certification Progress Flow
+
+Required flow:
+
+1. Vendor enrolls in module.
+2. Progress events update `academy_progress`.
+3. Completion checks and certification decision.
+4. Benefits unlocked (badge/feature prompt/education milestones).
+
+Required branches:
+
+- Incomplete prerequisites -> blocked certification path.
+- Abandoned progress -> reminder and re-engagement path.
+
+### 36.9 Diagram 64 - Facebook Shops Sync and Attribution Flow
+
+Required flow:
+
+1. Vendor initiates `POST /api/social/sync/facebook`.
+2. Catalog mapping and sync job execution.
+3. Status callbacks and mapping persistence.
+4. Attribution signal to PRISM analytics.
+
+Required branches:
+
+- API auth/token failure -> reconnect flow.
+- Partial sync failure -> delta retry flow.
+
+### 36.10 Diagram 65 - TikTok Shop Sync and Order Reconciliation Flow
+
+Required flow:
+
+1. Vendor links TikTok integration.
+2. Catalog push and product mapping.
+3. External order ingress and PRISM order reconciliation.
+4. Inventory and payout attribution updates.
+
+Required branches:
+
+- Duplicate external order -> idempotent handling path.
+- Mapping conflict -> manual review queue.
+
+### 36.11 Diagram 66 - YouTube Shopping and Live Product Overlay Integration Flow
+
+Required flow:
+
+1. Live or video inventory mapped to product IDs.
+2. Product overlays published to stream/video context.
+3. Viewer click-through routed to PRISM product/cart.
+4. Attribution recorded for source channel.
+
+Required branches:
+
+- Missing product mapping -> overlay suppression path.
+- Link integrity failure -> fallback destination path.
+
+### 36.12 Diagram 67 - Influencer Affiliate and Referral Attribution Lifecycle
+
+Required entities and outputs:
+
+- `affiliate_tracking`, `referral_codes`, commission payout signals.
+
+Required flow:
+
+1. Affiliate/referral link issuance.
+2. Click and conversion tracking.
+3. Attribution validation window.
+4. Reward/commission posting and reporting.
+
+Required branches:
+
+- Invalid or expired code -> no-attribution path.
+- Fraud-like attribution anomaly -> hold and review path.
+
+### 36.13 Diagram Generation Compliance Checklist (for IDs 57-67)
+
+- Include role gates for KYC, moderation, and finance-sensitive actions.
+- Include queue/background processing for sync and moderation workflows.
+- Include explicit attribution persistence paths for social/affiliate flows.
+- Include at least one rejection/failure branch for each process-heavy diagram.
+
+---
+
+## 37. Diagram Clarification Spec (Batch G: IDs 68-75)
+
+This section is the normative diagram specification for Mermaid Diagram IDs 68-75. It extends Sections 8.4, 13, 15, 17, 18, 20, 22, and 24 for DevOps/observability and API design visualization precision.
+
+### 37.1 Scope and Conventions
+
+- **Scope:** DevOps/observability diagrams (68-71) and API design/governance diagrams (72-75).
+- **Authority:** This section is authoritative for Batch G visualization details.
+- **Notation requirements:**
+  - Show control-plane tools and runtime-plane services distinctly.
+  - Include reliability controls (retry, alerting, rollback, idempotency) where relevant.
+
+### 37.2 Diagram 68 - CI/CD Build-Test-Deploy Pipeline
+
+Required stages:
+
+1. Source change trigger (push/PR).
+2. Lint, typecheck, unit/integration tests.
+3. Build artifacts and container images.
+4. Deploy to target environment.
+5. Post-deploy smoke/health checks.
+
+Required branches:
+
+- Failed quality gate -> block deployment.
+- Failed post-deploy check -> rollback path.
+
+### 37.3 Diagram 69 - Observability Signal Topology (Metrics, Logs, Traces, Errors)
+
+Required components:
+
+- Prometheus, Grafana, Loki, Tempo/OpenTelemetry, Sentry.
+
+Required flow:
+
+1. Services emit metrics/logs/traces/errors.
+2. Signals aggregated and routed to observability stack.
+3. Dashboards and alert rules consume signal streams.
+
+Required branches:
+
+- Telemetry sink outage -> buffered/degraded observability path.
+
+### 37.4 Diagram 70 - Incident Detection, Alerting, and On-Call Response Workflow
+
+Required flow:
+
+1. Alert threshold breach from SLO/SLA or error spike.
+2. Notification to on-call path.
+3. Triage and incident severity classification.
+4. Mitigation and recovery steps.
+5. Post-incident review and action items.
+
+Required branches:
+
+- False positive alert -> close with rule tuning.
+- Unresolved in time window -> escalation path.
+
+### 37.5 Diagram 71 - Backup, Restore, and Disaster Recovery Flow
+
+Required coverage:
+
+- PostgreSQL backups, event store retention, recovery validation.
+
+Required flow:
+
+1. Scheduled encrypted backup creation.
+2. Integrity verification.
+3. Restore rehearsal in isolated environment.
+4. RTO/RPO validation.
+
+Required branches:
+
+- Backup corruption -> backup-chain fallback.
+- Restore failure -> incident escalation.
+
+### 37.6 Diagram 72 - API Gateway Request Lifecycle and Version Governance
+
+Required controls:
+
+- Versioned routes (`/api/v1/...`), auth guard, throttling, validation.
+
+Required flow:
+
+1. Incoming request to gateway.
+2. Route/version resolution.
+3. Security and validation middleware.
+4. Domain handler execution and response shaping.
+
+Required branches:
+
+- Unsupported version -> deprecation/error path.
+- Rate limit or auth failure -> controlled reject path.
+
+### 37.7 Diagram 73 - Vendor Write API Contract (Idempotency + Consistency)
+
+Required endpoints context:
+
+- Vendor product/order/campaign mutation paths.
+
+Required flow:
+
+1. Authenticated vendor write request accepted.
+2. Idempotency key checked.
+3. Command and persistence execution.
+4. Event/audit append and response.
+
+Required branches:
+
+- Duplicate idempotency key -> replay-safe return.
+- Domain validation failure -> no mutation path.
+
+### 37.8 Diagram 74 - Webhook Ingestion Reliability Pattern
+
+Required sources:
+
+- Payment gateways and partner callbacks.
+
+Required flow:
+
+1. Webhook receive.
+2. Signature verification + source validation.
+3. Idempotency check.
+4. Process + event emit.
+5. Retry/dead-letter handling on transient failure.
+
+Required branches:
+
+- Invalid signature -> security reject path.
+- Permanent processing error -> manual intervention queue.
+
+### 37.9 Diagram 75 - API Key Lifecycle and Partner Access Control Flow
+
+Required entities:
+
+- `api_keys`, permissions set, rate-limit policy.
+
+Required flow:
+
+1. Vendor/admin requests key issuance.
+2. Permission-scoped key generated and hashed.
+3. Runtime authorization with key policy checks.
+4. Rotation/revocation lifecycle.
+
+Required branches:
+
+- Scope mismatch -> deny request.
+- Compromised key signal -> emergency revoke path.
+
+### 37.10 Diagram Generation Compliance Checklist (for IDs 68-75)
+
+- Distinguish CI/CD control-plane from runtime data-plane in diagrams.
+- Include reliability controls: rollback, retry, dead-letter, escalation.
+- Include explicit versioning/governance paths for API design diagrams.
+- Include at least one failure branch for each process-heavy diagram.
+
+---
+
+## 38. Diagram Clarification Spec (Batch H: IDs 76-84)
+
+This section is the normative diagram specification for Mermaid Diagram IDs 76-84. It extends Sections 6, 20, 22, 26, 27, 28, and 29 for business model, growth, and execution-governance visualization precision.
+
+### 38.1 Scope and Conventions
+
+- **Scope:** Business and growth diagrams (76-84).
+- **Authority:** This section is authoritative for Batch H visualization details.
+- **Modeling requirements:**
+  - Show decision gates and measurable thresholds where roadmap/finance decisions are made.
+  - Keep flows anchored to documented milestones and gates (Month 4, 6, 9, 12, 15, 18).
+
+### 38.2 Diagram 76 - Five-Tier Subscription Packaging and Entitlement Flow
+
+Required tiers and controls:
+
+- Free, Starter, Growth, Pro, Enterprise with entitlement boundaries.
+
+Required flow:
+
+1. Vendor selects/changes tier.
+2. Entitlement profile loaded.
+3. Feature access checks executed at runtime.
+
+Required branches:
+
+- Requested feature outside tier -> upgrade prompt path.
+
+### 38.3 Diagram 77 - Revenue Waterfall and Reserve Allocation Flow
+
+Required order of allocation:
+
+1. Gross platform inflows.
+2. Operating cost coverage.
+3. Reserve allocation (20% as documented).
+4. Remaining distributable pool.
+
+Required branches:
+
+- Revenue shortfall against operating costs -> austerity/escalation path.
+
+### 38.4 Diagram 78 - Unit Economics and Break-Even Trajectory Model
+
+Required metrics:
+
+- CAC, LTV, gross margin band, monthly burn, monthly revenue.
+
+Required flow:
+
+1. Monthly cohort/revenue/cost inputs.
+2. Net position computation.
+3. Break-even detection around Month 16-18 trajectory.
+
+Required branches:
+
+- If break-even trend drifts materially, trigger mitigation strategy.
+
+### 38.5 Diagram 79 - Vendor Acquisition Funnel and Conversion Flywheel
+
+Required stages:
+
+- Awareness -> Lead -> Demo -> Onboarded -> Active vendor -> Referral.
+
+Required channels:
+
+- Field sales, Facebook groups, referrals, academy content.
+
+Required branches:
+
+- Funnel drop-off at any stage -> targeted intervention loop.
+
+### 38.6 Diagram 80 - Buyer Acquisition and Retention Loop
+
+Required loop components:
+
+- Reels/live discovery, flash sales, referrals, repeat purchase, loyalty effects.
+
+Required flow:
+
+1. Discovery and first purchase.
+2. Post-purchase engagement and notification loops.
+3. Repeat behavior and referral activation.
+
+Required branches:
+
+- Churn-risk signals -> win-back campaign path.
+
+### 38.7 Diagram 81 - Geographic Expansion Rollout Strategy
+
+Required sequence:
+
+- Dhaka -> Chattogram -> Sylhet -> broader nationwide rollout.
+
+Required gates:
+
+- Capacity, logistics readiness, support readiness, vendor density thresholds.
+
+Required branches:
+
+- Gate not met -> hold and remediation path.
+
+### 38.8 Diagram 82 - Self-Funding Gates and External Funding Decision Tree
+
+Required decision gates:
+
+- Gate 1 (Month 4), Gate 2 (Month 6), Gate 3 (Month 9), Gate 4 (Month 12), Gate 5 (Month 15).
+
+Required flow:
+
+1. Evaluate revenue and traction at each gate.
+2. Continue self-funding vs seek external path decision.
+3. Resource allocation implications.
+
+Required branches:
+
+- Underperforming gate -> pivot/cost-control path.
+
+### 38.9 Diagram 83 - Risk Register Monitoring and Mitigation Escalation Workflow
+
+Required structure:
+
+- Risk intake, likelihood/impact scoring, owner assignment, mitigation execution, residual risk review.
+
+Required branches:
+
+- High-impact unresolved risk -> executive escalation path.
+- Closed risk -> archive/knowledge capture path.
+
+### 38.10 Diagram 84 - 15-Month Roadmap Dependency and Milestone Timeline
+
+Required phases:
+
+- Foundation/Compliance, Revenue/Trust, AI/GenAI, Communication/Commerce, Logistics/Mobile, Polish/Launch/Scale.
+
+Required flow:
+
+1. Phase dependencies mapped.
+2. Milestone readiness checks.
+3. Launch readiness gate at Month 15.
+
+Required branches:
+
+- Dependency slip -> re-plan and scope adjustment path.
+
+### 38.11 Diagram Generation Compliance Checklist (for IDs 76-84)
+
+- Include numerical gates/thresholds where documented.
+- Include explicit decision points for funding and expansion.
+- Keep business diagrams tied to V4 roadmap and projection terminology.
+- Include at least one risk/deviation branch for each process-heavy diagram.

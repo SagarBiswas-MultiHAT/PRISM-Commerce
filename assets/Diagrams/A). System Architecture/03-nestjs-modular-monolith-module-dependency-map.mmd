@@ -1,0 +1,79 @@
+flowchart LR
+  %% Diagram 03: NestJS Modular Monolith - Module Dependency Map (Production-Grade)
+
+  subgraph CORE[Core Commerce Modules]
+    Auth[AuthModule]
+    User[UserModule]
+    Product[ProductModule]
+    Inventory[InventoryModule]
+    Order[OrderModule]
+    Payment[PaymentModule]
+    Escrow[EscrowModule]
+    Logistics[LogisticsModule]
+  end
+
+  subgraph TRUST[Trust and Governance]
+    Compliance[ComplianceModule]
+    Audit[AuditModule]
+  end
+
+  subgraph INTEL[Intelligence and Insights]
+    AI[AIModule]
+    Analytics[AnalyticsModule]
+  end
+
+  subgraph PLATFORM[Cross-Cutting Platform]
+    CQRS[CqrsModule\nCommands + Queries + Sagas]
+    EventStore[EventStoreModule\nAppend-Only Domain Events]
+    Notify[NotificationModule]
+  end
+
+  subgraph ADMIN[Control Plane]
+    Admin[AdminModule]
+  end
+
+  Auth --> User
+  User --> Product
+  Product --> Inventory
+  Product --> Order
+  Inventory --> Order
+  Order --> Payment
+  Payment --> Escrow
+  Order --> Logistics
+
+  Compliance --> Payment
+  Compliance --> Escrow
+
+  Order --> Notify
+  Order --> AI
+  Analytics --> AI
+
+  Order --> CQRS
+  Payment --> CQRS
+  Escrow --> CQRS
+  Logistics --> CQRS
+  CQRS --> EventStore
+
+  EventStore --> Notify
+  EventStore --> Analytics
+  EventStore --> AI
+  EventStore --> Audit
+
+  Auth --> Admin
+  Compliance --> Admin
+  Analytics --> Admin
+  Audit --> Admin
+
+  Stable[Stable Core\nAuth, User, Product, Order, Payment]
+  Evolving[Evolving Domain\nAI, Analytics, Agentic Features]
+
+  Stable -.versioned contracts.-> CQRS
+  Evolving -.bounded by events.-> EventStore
+
+  classDef core fill:#e7f0ff,stroke:#2a4b8d,stroke-width:1px;
+  classDef cross fill:#fff3e2,stroke:#8a4f08,stroke-width:1px;
+  classDef gov fill:#eaf9ea,stroke:#1b6b2f,stroke-width:1px;
+
+  class Auth,User,Product,Inventory,Order,Payment,Escrow,Logistics core;
+  class CQRS,EventStore,Notify,AI,Analytics cross;
+  class Compliance,Audit,Admin gov;

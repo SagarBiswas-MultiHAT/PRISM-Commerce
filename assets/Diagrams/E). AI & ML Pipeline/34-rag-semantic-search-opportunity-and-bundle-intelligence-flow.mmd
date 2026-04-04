@@ -1,0 +1,60 @@
+flowchart TB
+  %% Diagram 34: RAG Semantic Search, Opportunity, and Bundle Intelligence Flow
+
+  subgraph RAG[RAG Semantic Search Pipeline]
+    Q[User query\nGET /api/search/semantic?q=...] --> E[Generate embeddings]
+    E --> VEC[pgvector cosine similarity]
+    Q --> LEX[Meilisearch lexical query]
+    VEC --> FUSION[Reciprocal Rank Fusion]
+    LEX --> FUSION
+    FUSION --> RANKED[Ranked semantic + lexical results]
+  end
+
+  subgraph OPP[Opportunity Engine Pipeline]
+    OCron[15-min CRON] --> OScan[Scan vendor portfolio\nstock, demand, price signals]
+    OScan --> OClass[Classify alerts\nred/yellow/green/blue]
+    OClass --> OPersist[(Write opportunity_alerts)]
+    OPersist --> OAction[Recommend price, flash sale, bundle, restock]
+  end
+
+  subgraph BUNDLE[Bundle Recommendation Pipeline]
+    BCron[Weekly CRON] --> CoBuy[Build co-purchase matrix\nfrom order_items]
+    CoBuy --> BScore[Category affinity scoring]
+    BScore --> BPersist[(Write bundle_suggestions)]
+    BPersist --> BTop[Top 5 bundle suggestions\nwith 5-15% discount]
+  end
+
+  Dashboard[Vendor Dashboard]
+  Sahayak[Sahayak Context and Tools]
+
+  RANKED --> Dashboard
+  OAction --> Dashboard
+  BTop --> Dashboard
+
+  RANKED --> Sahayak
+  OAction --> Sahayak
+  BTop --> Sahayak
+
+  VecFail{Embedding index stale?}
+  OppFail{Opportunity scan missed cycle?}
+  BundleFail{Bundle compute failure?}
+  RFallback[Serve lexical-only fallback\nwith stale-warning]
+
+  VEC --> VecFail
+  VecFail -- Yes --> Regen[Queue embedding regeneration]
+  Regen --> RFallback
+  RFallback --> Dashboard
+  RFallback --> Sahayak
+  VecFail -- No --> RANKED
+
+  OScan --> OppFail
+  OppFail -- Yes --> OStale[Mark alert set stale\nretry scheduler]
+  OStale --> Dashboard
+  OStale --> Sahayak
+  OppFail -- No --> OClass
+
+  CoBuy --> BundleFail
+  BundleFail -- Yes --> BSnapshot[Retain last successful\nbundle snapshot with timestamp]
+  BSnapshot --> Dashboard
+  BSnapshot --> Sahayak
+  BundleFail -- No --> BScore

@@ -1,0 +1,34 @@
+flowchart TB
+  %% Diagram 58: Vendor Subscription Billing and Tier Change Flow
+
+  Select[Vendor selects upgrade or downgrade\nFree/Starter/Growth/Pro/Enterprise]
+  AuthGate{Vendor authorized for tier change?}
+  Deny[Deny request and show account guidance]
+
+  Compute[Compute billing amount\ncycle + proration]
+  Attempt[Attempt payment through configured rails]
+  PayResult{Payment successful?}
+
+  Billing[(Update subscription_billing)]
+  Entitlements[Apply tier entitlements]
+  EntitlementCheck{Entitlements match billing state?}
+  Reconcile[Run entitlement reconciliation job]
+  Confirm[Return active tier confirmation]
+
+  Grace[Enter grace period]
+  Retry[Retry collection schedule]
+  RetryResult{Retry successful?}
+  Restrict[Restrict premium entitlements]
+  Downgrade[Downgrade to safe tier policy]
+
+  Select --> AuthGate
+  AuthGate -- No --> Deny
+  AuthGate -- Yes --> Compute --> Attempt --> PayResult
+
+  PayResult -- Yes --> Billing --> Entitlements --> EntitlementCheck
+  EntitlementCheck -- Yes --> Confirm
+  EntitlementCheck -- No --> Reconcile --> Confirm
+
+  PayResult -- No --> Grace --> Retry --> RetryResult
+  RetryResult -- Yes --> Billing
+  RetryResult -- No --> Restrict --> Downgrade

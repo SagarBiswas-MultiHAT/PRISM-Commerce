@@ -1,0 +1,29 @@
+flowchart TB
+  %% Diagram 22A: Payment and Escrow Business-Friendly Journey
+
+  Start([Buyer places an order]) --> Method{Choose payment method}
+
+  Method --> Pay[Buyer pays via bKash/Nagad/SSLCommerz/Bangla QR/Rocket]
+  Pay --> Verified{Payment verified?}
+
+  Verified -- No --> Retry[Show retry or alternate payment options]
+  Retry --> Method
+
+  Verified -- Yes --> Hold[Funds moved to escrow - Held]
+  Hold --> Ship[Vendor fulfills and ships the order]
+  Ship --> Delivered{Order delivered?}
+
+  Delivered -- No --> Support[Support follows delivery issue workflow]
+  Delivered -- Yes --> Satisfied{Buyer satisfied or no dispute in 48h?}
+
+  Satisfied -- Yes --> Release[Escrow released to vendor]
+  Release --> Payout[Vendor payout processed]
+
+  Satisfied -- No --> Dispute[Claim review - Disputed state]
+  Dispute --> Outcome{Claim decision}
+  Outcome -- Buyer wins --> Refund[Refund buyer from escrow]
+  Outcome -- Vendor wins --> Release
+
+  Payout --> Audit[All transitions logged in audit trail]
+  Refund --> Audit
+  Support --> Audit

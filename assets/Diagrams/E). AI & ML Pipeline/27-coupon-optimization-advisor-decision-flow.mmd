@@ -1,0 +1,38 @@
+flowchart TB
+  %% Diagram 27: Coupon Optimization Advisor Decision Flow
+
+  APICall[POST /api/ai/coupon-optimize]
+  AutoTrigger[Auto trigger\nsupply_days > 45]
+  SahayakTrigger[Sahayak tool call\ncreate_coupon intent]
+
+  Merge[Open optimization run]
+  Gather[Gather inputs\nproduct_id\nsurplus_ratio\nprice_elasticity\nfestival_urgency\nmax_discount_pct]
+  ElasticityCheck{Price elasticity available?}
+  ElasticityFallback[Use bounded heuristic elasticity\nMark confidence lower]
+
+  Calc[Optimal Discount equals\nSurplus Ratio minus 1 divided by Price Elasticity\nwith festival urgency modifier]
+  PolicyCheck{Within discount policy bounds?}
+  Clamp[Clamp to policy max/min\nAttach rationale]
+
+  Simulate[Estimate outputs\nexpected_units_moved\nexpected_revenue\nestimated_days_to_clear]
+  BenefitCheck{Revenue or inventory outcome improves baseline?}
+
+  Recommend[Return recommended_discount_pct\nexpected_units_moved\nexpected_revenue\nestimated_days_to_clear\ncoupon_code_suggestion]
+  NoCoupon[No coupon recommendation\nSuggest flash sale or monitoring]
+  PersistRec[(Persist recommendation snapshot\nfor audit and replay)]
+
+  APICall --> Merge
+  AutoTrigger --> Merge
+  SahayakTrigger --> Merge
+
+  Merge --> Gather --> ElasticityCheck
+  ElasticityCheck -- Yes --> Calc
+  ElasticityCheck -- No --> ElasticityFallback --> Calc
+
+  Calc --> PolicyCheck
+  PolicyCheck -- Yes --> Simulate
+  PolicyCheck -- No --> Clamp --> Simulate
+
+  Simulate --> BenefitCheck
+  BenefitCheck -- Yes --> Recommend --> PersistRec
+  BenefitCheck -- No --> NoCoupon --> PersistRec

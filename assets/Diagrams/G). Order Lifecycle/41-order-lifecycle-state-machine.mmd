@@ -1,0 +1,21 @@
+stateDiagram-v2
+  %% Diagram 41: Order Lifecycle State Machine
+
+  [*] --> Pending
+  Pending --> Confirmed: inventory reserved and payment verified
+  Confirmed --> Processing: pick and pack started
+  Processing --> PickedUp: 3PL pickup completed
+  PickedUp --> InTransit: linehaul and last-mile in progress
+  InTransit --> Delivered: delivery confirmed
+  Delivered --> Completed: post-delivery completion window
+
+  Pending --> FailedCompensated: validation or payment failed
+  FailedCompensated --> Cancelled: saga compensation completed
+  Confirmed --> Cancelled: buyer or vendor cancellation path
+  Delivered --> Disputed: buyer protection claim
+  Disputed --> Completed: claim rejected and escrow released
+  Disputed --> Refunded: claim accepted
+  Refunded --> Completed
+
+  Completed --> [*]
+  Cancelled --> [*]

@@ -1,0 +1,33 @@
+flowchart LR
+  %% Diagram 50: Client State and Data Sync Architecture
+
+  UI[UI Components]
+  Local[Local client state\ncart/session/ui]
+  ServerCache[Server state cache/query layer]
+  API[Backend APIs]
+  RT[Realtime events]
+  Merge[State reconciliation]
+  Hydrate[Initial fetch and cache hydration]
+
+  Mutate[Client mutation request]
+  Optimistic[Optimistic UI update]
+  Invalidate[Cache invalidation/revalidation]
+  MutationFail{Mutation failed?}
+  Rollback[Rollback optimistic state and show retry]
+
+  Offline{Network available?}
+  Queue[Queue/defer supported mutations]
+  Sync[Sync deferred changes on reconnect]
+
+  UI --> Local
+  UI --> ServerCache --> Hydrate --> API
+  API --> ServerCache --> UI
+
+  UI --> Mutate --> Offline
+  Offline -- No --> Queue --> Sync --> API
+  Offline -- Yes --> Optimistic --> API
+  API --> MutationFail
+  MutationFail -- Yes --> Rollback --> Mutate
+  MutationFail -- No --> Invalidate --> ServerCache
+
+  RT --> Merge --> ServerCache

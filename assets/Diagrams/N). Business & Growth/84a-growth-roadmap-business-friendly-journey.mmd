@@ -1,0 +1,20 @@
+flowchart TB
+  %% Diagram 84A: Growth Roadmap Business-Friendly Journey
+
+  Foundation[Build strong foundation and compliance]
+  Trust[Grow vendor and buyer trust]
+  Intelligence[Scale AI-assisted operations]
+  Commerce[Expand communication and commerce channels]
+  Launch[Launch readiness and public rollout]
+  Scale[Post-launch scale and stabilization]
+
+  Gate{Milestone achieved?}
+  Replan[Adjust scope, timing, and resources]
+
+  Foundation --> Gate
+  Gate -- Yes --> Trust --> Gate
+  Gate -- Yes --> Intelligence --> Gate
+  Gate -- Yes --> Commerce --> Gate
+  Gate -- Yes --> Launch --> Scale
+
+  Gate -- No --> Replan --> Foundation

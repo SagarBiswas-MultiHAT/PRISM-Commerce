@@ -1,0 +1,67 @@
+flowchart TB
+  %% Diagram 18A: Business-Friendly Cross-Domain Data Map
+
+  subgraph CORE[Core Commerce Data]
+    U[Users and Vendors]
+    P[Products and Categories]
+    O[Orders and Order Items]
+  end
+
+  subgraph TRUST[Trust and Compliance Data]
+    E[Escrow Transactions]
+    C[Claims, KYC, Brand, VAT]
+  end
+
+  subgraph FIN[Financial Data]
+    W[Wallets and Wallet Transactions]
+    D[Vendor Disbursements]
+    S[Subscriptions and Commissions]
+  end
+
+  subgraph AI[AI and Intelligence Data]
+    F[Forecasts and Accuracy]
+    V[Category Velocity and Weather Signals]
+    B[Opportunities and Bundle Suggestions]
+  end
+
+  subgraph ENG[Engagement Data]
+    N[Notifications and Chat]
+    L[Live Streams and Short Videos]
+    A[Affiliate, Referrals, Academy, POS]
+  end
+
+  subgraph SYS[System Governance Data]
+    EV[event_store]
+    AL[audit_logs]
+    K[api_keys and moderation queue]
+  end
+
+  U --> P --> O
+  O --> E
+  O --> S
+  O --> F
+
+  E --> D
+  C --> E
+
+  W --> D
+  S --> D
+
+  V --> F
+  F --> B
+  O --> V
+
+  O --> N
+  P --> L
+  U --> A
+
+  EV --> O
+  EV --> E
+  EV --> S
+  AL --> O
+  AL --> E
+  AL --> D
+  K --> U
+
+  Guard[Privacy Rule\nCross-vendor aggregate analytics require >= 3 vendors]
+  V --> Guard

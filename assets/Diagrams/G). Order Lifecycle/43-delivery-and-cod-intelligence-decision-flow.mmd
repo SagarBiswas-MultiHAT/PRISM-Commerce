@@ -1,0 +1,41 @@
+flowchart TB
+  %% Diagram 43: Delivery and COD Intelligence Decision Flow
+
+  Start[Order ready for delivery]
+  Method{Payment method}
+
+  COD[COD path]
+  Prepaid[Prepaid path]
+
+  Risk[Run COD intelligence\ncod_history + anomaly signals]
+  RiskGate{High COD risk?}
+  Restrict[Require advance payment\nor restrict COD]
+  Convert{Advance payment completed?}
+  NormalCOD[Proceed with COD delivery]
+  Abort[Cancel COD attempt and notify buyer]
+
+  Deliver[Delivery attempt]
+  Outcome{Delivered successfully?}
+  Delivered[Mark delivered state]
+  Failed[Delivery failure handling]
+  Reattempt[Reschedule or reassign delivery]
+
+  Dispute{Buyer files dispute?}
+  Freeze[Freeze escrow and start investigation]
+  Release[Continue normal escrow timing path]
+  Support[Support investigation and resolution]
+
+  Start --> Method
+  Method -- COD --> COD --> Risk --> RiskGate
+  RiskGate -- Yes --> Restrict --> Convert
+  Convert -- Yes --> Deliver
+  Convert -- No --> Abort
+  RiskGate -- No --> NormalCOD --> Deliver
+
+  Method -- Prepaid --> Prepaid --> Deliver
+
+  Deliver --> Outcome
+  Outcome -- No --> Failed --> Reattempt --> Deliver
+  Outcome -- Yes --> Delivered --> Dispute
+  Dispute -- Yes --> Freeze --> Support
+  Dispute -- No --> Release

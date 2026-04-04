@@ -1,0 +1,21 @@
+flowchart TB
+  %% Diagram 80: Buyer Acquisition and Retention Loop Flow
+
+  Discover[Discovery\nreels, live commerce, flash sales, SEO]
+  FirstBuy[First purchase]
+  Fulfill[Reliable fulfillment + trust signals]
+  Engage[Post-purchase engagement\nnotifications, recommendations, wishlist alerts]
+  Repeat[Repeat purchase]
+  Loyalty[Loyalty effects\npoints, trust, habit formation]
+  Refer[Referral and social sharing]
+
+  Churn{Churn risk detected?}
+  Winback[Win-back campaign\npersonalized offer or reminder]
+
+  Discover --> FirstBuy --> Fulfill --> Engage --> Repeat --> Loyalty --> Refer --> Discover
+
+  Engage --> Churn
+  Repeat --> Churn
+  Loyalty --> Churn
+  Churn -- Yes --> Winback --> Engage
+  Churn -- No --> Repeat

@@ -1,0 +1,37 @@
+sequenceDiagram
+  %% Diagram 73: Vendor Write API Idempotency and Consistency Flow
+
+  autonumber
+  actor V as Vendor
+  participant API as Vendor Write API (/products,/orders,/campaigns)
+  participant Idem as Idempotency Store
+  participant Cmd as Command Handler
+  participant DB as Write Model
+  participant Outbox as Event Outbox/Bus
+  participant Audit as Audit/Event Store
+
+  V->>API: Authenticated write request + idempotency key
+  API->>Idem: Check idempotency key
+  alt Duplicate key
+    Idem-->>API: Existing result reference
+    API-->>V: Replay-safe prior response
+  else New key
+    API->>Cmd: Validate domain rules
+    alt Validation fails
+      Cmd-->>API: Reject, no mutation
+      API-->>V: 4xx domain error
+    else Validation passes
+      Cmd->>DB: Persist mutation transaction
+      alt DB commit conflict/failure
+        DB-->>Cmd: Conflict or write failure
+        Cmd-->>API: Reject, no durable mutation
+        API-->>V: 409/5xx controlled response
+      else Commit success
+        DB-->>Cmd: Commit success
+        Cmd->>Outbox: Publish domain event
+        Cmd->>Audit: Append audit/event record
+        Cmd-->>API: Success payload
+        API-->>V: 2xx response
+      end
+    end
+  end

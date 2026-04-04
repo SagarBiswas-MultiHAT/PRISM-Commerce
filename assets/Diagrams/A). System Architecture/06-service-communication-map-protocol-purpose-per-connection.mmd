@@ -1,0 +1,62 @@
+flowchart LR
+  %% Diagram 06: Service Communication Map (Protocol + Purpose + Reliability)
+
+  Client[Web/Mobile Client]
+  Gateway[API Gateway]
+  RT[Realtime Gateway]
+  Policy[Auth + Rate Limit + RBAC]
+  API[NestJS API]
+  PGB[PgBouncer]
+  PGW[(PostgreSQL Primary)]
+  PGR[(PostgreSQL Replica)]
+  RED[(Redis)]
+  MEI[(Meilisearch)]
+  ONNX[ONNX Runtime]
+  OLL[Sahayak Runtime\nOllama Primary]
+  GPT[OpenAI GPT Fallback]
+  PAY[Payment Providers]
+  WA[WhatsApp API]
+  PUSH[Web Push and In-App Fallback]
+  L3[3PL APIs]
+  Retry[Retry Policy\nExponential Backoff + Circuit Breaker]
+  Sig[Webhook Signature Verify]
+  Idem[Idempotency Keys\nOrders + Payments + Webhooks]
+  Obs[Metrics + Logs + Traces]
+
+  Client -->|HTTPS REST\nBusiness Operations| Gateway
+  Client -->|WSS Primary\nRealtime Subscriptions| RT
+  Client -.SSE Fallback.-> Gateway
+
+  Gateway -->|HTTPS\nAuth, Routing, Throttle| Policy
+  Policy -->|Approved Traffic| API
+  RT -->|Session Auth| API
+
+  API -->|SQL via Prisma| PGB
+  PGB -->|Write Commands| PGW
+  PGB -->|Read Queries| PGR
+  API <--> |Redis Protocol\nCache, Queue, Pub/Sub| RED
+  API <--> |HTTP\nLexical Search Index/Query| MEI
+  API <--> |Local Runtime\nForecast Inference| ONNX
+  API <--> |HTTP\nLLM Tool Calling| OLL
+  OLL -.Tiered Fallback.-> GPT
+
+  API -->|HTTPS\nInitiate Payments| PAY
+  PAY -->|Webhook HTTPS| Sig
+  Sig -->|Verify Signature + Timestamp| Idem
+  Idem -->|Deduplicate and Process| API
+
+  API -->|HTTPS\nTemplated Notifications| WA
+  WA -.Delivery Failure Fallback.-> PUSH
+  API -->|HTTPS\nCreate/Track Shipments| L3
+  L3 -.Timeout/5xx Retry.-> Retry
+  Retry -.Replay Safe Operations.-> API
+
+  RT -->|WSS\nOrder Push, Chat, Live Events| Client
+
+  API -->|Telemetry| Obs
+  RT -->|Telemetry| Obs
+
+  classDef store fill:#eef6ff,stroke:#2d5aa7,stroke-width:1px;
+  classDef control fill:#fff3e2,stroke:#8a4f08,stroke-width:1px;
+  class PGB,PGW,PGR,RED,MEI store;
+  class Policy,Sig,Idem,Retry control;

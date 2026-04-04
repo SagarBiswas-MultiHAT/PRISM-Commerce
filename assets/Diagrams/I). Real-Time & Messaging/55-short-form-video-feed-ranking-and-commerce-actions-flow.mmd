@@ -1,0 +1,21 @@
+flowchart TB
+  %% Diagram 55: Short-Form Video Feed Ranking and Commerce Actions Flow
+
+  Open[Buyer opens reels feed]
+  Rank[Rank candidates using\ninterest + trend + affinity + recency]
+  Sparse{Sparse user history?}
+  Fallback[Use popularity + recency fallback ranking]
+  Feed[Render ranked feed cards]
+
+  View[View/impression event]
+  Click[Tagged product click]
+  Cart[Add to cart]
+  Profile[Open vendor profile]
+
+  Open --> Rank --> Sparse
+  Sparse -- Yes --> Fallback --> Feed
+  Sparse -- No --> Feed
+
+  Feed --> View
+  Feed --> Click --> Cart
+  Feed --> Profile

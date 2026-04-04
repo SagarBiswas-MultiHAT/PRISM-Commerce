@@ -1,0 +1,27 @@
+flowchart TB
+  %% Diagram 21: Vendor Disbursement Pipeline
+
+  E0([EscrowReleased Event]) --> I0{Event Already Processed?}
+  I0 -- Yes --> NoOp[Return Existing Disbursement Status]
+  I0 -- No --> N0[Compute Net Payout\nNet = GMV - commission - applicable fees]
+  N0 --> R0[Create vendor_disbursements row\nstatus=pending]
+  R0 --> Q0[Queue Payout Job\nmethod=bKash or Nagad]
+  Q0 --> P0[Call Provider Payout API]
+
+  P0 --> S0{Provider Response}
+  S0 -- Success --> OK[Update status=processed\nset processed_at]
+  OK --> W0[Write wallet_transactions or payout reference]
+  W0 --> N1[Notify Vendor\nWhatsApp + In-app]
+  N1 --> A0[Append audit_logs entry]
+
+  S0 -- Failed --> F0[Update status=failed - transient]
+  F0 --> C0[Append immutable payout attempt history\nStore failure reason]
+  C0 --> R1{Attempts < Max Retries?}
+  R1 -- Yes --> B0[Backoff Delay and Retry]
+  B0 --> P0
+
+  R1 -- No --> M0[Move to Manual Finance Review Queue\nstatus=failed terminal]
+  M0 --> N2[Alert Finance Admin]
+  N2 --> A1[Append audit_logs incident entry]
+
+  NoOp --> A0

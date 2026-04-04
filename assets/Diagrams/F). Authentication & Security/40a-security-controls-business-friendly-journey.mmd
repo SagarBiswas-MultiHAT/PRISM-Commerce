@@ -1,0 +1,21 @@
+flowchart TB
+  %% Diagram 40A: Security Controls Business-Friendly Journey
+
+  User[User signs in]
+  Verify[System verifies identity and permissions]
+  Protect[System checks each request for safety rules]
+  Decide{Request safe and allowed?}
+
+  Allow[Action proceeds]
+  Block[Action blocked]
+
+  Payment[Payment callback verified and deduplicated]
+  Escrow[Escrow release follows strict rules]
+  Privacy[Data isolation protects each vendor]
+  Audit[Every sensitive action is logged]
+
+  User --> Verify --> Protect --> Decide
+  Decide -- Yes --> Allow --> Payment --> Escrow --> Audit
+  Decide -- No --> Block --> Audit
+
+  Verify --> Privacy

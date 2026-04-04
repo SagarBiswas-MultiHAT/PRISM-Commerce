@@ -1,0 +1,33 @@
+sequenceDiagram
+  %% Diagram 52: WebSocket Event Architecture and Reconnect Flow
+
+  autonumber
+  actor C as Client
+  participant WS as WebSocket Gateway
+  participant Auth as Auth Guard
+  participant Rooms as Room Router
+  participant Presence as Presence and Session Store
+  participant Cursor as Last Event Cursor Store
+  participant Bus as Event Sources
+
+  C->>WS: Connect with token + last_event_id
+  WS->>Auth: Validate token and role scope
+  Auth-->>WS: Auth context
+  WS->>Rooms: Join role/context rooms
+  WS->>Presence: Register session metadata and online state
+
+  Bus->>WS: Publish order-status/chat/alert/live-viewer events
+  WS->>C: Push event with sequence_id
+  C-->>WS: Ack sequence_id
+  WS->>Cursor: Persist last acked event id
+
+  alt Ack timeout
+    WS->>C: Retry unacked event with bounded retries
+  end
+
+  alt Connection drops
+    C->>WS: Reconnect with exponential backoff
+    WS->>Auth: Revalidate token or refresh session
+    WS->>Rooms: Rejoin prior rooms by context
+    WS->>C: Replay missed events since last_event_id
+  end

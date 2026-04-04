@@ -1,0 +1,33 @@
+flowchart TB
+  %% Diagram 82: Self-Funding Gates and External Funding Decision Tree
+
+  Start[Start self-funding path]
+  G1[Gate 1 Month 4\n20 vendors target]
+  G2[Gate 2 Month 6\nFirst 50K revenue month]
+  G3[Gate 3 Month 9\n100 vendors and 150K revenue]
+  G4[Gate 4 Month 12\n500 vendors and 350K revenue]
+  G5[Gate 5 Month 15\nPublic launch and 500K+ revenue]
+
+  E1{Gate 1 met?}
+  E2{Gate 2 met?}
+  E3{Gate 3 met?}
+  E4{Gate 4 met?}
+  E5{Gate 5 met?}
+
+  Continue[Continue self-funded execution]
+  Allocate[Allocate resources for next growth stage]
+  External[Evaluate external funding option]
+  Pivot[Pivot/cost control plan]
+
+  Start --> G1 --> E1
+  E1 -- Yes --> Continue --> Allocate --> G2 --> E2
+  E2 -- Yes --> Continue --> Allocate --> G3 --> E3
+  E3 -- Yes --> Continue --> Allocate --> G4 --> E4
+  E4 -- Yes --> Continue --> Allocate --> G5 --> E5
+  E5 -- Yes --> Continue
+
+  E1 -- No --> Pivot --> External
+  E2 -- No --> Pivot --> External
+  E3 -- No --> Pivot --> External
+  E4 -- No --> Pivot --> External
+  E5 -- No --> Pivot --> External

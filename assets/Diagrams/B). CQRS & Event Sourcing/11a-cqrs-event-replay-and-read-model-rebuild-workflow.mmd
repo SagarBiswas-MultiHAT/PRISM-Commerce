@@ -1,0 +1,32 @@
+flowchart TB
+  %% Diagram 11A: CQRS Event Replay and Read-Model Rebuild Workflow
+
+  Trigger[Replay trigger\nNew projector logic, incident recovery, or backfill]
+  Scope[Select replay scope\naggregate type, date range, tenant scope]
+  Snapshot[Create safety snapshot of current read models]
+  Load[(Load ordered events from event_store)]
+
+  Checkpoint[Replay checkpoint store\nlast_event_id, status, duration]
+  Project[Re-run projectors against historical events]
+  Build[(Rebuild read models\norders, analytics, notifications, search docs)]
+  Cache[Refresh or invalidate Redis caches]
+  Validate[Validate rebuilt models\ncounts, checksums, sample queries]
+
+  Cutover{Validation passed?}
+  Promote[Promote rebuilt projections to active reads]
+  Rollback[Rollback to prior snapshot]
+  Alert[Raise incident for manual review]
+
+  Resume{Replay interrupted?}
+  ResumeFrom[Resume from checkpoint]
+
+  Trigger --> Scope --> Snapshot --> Load --> Project --> Build --> Cache --> Validate --> Cutover
+  Load --> Checkpoint
+  Project --> Checkpoint
+
+  Cutover -- Yes --> Promote
+  Cutover -- No --> Rollback --> Alert
+
+  Project --> Resume
+  Resume -- Yes --> ResumeFrom --> Project
+  Resume -- No --> Build

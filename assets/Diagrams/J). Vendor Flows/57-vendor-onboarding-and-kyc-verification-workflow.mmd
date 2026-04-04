@@ -1,0 +1,27 @@
+flowchart TB
+  %% Diagram 57: Vendor Onboarding and KYC Verification Workflow
+
+  Start[Vendor starts registration]
+  Register[POST /api/auth/register with locale and vendor role]
+  KYC[POST /api/verification/submit\nNID + Trade License + TIN]
+
+  DocCheck{Required documents complete and valid?}
+  Revision[Send revision request for missing or invalid documents]
+  Queue[Push to compliance review queue]
+  RoleGate{Reviewer has compliance role?}
+  Review[Admin/compliance review]
+  Decision{Approved?}
+
+  Activate[Activate vendor account]
+  Access[Grant vendor dashboard access]
+  Reject[Reject with reason]
+  Appeal[Appeal or resubmit path]
+
+  Start --> Register --> KYC --> DocCheck
+  DocCheck -- No --> Revision --> KYC
+  DocCheck -- Yes --> Queue --> RoleGate
+  RoleGate -- No --> Revision
+  RoleGate -- Yes --> Review --> Decision
+
+  Decision -- Yes --> Activate --> Access
+  Decision -- No --> Reject --> Appeal --> KYC

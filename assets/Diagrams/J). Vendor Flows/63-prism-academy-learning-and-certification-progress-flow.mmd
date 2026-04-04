@@ -1,0 +1,27 @@
+flowchart TB
+  %% Diagram 63: PRISM Academy Learning and Certification Progress Flow
+
+  Enroll[Vendor enrolls in academy module]
+  Track[Track progress events in academy_progress]
+  Inactive{No progress for reminder window?}
+  Reminder[Send reminder and re-engagement nudges]
+  Resume[Vendor resumes learning path]
+
+  Complete{Module completed?}
+
+  Continue[Continue lesson path]
+  Prereq{All prerequisites complete?}
+  Cert[Issue certification]
+  Unlock[Unlock badge, feature prompts, and milestone benefits]
+
+  Block[Block certification]
+
+  Enroll --> Track --> Inactive
+  Inactive -- Yes --> Reminder --> Resume --> Track
+  Inactive -- No --> Complete
+
+  Complete -- No --> Continue --> Track
+  Complete -- Yes --> Prereq
+
+  Prereq -- Yes --> Cert --> Unlock
+  Prereq -- No --> Block --> Reminder --> Track

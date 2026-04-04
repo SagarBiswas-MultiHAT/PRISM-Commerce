@@ -1,0 +1,36 @@
+flowchart TB
+  %% Diagram 69: Observability Signal Topology (Metrics, Logs, Traces, Errors)
+
+  Services[Runtime services\nweb/api/worker/data]
+
+  Metrics[Prometheus]
+  Logs[Loki]
+  OTel[OpenTelemetry Collector]
+  Traces[Tempo]
+  Errors[Sentry]
+
+  Dash[Grafana dashboards]
+  Alerts[Alert routing and on-call notifications]
+  SinkIssue{Any telemetry sink unavailable?}
+  Buffer[Buffer degraded telemetry and preserve critical signals]
+  Replay[Replay buffered telemetry after sink recovery]
+
+  Services -->|metrics| Metrics
+  Services -->|logs| Logs
+  Services -->|traces| OTel --> Traces
+  Services -->|errors| Errors
+
+  Metrics --> Dash
+  Logs --> Dash
+  Traces --> Dash
+  Errors --> Dash
+
+  Dash --> Alerts
+
+  Metrics --> SinkIssue
+  Logs --> SinkIssue
+  Traces --> SinkIssue
+  Errors --> SinkIssue
+  SinkIssue -- Yes --> Buffer
+  Buffer --> Replay --> Dash
+  SinkIssue -- No --> Dash

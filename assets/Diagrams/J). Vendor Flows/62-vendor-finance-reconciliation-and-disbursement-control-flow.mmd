@@ -1,0 +1,31 @@
+flowchart TB
+  %% Diagram 62: Vendor Finance Reconciliation and Disbursement Control Flow
+
+  Start[Escrow release events received]
+  Aggregate[(Aggregate escrow_transactions by vendor period)]
+  Compute[(Compute net payable using commission_records and fees)]
+  Compare[Compare computed payable vs vendor_disbursements]
+  Match{Amounts reconcile?}
+
+  Execute[Execute or confirm disbursement status]
+  Wallet[(Write wallet_transactions or payout references)]
+  Dashboard[Update finance dashboard]
+  Close[Mark period reconciled]
+
+  Hold[Place finance hold]
+  Investigate[Investigate mismatch]
+  Resolve{Resolved?}
+  Escalate[Escalate to finance admin]
+
+  PayoutFail{Payout failed?}
+  Retry[Retry with backoff]
+  Manual[Move to manual review queue]
+
+  Start --> Aggregate --> Compute --> Compare --> Match
+  Match -- Yes --> Execute --> PayoutFail
+  PayoutFail -- No --> Wallet --> Dashboard --> Close
+  PayoutFail -- Yes --> Retry --> Manual --> Dashboard
+
+  Match -- No --> Hold --> Investigate --> Resolve
+  Resolve -- Yes --> Execute
+  Resolve -- No --> Escalate --> Manual

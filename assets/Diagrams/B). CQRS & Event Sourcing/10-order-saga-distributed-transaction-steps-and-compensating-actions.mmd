@@ -1,0 +1,46 @@
+flowchart TB
+  %% Diagram 10: Order Saga - Distributed Transaction (5 Steps + Compensating Actions)
+
+  Start([PlaceOrderCommand Received]) --> I0{Idempotency Key Seen?}
+  I0 -- Yes --> Prev[Return Prior Saga Outcome]
+  I0 -- No --> S1[Step 1: Reserve Inventory]
+
+  S1 --> D1{Inventory Reserved?}
+  D1 -- No --> F1[Fail: Out of Stock\nReturn 409]
+  D1 -- Yes --> S2[Step 2: Process Payment]
+
+  S2 --> D2{Payment Captured and Verified?}
+  D2 -- No --> C21[Compensate: Release Inventory]
+  C21 --> F2[OrderFailedCompensated]
+  D2 -- Yes --> S3[Step 3: Hold Escrow]
+
+  S3 --> D3{Escrow Held?}
+  D3 -- No --> C31[Compensate: Refund Payment]
+  C31 --> C32[Compensate: Release Inventory]
+  C32 --> F3[OrderFailedCompensated]
+  D3 -- Yes --> S4[Step 4: Confirm Order]
+
+  S4 --> D4{Order Confirmed?}
+  D4 -- No --> C41[Compensate: Refund Payment]
+  C41 --> C42[Compensate: Release Inventory]
+  C42 --> F4[OrderFailedCompensated]
+  D4 -- Yes --> S5[Step 5: Assign Logistics]
+
+  S5 --> D5{Logistics Assigned?}
+  D5 -- No --> C51[Compensate: Refund Payment]
+  C51 --> C52[Compensate: Release Inventory]
+  C52 --> F5[OrderFailedCompensated + Manual Retry Queue]
+  D5 -- Yes --> OK[OrderConfirmedSagaComplete]
+
+  OK --> N1[Notify Buyer + Vendor\nEmit success events]
+  F2 --> N2[Notify Buyer + Vendor\nEmit failure events]
+  F3 --> N3[Notify Buyer + Vendor + Finance]
+  F4 --> N4[Notify Buyer + Vendor + Finance]
+  F5 --> N5[Notify Buyer + Vendor + Support + Finance/Admin]
+
+  F1 --> A0[Append audit_logs + correlation ID]
+  N1 --> A0
+  N2 --> A0
+  N3 --> A0
+  N4 --> A0
+  N5 --> A0

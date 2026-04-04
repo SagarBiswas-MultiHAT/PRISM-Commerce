@@ -1,0 +1,36 @@
+sequenceDiagram
+  %% Diagram 64: Facebook Shops Sync and Attribution Flow
+
+  autonumber
+  actor V as Vendor
+  participant API as /api/social/sync/facebook
+  participant Sync as Catalog Sync Worker
+  participant FB as Facebook Shops API
+  participant Store as Mapping Store
+  participant Retry as Delta Retry Queue
+  participant Analytic as Attribution Engine
+
+  V->>API: Start Facebook catalog sync
+  API->>Sync: Enqueue sync job
+  Sync->>FB: Push product catalog delta
+  FB-->>Sync: Sync response/callback
+
+  alt Token invalid or auth failure
+    Sync-->>API: Reconnect required
+    API-->>V: Re-authorize Facebook account
+  else Sync response received
+    alt Partial sync failure
+      Sync->>Store: Persist partial status + failed item set
+      Sync->>Retry: Enqueue delta retry job
+      Retry->>FB: Retry failed catalog delta
+      FB-->>Retry: Retry callback
+      Retry->>Store: Persist final sync status
+      Retry->>Analytic: Emit attribution signal for synced items
+      API-->>V: Partial sync recovered summary
+    else Full sync success
+      Sync->>Store: Persist product mapping + sync status
+      Sync->>Analytic: Emit source attribution signal
+      Analytic-->>API: Attribution updated
+      API-->>V: Sync complete summary
+    end
+  end

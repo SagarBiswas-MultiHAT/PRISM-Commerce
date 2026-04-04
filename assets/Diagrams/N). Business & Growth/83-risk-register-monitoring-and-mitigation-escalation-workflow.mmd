@@ -1,0 +1,22 @@
+flowchart TB
+  %% Diagram 83: Risk Register Monitoring and Mitigation Escalation Workflow
+
+  Intake[Risk identified]
+  Score[Score likelihood and impact]
+  Assign[Assign owner and mitigation plan]
+  Mitigate[Execute mitigation actions]
+  Residual[Residual risk review]
+  Review[Periodic status review]
+  Status{Risk resolved?}
+
+  Close[Close risk and archive knowledge capture]
+  EscalationCheck{High impact and unresolved?}
+  Escalate[Escalate to leadership]
+  Action[Execute escalated mitigation actions]
+
+  Intake --> Score --> Assign --> Mitigate --> Residual --> Review --> Status
+  Status -- Yes --> Close
+  Status -- No --> EscalationCheck
+
+  EscalationCheck -- Yes --> Escalate --> Action --> Review
+  EscalationCheck -- No --> Assign

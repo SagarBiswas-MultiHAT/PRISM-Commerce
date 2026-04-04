@@ -1,0 +1,74 @@
+flowchart TB
+  %% Diagram 09: Event Store - Aggregate Types and Event Projection Flow
+
+  subgraph AGG[Aggregate Roots]
+    OA[OrderAggregate]
+    PA[PaymentAggregate]
+    EA[EscrowAggregate]
+    IA[InventoryAggregate]
+    VA[VendorAggregate]
+  end
+
+  subgraph ES[Event Store - Append Only]
+    EVT[(event_store\naggregate_id\naggregate_type\nevent_type\nevent_data\nversion\ncreated_at)]
+  end
+
+  subgraph PROJ[Projectors]
+    OP[Order Projector]
+    AP[Analytics Projector]
+    SP[Search Projector]
+    NP[Notification Projector]
+    CP[Cache Projector]
+    RQ[Projector Retry Queue]
+    DLQ[Projector Dead-Letter Queue]
+  end
+
+  subgraph READ[Read Models and Materialized Views]
+    ORD[(orders read model)]
+    AN[(vendor/category analytics views)]
+    IDX[(meilisearch documents)]
+    NOTI[(notification state)]
+    CACHE[(redis projection cache)]
+  end
+
+  subgraph OPS[Operational Controls]
+    INV[Cache Invalidation or Refresh]
+    REPLAY[Replay Controller\nPoint-in-time rebuild]
+  end
+
+  OA -->|OrderCreated, StatusChanged| EVT
+  PA -->|PaymentCaptured, PaymentFailed| EVT
+  EA -->|EscrowHeld, EscrowReleased, EscrowDisputed| EVT
+  IA -->|InventoryReserved, InventoryReleased| EVT
+  VA -->|VendorTierChanged, VendorSuspended| EVT
+
+  EVT --> OP
+  EVT --> AP
+  EVT --> SP
+  EVT --> NP
+  EVT --> CP
+
+  OP --> ORD
+  AP --> AN
+  SP --> IDX
+  NP --> NOTI
+  CP --> INV --> CACHE
+
+  OP -.projection failure.-> RQ
+  AP -.projection failure.-> RQ
+  SP -.projection failure.-> RQ
+  NP -.projection failure.-> RQ
+  CP -.projection failure.-> RQ
+  RQ -.retry exhausted.-> DLQ
+
+  REPLAY --> EVT
+  REPLAY --> OP
+  REPLAY --> AP
+  REPLAY --> SP
+  REPLAY --> NP
+  REPLAY --> CP
+
+  ORD -->|Read Queries| Q1[Query Handlers]
+  AN -->|Read Queries| Q1
+  IDX -->|Search Queries| Q1
+  CACHE -->|Cached Responses| Q1

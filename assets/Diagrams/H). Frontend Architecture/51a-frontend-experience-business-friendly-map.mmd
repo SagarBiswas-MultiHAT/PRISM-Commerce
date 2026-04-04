@@ -1,0 +1,22 @@
+flowchart TB
+  %% Diagram 51A: Frontend Experience Business-Friendly Map
+
+  Buyer[Buyer app experience]
+  Vendor[Vendor dashboard experience]
+  Admin[Admin control experience]
+
+  ENBN[English and Bangla interface support]
+  Realtime[Live updates for order status and alerts]
+  Sync[Same order and inventory state across web, mobile, and POS]
+
+  Offline{Internet temporarily unavailable?}
+  Continue[Continue in limited mode]
+  Recover[Auto-sync after connection returns]
+
+  Buyer --> ENBN
+  Vendor --> ENBN
+  Admin --> ENBN
+
+  ENBN --> Realtime --> Sync --> Offline
+  Offline -- No --> Sync
+  Offline -- Yes --> Continue --> Recover --> Sync

@@ -1,0 +1,20 @@
+flowchart TB
+  %% Diagram 45A: Order Journey Business-Friendly View
+
+  Start[Buyer places order]
+  Confirm[Order confirmed after payment and stock checks]
+  Prepare[Vendor prepares package]
+  Ship[Delivery partner ships order]
+  Receive[Buyer receives order]
+  Complete[Order completed]
+
+  Problem{Any problem happens?}
+  Fix[Support and protection workflow starts]
+  Refund[Refund when claim is valid]
+  Resolve[Order continues when issue is resolved]
+
+  Start --> Confirm --> Prepare --> Ship --> Receive --> Problem
+  Problem -- No --> Complete
+  Problem -- Yes --> Fix
+  Fix --> Refund --> Complete
+  Fix --> Resolve --> Complete

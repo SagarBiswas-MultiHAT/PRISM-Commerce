@@ -1,0 +1,40 @@
+flowchart TB
+  %% Diagram 29: Vendor Performance Score Computation and Tiering Flow
+
+  DeliveryEvent[Order delivery event]
+  WeeklyRefresh[Weekly full refresh job]
+  Start[Start VPS computation]
+
+  Collect[Collect component metrics\nFulfillment Rate\nAvg Rating\nResponse-to-Ship Time\nDelivery Accuracy\nDispute Rate]
+  MetricsCheck{All component metrics available?}
+  Fallback[Use prior metric snapshot for missing fields\nMark score as confidence-reduced]
+
+  Weighting[Weighted score model\n35% Fulfillment\n25% Rating\n15% Response-to-Ship\n15% Delivery Accuracy\n10% Dispute Rate]
+  Score[Compute VPS 0-100]
+  TierDecision{Assign tier}
+
+  Platinum[Platinum 85+]
+  Gold[Gold 70-84]
+  Silver[Silver 50-69]
+  Watch[Watch <50]
+
+  PlatinumAction[Promotion + potential commission benefits]
+  GoldAction[Standard operations]
+  SilverAction[Warning notices + coaching prompts]
+  WatchAction[Suspension risk workflow]
+
+  Output[Return VPS payload\nscore, tier, component breakdown, trend]
+
+  DeliveryEvent --> Start
+  WeeklyRefresh --> Start
+
+  Start --> Collect --> MetricsCheck
+  MetricsCheck -- Yes --> Weighting
+  MetricsCheck -- No --> Fallback --> Weighting
+
+  Weighting --> Score --> TierDecision
+
+  TierDecision -- Platinum --> Platinum --> PlatinumAction --> Output
+  TierDecision -- Gold --> Gold --> GoldAction --> Output
+  TierDecision -- Silver --> Silver --> SilverAction --> Output
+  TierDecision -- Watch --> Watch --> WatchAction --> Output

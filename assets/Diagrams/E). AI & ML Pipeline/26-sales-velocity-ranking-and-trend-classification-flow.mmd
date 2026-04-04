@@ -1,0 +1,34 @@
+flowchart LR
+  %% Diagram 26: Sales Velocity Ranking and Trend Classification Flow
+
+  Req[GET /api/ai/velocity]
+  Pull[Load rolling 7-day sales windows\nper product]
+  DataCheck{Sufficient recent data?}
+  Fallback[Fallback classification\ntrend = stable\nlower-confidence marker]
+
+  Smooth[Exponential smoothing\ncompute velocity_score and change_pct]
+  Trend{Trend classification}
+
+  Accel[Trend = accelerating]
+  Stable[Trend = stable]
+  Decel[Trend = decelerating]
+
+  BuyerShelf[Push to buyer Trending shelf]
+  PositiveAlert[Send vendor positive momentum alert]
+  Monitor[Keep in normal monitoring]
+  Warning[Send vendor deceleration warning]
+  CouponTrigger[Trigger coupon optimization path]
+
+  Cache[Cache response in Redis\nTTL 1h]
+  Resp[Return ranked product list\n{id, velocity_score, trend, change_pct}]
+
+  Req --> Pull --> DataCheck
+  DataCheck -- Yes --> Smooth --> Trend
+  DataCheck -- No --> Fallback --> Cache --> Resp
+
+  Trend -- accelerating --> Accel --> BuyerShelf --> Cache
+  Accel --> PositiveAlert --> Cache
+  Trend -- stable --> Stable --> Monitor --> Cache
+  Trend -- decelerating --> Decel --> Warning --> CouponTrigger --> Cache
+
+  Cache --> Resp

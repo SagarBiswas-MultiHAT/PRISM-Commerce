@@ -1,0 +1,26 @@
+flowchart LR
+  %% Diagram 84: 15-Month Roadmap Dependency and Milestone Timeline
+
+  P1[Phase 1 Months 1-3\nFoundation and Compliance]
+  P2[Phase 2 Months 4-5\nRevenue and Trust]
+  P3[Phase 3 Months 6-8\nAI and GenAI]
+  P4[Phase 4 Months 9-10\nCommunication and Commerce]
+  P5[Phase 5 Months 11-12\nLogistics and Mobile]
+  P6[Phase 6 Months 13-15\nPolish Launch Scale]
+
+  Check[Milestone readiness checks at each phase exit]
+  Gate[Launch readiness gate\nMonth 15]
+  Launch[Public launch]
+  M18[Month 18 stabilization and break-even trajectory check]
+
+  Slip{Dependency slip detected?}
+  Replan[Replan sequencing and scope]
+
+  P1 --> Check --> P2 --> Check --> P3 --> Check --> P4 --> Check --> P5 --> Check --> P6 --> Gate --> Launch --> M18
+
+  P2 --> Slip
+  P3 --> Slip
+  P4 --> Slip
+  P5 --> Slip
+  Slip -- Yes --> Replan --> Check
+  Slip -- No --> Gate

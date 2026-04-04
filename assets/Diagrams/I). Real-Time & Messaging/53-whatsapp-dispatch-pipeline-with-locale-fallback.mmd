@@ -1,0 +1,28 @@
+flowchart TB
+  %% Diagram 53: WhatsApp Dispatch Pipeline with Locale Fallback
+
+  Event[Domain event triggers notification intent]
+  Classify[Classify notification type and severity]
+  Locale[Resolve preferred locale EN or BN]
+  TemplateCheck{Template exists for locale?}
+  Template[Select approved template]
+  DefaultTemplate[Fallback to default approved template]
+  Policy{Rate-limit and anti-spam policy pass?}
+  Delay[Delay, suppress, or queue for next window]
+  Queue[Enqueue notification job]
+  Worker[Dispatch worker sends to Meta Cloud API]
+  Status[Delivery status callback]
+  Update[(Update notification state delivered/read)]
+
+  Fail{WhatsApp send failed?}
+  Fallback[Fallback to web push and in-app channels]
+
+  Event --> Classify --> Locale --> TemplateCheck
+  TemplateCheck -- Yes --> Template --> Policy
+  TemplateCheck -- No --> DefaultTemplate --> Policy
+
+  Policy -- No --> Delay --> Update
+  Policy -- Yes --> Queue --> Worker --> Fail
+
+  Fail -- No --> Status --> Update
+  Fail -- Yes --> Fallback --> Update

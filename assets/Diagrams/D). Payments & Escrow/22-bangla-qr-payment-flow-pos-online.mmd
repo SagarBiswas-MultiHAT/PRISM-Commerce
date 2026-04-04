@@ -1,0 +1,35 @@
+flowchart TB
+  %% Diagram 22: Bangla QR Payment Flow (In-Store POS and Online Checkout)
+
+  Start([Bangla QR Payment Requested]) --> Channel{Payment Channel}
+
+  Channel --> POSPath[In-Store POS]
+  Channel --> OnlinePath[Online Checkout]
+
+  POSPath --> POS1[Generate Bangla QR Payload\namount + vendor reference + unique payment_reference]
+  POS1 --> POS2[Buyer Scans QR in Banking or MFS App]
+  POS2 --> POS3[Bank Processes Payment]
+  POS3 --> POS4[Callback to POS API]
+  POS4 --> POSRef{Reference Matches Pending POS Intent?}
+  POSRef -- No --> POSFail[Reject Callback\nFlag for review]
+  POSRef -- Yes --> POSDup{Duplicate Callback?}
+  POSDup -- Yes --> POSNoOp[Return 200 idempotent no-op]
+  POSDup -- No --> POS5{Signature and Settlement Valid?}
+  POS5 -- No --> POSFail
+  POS5 -- Yes --> POS6[Mark POS Transaction Paid]
+  POS6 --> POS7[Create pos_transactions row\nDecrement inventory]
+  POS7 --> POSEmit[Emit payment-confirmed/POS-settled event]
+  POSEmit --> POSDone[Issue Receipt and Vendor Notification]
+
+  OnlinePath --> ON1[Render Checkout QR Intent\norder_id + amount + unique payment_reference]
+  ON1 --> ON2[Buyer Scans and Pays via Banking App]
+  ON2 --> ON3[Gateway or Bank Webhook to API]
+  ON3 --> ONRef{Reference Matches Checkout Intent?}
+  ONRef -- No --> ONReject[Reject Callback\nReference mismatch]
+  ONRef -- Yes --> ON4{Idempotency Check\nDuplicate Callback?}
+  ON4 -- Yes --> ONIgnore[Ignore Duplicate\nReturn 200 idempotent]
+  ON4 -- No --> ON5{Signature and Transaction Verified?}
+  ON5 -- No --> ONFail[Mark Payment Failed\nEmit payment-failed event\nOffer Retry]
+  ON5 -- Yes --> ON6[Mark Order Payment Confirmed]
+  ON6 --> ON7[Apply Escrow Hold for Prepaid Order]
+  ON7 --> ONDone[Continue Order Saga and Notify Buyer/Vendor]

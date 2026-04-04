@@ -1,0 +1,39 @@
+flowchart TB
+  %% Diagram 11: Saga Failure Recovery - Compensating Actions Flowchart
+
+  Start([Saga Recovery Entry]) --> D1{Inventory Reserved?}
+  D1 -- No --> T0[OrderRejectedNoMutation]
+  D1 -- Yes --> D2{Payment Captured?}
+
+  D2 -- No --> C21[Compensate: Release Inventory]
+  C21 --> C2{Compensation Completed?}
+  C2 -- Yes --> T1[OrderFailedCompensated]
+  C2 -- No --> M1[Create Incident + Manual Reconciliation]
+
+  D2 -- Yes --> D3{Escrow Held?}
+  D3 -- No --> C31[Compensate: Refund Payment]
+  C31 --> C32[Compensate: Release Inventory]
+  C32 --> C3{Compensation Completed?}
+  C3 -- Yes --> T2[OrderFailedCompensated]
+  C3 -- No --> M1
+
+  D3 -- Yes --> D4{Logistics Assigned?}
+  D4 -- Yes --> T3[OrderConfirmed]
+  D4 -- No --> C41[Compensate: Refund Payment]
+  C41 --> C42[Compensate: Release Inventory]
+  C42 --> C4{Compensation Completed?}
+  C4 -- Yes --> T4[OrderFailedCompensated]
+  C4 -- No --> M1
+
+  M1 --> M2[Freeze Financial Records]
+  M2 --> M3[Escalate to Support + Finance]
+  M3 --> M4[Post-Incident Audit Log Append]
+  M4 --> T5[OrderFailedManualIntervention]
+
+  classDef fail fill:#ffeaea,stroke:#9f1f1f,stroke-width:1px;
+  classDef ok fill:#eaf8ea,stroke:#2b7a2b,stroke-width:1px;
+  classDef warn fill:#fff3d6,stroke:#9a6a00,stroke-width:1px;
+
+  class Start,D1,D2,D3,D4,C2,C3,C4,M1,M2,M3,M4 warn;
+  class T0,T1,T2,T3,T4 ok;
+  class T5 fail;
