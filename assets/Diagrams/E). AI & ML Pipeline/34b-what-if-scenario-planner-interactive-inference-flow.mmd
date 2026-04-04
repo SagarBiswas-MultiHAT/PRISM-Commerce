@@ -1,0 +1,56 @@
+flowchart TB
+  %% Diagram 34B: What-If Scenario Planner — Interactive ONNX Re-Inference Flow
+  %% Source: V4 Section 10 Module 11
+
+  Vendor[Vendor Dashboard\nWhat-If Planner UI]
+  Endpoint[POST /api/ai/what-if]
+  AuthCheck{Subscription tier allows\nWhat-If access?}
+  Deny[Return upgrade prompt\nGrowth+ tier required]
+
+  LoadVector[Load current 13-feature GBR vector\nfor product_id from latest forecast]
+  VectorCheck{Base forecast vector available?}
+  NoVector[Return error\nProduct needs initial forecast first]
+
+  ApplyMods[Apply vendor modifications\nis_festival_week?\ndays_to_next_festival?\ntemperature_avg?\nprice_change_pct?]
+  Validate{Modified features\nwithin valid bounds?}
+  ClampWarn[Clamp to valid bounds\nAttach warning annotation]
+
+  subgraph INFERENCE[ONNX Dual-Inference]
+    OrigInfer[Run ONNX inference\nwith ORIGINAL feature vector]
+    ModInfer[Run ONNX inference\nwith MODIFIED feature vector]
+  end
+
+  RuntimeFail{Either inference fails?}
+
+  ComputeDelta[Compute delta\nunits_7d_diff\nunits_14d_diff\nunits_30d_diff\nrevenue_impact]
+
+  Response[Return What-If payload\noriginal_forecast\nmodified_forecast\ndelta\nmodified_features_used\nconfidence]
+
+  FailResponse[Return controlled failure\nRetry guidance\nLog error to observability]
+
+  CacheResult[Cache result in Redis\nTTL 1h per product+scenario hash]
+  CacheCheck{Identical scenario\ncached?}
+  ReturnCached[Return cached\nscenario result]
+
+  UINote[Dashboard shows\nside-by-side comparison chart\nReal-time update on slider change]
+
+  Vendor --> Endpoint --> AuthCheck
+  AuthCheck -- No --> Deny
+  AuthCheck -- Yes --> CacheCheck
+
+  CacheCheck -- Yes --> ReturnCached --> Response
+  CacheCheck -- No --> LoadVector --> VectorCheck
+
+  VectorCheck -- No --> NoVector
+  VectorCheck -- Yes --> ApplyMods --> Validate
+
+  Validate -- Yes --> INFERENCE
+  Validate -- No --> ClampWarn --> INFERENCE
+
+  OrigInfer --> RuntimeFail
+  ModInfer --> RuntimeFail
+
+  RuntimeFail -- No --> ComputeDelta --> CacheResult --> Response
+  RuntimeFail -- Yes --> FailResponse
+
+  Response --> UINote

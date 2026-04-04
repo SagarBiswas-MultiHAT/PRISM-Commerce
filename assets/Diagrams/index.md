@@ -14,6 +14,7 @@ Gap policy: if a required detail is missing, document it first in V4 docs, then 
 | 05 | Production Deployment Architecture (Hetzner VPS + Cloudflare CDN + External Services) | 05-production-deployment-architecture-hetzner-cloudflare-external-services.mmd | V4 Section 13, 18, 19, 31.6 | Complete |
 | 06 | Service Communication Map (Protocol and Purpose per Connection) | 06-service-communication-map-protocol-purpose-per-connection.mmd | V4 Section 8.4, 12, 15, 31.7 | Complete |
 | 06A | System Resilience and Scale Trigger Map | 06a-system-resilience-and-scale-trigger-map.mmd | V4 Section 13, 18, 22, 31.6-31.7 | Complete |
+| 06B | System Data Flow — Key Journeys (Buyer Order + Vendor Sahayak Agentic) | 06b-system-data-flow-key-journeys.mmd | V4 Section 8.3 Journey A + Journey B | Complete |
 | 07 | CQRS Write Path - Command Handler to Event Store Flow | 07-cqrs-write-path-command-handler-to-event-store-flow.mmd | V4 Section 8.2, 14, 31.8 | Complete |
 | 08 | CQRS Read Path - Query Handler to Materialized Views Flow | 08-cqrs-read-path-query-handler-to-materialized-views-flow.mmd | V4 Section 8.2, 14, 31.9 | Complete |
 | 09 | Event Store - Aggregate Types and Event Projection Flow | 09-event-store-aggregate-types-and-event-projection-flow.mmd | V4 Section 8.2, 14, 31.10 | Complete |
@@ -56,6 +57,7 @@ Gap policy: if a required detail is missing, document it first in V4 docs, then 
 | 33 | Agentic Sahayak V2 Tool-Calling Sequence | 33-agentic-sahayak-v2-tool-calling-sequence.mmd | V4 Section 8 Journey B, 10 Module 12, 33.12 | Complete |
 | 34 | RAG Semantic Search, Opportunity, and Bundle Intelligence Flow | 34-rag-semantic-search-opportunity-and-bundle-intelligence-flow.mmd | V4 Section 10 Modules 13-15, 15, 33.13 | Complete |
 | 34A | AI Intelligence Business-Friendly Cycle | 34a-ai-intelligence-business-friendly-cycle.mmd | V4 Section 10, 33.2-33.13 | Complete |
+| 34B | What-If Scenario Planner Interactive Inference Flow | 34b-what-if-scenario-planner-interactive-inference-flow.mmd | V4 Section 10 Module 11 | Complete |
 
 ## Batch D Status (Implemented)
 

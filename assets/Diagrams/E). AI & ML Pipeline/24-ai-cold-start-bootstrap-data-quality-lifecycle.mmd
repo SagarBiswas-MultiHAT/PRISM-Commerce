@@ -16,7 +16,7 @@ stateDiagram-v2
 
   state Tier2 {
     [*] --> MixedData
-    MixedData: Tier 2\nReal + seed blended\ndata_quality_score rising
+    MixedData: Tier 2\nReal + seed blended\ndata_quality_score = real_orders / (real + synthetic)\nScore rises as real orders grow
   }
 
   Tier2 --> SparseReal: Real volume remains sparse

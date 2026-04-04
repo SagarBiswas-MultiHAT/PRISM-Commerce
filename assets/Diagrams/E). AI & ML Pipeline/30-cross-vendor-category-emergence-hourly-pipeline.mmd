@@ -16,7 +16,14 @@ flowchart TB
 
   InternalOnly[Internal-only module\nNo public endpoint]
 
-  Cron --> Read --> Compute --> PrivacyGate
+  CronFail{CRON execution error?}
+  RetryJob[Retry after backoff\nLog to observability]
+  CronAlert[Emit ops alert if\nretries exhausted]
+
+  Cron --> CronFail
+  CronFail -- No --> Read --> Compute --> PrivacyGate
+  CronFail -- Yes --> RetryJob
+  RetryJob --> CronAlert
 
   PrivacyGate -- Yes --> Publish --> Persist --> Cache --> FeatureInject
   PrivacyGate -- No --> Suppress --> Fallback

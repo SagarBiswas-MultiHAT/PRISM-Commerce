@@ -3,7 +3,8 @@ flowchart LR
 
   Data[Business data\nsales + inventory + festivals + weather] --> Forecast[AI predicts near-term demand]
   Forecast --> Insights[Platform creates clear insights\nrestock, discount, bundle, pricing]
-  Insights --> Advisor[Sahayak explains actions\nin Bangla/English]
+  Insights --> WhatIf[Vendor explores What-If scenarios\nadjust price, festival, weather sliders\nsee impact before deciding]
+  WhatIf --> Advisor[Sahayak explains actions\nin Bangla/English]
   Advisor --> Decision{Vendor approves action?}
 
   Decision -- Yes --> Execute[Platform executes approved actions]

@@ -74,6 +74,7 @@ flowchart TB
   Typecheck --> Web
   Typecheck --> Api
   Test --> Api
+  Test --> Web
   Build --> Web
   Build --> Api
   Build --> UI
@@ -89,7 +90,7 @@ flowchart TB
   Mon --> Api
   Scripts --> Api
   Scripts --> Docker
-  Diag --> DOCS
+  %% Diag is already inside DOCS subgraph; no edge needed
 
   Boundary -.enforced by dependency rules.-> Web
   Boundary -.enforced by dependency rules.-> Api

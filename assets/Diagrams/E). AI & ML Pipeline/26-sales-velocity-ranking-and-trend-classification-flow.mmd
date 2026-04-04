@@ -4,7 +4,7 @@ flowchart LR
   Req[GET /api/ai/velocity]
   Pull[Load rolling 7-day sales windows\nper product]
   DataCheck{Sufficient recent data?}
-  Fallback[Fallback classification\ntrend = stable\nlower-confidence marker]
+  Fallback[Fallback classification\ntrend = stable\nvelocity_score = null\nchange_pct = 0\nlower-confidence marker]
 
   Smooth[Exponential smoothing\ncompute velocity_score and change_pct]
   Trend{Trend classification}

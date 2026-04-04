@@ -22,6 +22,10 @@ flowchart LR
   Sig[Webhook Signature Verify]
   Idem[Idempotency Keys\nOrders + Payments + Webhooks]
   Obs[Metrics + Logs + Traces]
+  Weather[OpenWeatherMap]
+  Social[Social APIs\nFacebook/TikTok/YouTube]
+  LiveKit[LiveKit SFU]
+  CRON[CRON Schedules\nHourly: Category Velocity\n15min: Opportunity Scan\nDaily 6AM: Weather Refresh\nWeekly Sun: GBR Eval]
 
   Client -->|HTTPS REST\nBusiness Operations| Gateway
   Client -->|WSS Primary\nRealtime Subscriptions| RT
@@ -55,6 +59,12 @@ flowchart LR
 
   API -->|Telemetry| Obs
   RT -->|Telemetry| Obs
+
+  API -->|HTTPS\nWeather Forecast Fetch| Weather
+  API -->|HTTPS\nCatalog and Order Sync| Social
+  RT -->|WebSocket\nLive Video Coordination| LiveKit
+
+  CRON -.triggers.-> API
 
   classDef store fill:#eef6ff,stroke:#2d5aa7,stroke-width:1px;
   classDef control fill:#fff3e2,stroke:#8a4f08,stroke-width:1px;

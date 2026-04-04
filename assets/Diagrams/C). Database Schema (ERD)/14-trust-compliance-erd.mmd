@@ -6,8 +6,8 @@ erDiagram
   VENDORS ||--o{ ESCROW_TRANSACTIONS : vendor_side
   VENDORS ||--o{ VERIFICATION_LEVELS : kyc_tiers
   VENDORS ||--o{ COMPLIANCE_DOCUMENTS : submits
-  USERS ||--o{ VERIFICATION_LEVELS : verifies_vendor
-  USERS ||--o{ COMPLIANCE_DOCUMENTS : verifies_document
+  USERS ||--o{ VERIFICATION_LEVELS : verified_by_admin
+  USERS ||--o{ COMPLIANCE_DOCUMENTS : verified_by_admin
   ORDERS ||--o{ BUYER_PROTECTION_CLAIMS : claim_on
   USERS ||--o{ BUYER_PROTECTION_CLAIMS : files
   VENDORS ||--o{ BUYER_PROTECTION_CLAIMS : claimed_against

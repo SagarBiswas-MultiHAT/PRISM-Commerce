@@ -1,0 +1,138 @@
+flowchart TB
+  %% Diagram 06B: System Data Flow — Key Journeys (Buyer Order + Vendor Sahayak Agentic)
+  %% Source: V4 Section 8.3 Journey A and Journey B
+
+  %% ============================================================
+  %% JOURNEY A: Buyer Places Order (With Escrow + Saga)
+  %% ============================================================
+
+  subgraph JA[Journey A — Buyer Places Order]
+    direction TB
+
+    JA_Start([Buyer selects items\nand payment method])
+
+    subgraph JA_EXP[Experience Layer]
+      JA_Cart[Cart + Checkout UI\nZustand + Next.js]
+      JA_Sahayak[Sahayak auto-applies\nbest coupon if enabled]
+    end
+
+    subgraph JA_EDGE[Edge Layer]
+      JA_CF[Cloudflare\nHTTPS + WAF]
+      JA_GW[API Gateway\nAuth + Rate Limit + Validate]
+    end
+
+    subgraph JA_APP[Application Layer — Order Saga]
+      JA_CMD[PlaceOrderCommand]
+      JA_S1[Step 1: Validate Cart\n+ Check Inventory]
+      JA_S2[Step 2: Reserve Inventory\nOptimistic Lock via Prisma]
+      JA_S3[Step 3: Process Payment\nbKash / Nagad / Bangla QR / COD]
+      JA_S4[Step 4: Hold in Escrow\nRegulatory Requirement]
+      JA_S5[Step 5: Confirm Order\n+ Decrement Inventory]
+      JA_S6[Step 6: Assign 3PL\nIntelligent Routing Engine]
+    end
+
+    subgraph JA_DATA[Data Layer]
+      JA_PG[(PostgreSQL Primary\nOrder + Event Store)]
+      JA_Redis[(Redis\nCache Invalidation + PubSub)]
+    end
+
+    subgraph JA_EXT[External Services]
+      JA_PAY[Payment Gateway\nbKash / Nagad / SSLCommerz]
+      JA_3PL[3PL Partner\nPathao / RedX / Paperfly]
+    end
+
+    subgraph JA_NOTIFY[Notification Fanout — Parallel via BullMQ]
+      JA_WA_V[WhatsApp → Vendor\nOrder alert in preferred locale]
+      JA_WA_B[WhatsApp → Buyer\nConfirmation in preferred locale]
+      JA_WS[WebSocket → Buyer\nReal-time order status push]
+      JA_3PL_N[3PL API → Delivery\nPartner gets assignment]
+      JA_EVT[Event Store\nImmutable event logged]
+    end
+
+    JA_DELIVERY([On Delivery Confirmed\nEscrow releases → Vendor paid\nVPS score updated])
+
+    JA_Start --> JA_Cart
+    JA_Cart --> JA_Sahayak
+    JA_Sahayak --> JA_CF
+    JA_CF --> JA_GW
+    JA_GW --> JA_CMD
+    JA_CMD --> JA_S1
+    JA_S1 -->|Valid| JA_S2
+    JA_S2 --> JA_S3
+    JA_S3 -->|Success| JA_S4
+    JA_S4 --> JA_S5
+    JA_S5 --> JA_S6
+    JA_S6 --> JA_NOTIFY
+
+    JA_S3 --> JA_PAY
+    JA_PAY -->|Webhook Verified| JA_S4
+    JA_S6 --> JA_3PL
+
+    JA_S5 --> JA_PG
+    JA_S5 --> JA_Redis
+    JA_NOTIFY --> JA_DELIVERY
+
+    %% Failure / Compensation Paths
+    JA_S1 -->|Invalid Stock| JA_FAIL_INV([Reject Order\nNotify Buyer])
+    JA_S3 -->|Payment Failed| JA_COMP1([Compensate:\nRelease Inventory\nNotify Buyer])
+    JA_S6 -->|Logistics Failed| JA_COMP2([Compensate:\nRefund Payment\nRelease Inventory])
+  end
+
+  %% ============================================================
+  %% JOURNEY B: Vendor Uses Agentic Sahayak
+  %% ============================================================
+
+  subgraph JB[Journey B — Vendor Uses Agentic Sahayak]
+    direction TB
+
+    JB_Start([Vendor speaks or types in Bangla\ne.g. আমার স্লো-মুভিং প্রোডাক্টগুলোতে ১৫% ডিসকাউন্ট দাও])
+
+    subgraph JB_EXP[Experience Layer]
+      JB_Chat[Sahayak Chat Panel\nDashboard or WhatsApp]
+    end
+
+    subgraph JB_EDGE[Edge Layer]
+      JB_GW[API Gateway\nAuth + Tier Check]
+    end
+
+    subgraph JB_APP[Application Layer]
+      JB_API[POST /api/ai/sahayak/chat]
+      JB_Parse[Step 1: Parse Intent\nvia LLM — Ollama Primary]
+      JB_RAG[Step 2: RAG Context\npgvector vendor-specific data]
+      JB_Tool1[Step 3: Tool Call\nGET /api/ai/velocity\nIdentify slow products]
+      JB_Tool2[Step 4: Tool Call\nPOST /api/ai/coupon-optimize\nCalculate optimal discounts]
+      JB_Tool3[Step 5: Tool Call\nPOST /api/coupons/bulk-create\nCreate coupons]
+      JB_Confirm[Human Confirmation\nBefore irreversible mutations]
+      JB_Respond[Final Response in Bangla\n৩টি প্রোডাক্টে ১৫% ডিসকাউন্ট কুপন তৈরি হয়েছে]
+    end
+
+    subgraph JB_INTEL[Intelligence Layer]
+      JB_LLM[Ollama — Llama 3.2\nPrimary LLM]
+      JB_GPT[OpenAI GPT-4o\nPro+ Tier Fallback]
+    end
+
+    subgraph JB_DATA[Data Layer]
+      JB_PG[(PostgreSQL\nsahayak_conversations\naudit_logs)]
+      JB_Vec[(pgvector\nProduct Embeddings)]
+    end
+
+    JB_Start --> JB_Chat
+    JB_Chat --> JB_GW
+    JB_GW --> JB_API
+    JB_API --> JB_Parse
+    JB_Parse --> JB_LLM
+    JB_LLM -.Fallback.-> JB_GPT
+    JB_Parse --> JB_RAG
+    JB_RAG --> JB_Vec
+    JB_RAG --> JB_Tool1
+    JB_Tool1 --> JB_Tool2
+    JB_Tool2 --> JB_Tool3
+    JB_Tool3 --> JB_Confirm
+    JB_Confirm -->|Vendor Approves| JB_Respond
+    JB_Respond --> JB_PG
+
+    %% Failure Paths
+    JB_LLM -->|Runtime Failure| JB_FALLBACK([Partial Advisory Response\nNo Silent Mutations])
+    JB_Tool1 -->|Tool Call Error| JB_PARTIAL([Return Partial Result\nLog Incident])
+    JB_Confirm -->|Vendor Rejects| JB_CANCEL([Actions Cancelled\nNo Mutations Applied])
+  end

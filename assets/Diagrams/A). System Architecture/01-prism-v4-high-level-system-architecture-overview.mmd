@@ -26,6 +26,7 @@ flowchart TB
     Redis[(Redis 7\nCache + Queue + Pub/Sub)]
     Mei[(Meilisearch\nLexical Search)]
     Vec[(pgvector\nSemantic Retrieval)]
+    ObjStore[(Object Storage\nCloudflare R2 / MinIO)]
   end
 
   subgraph AI[Intelligence Layer]
@@ -79,6 +80,10 @@ flowchart TB
   Nest <--> |Vector Search| Vec
   Worker -->|Projection Refresh| Mei
   Worker -->|Projection Refresh| PGR
+
+  Nest -->|Upload Images/Videos/Docs| ObjStore
+  Worker -->|Video Processing| ObjStore
+  ObjStore -->|CDN Delivery| CF
 
   Nest <--> |In-Process Calls| ONNX
   Nest <--> |Tool Calling| SAH

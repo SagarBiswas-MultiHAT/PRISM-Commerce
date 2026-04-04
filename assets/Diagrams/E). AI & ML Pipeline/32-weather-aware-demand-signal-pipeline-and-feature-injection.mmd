@@ -11,6 +11,7 @@ flowchart TB
 
   ImpactMatrix[Apply category impact matrix\nMonsoon: rain gear up\nOutdoor demand down]
   Inject[Inject weather features into\nForecast and ROP modules]
+  WeatherAPI[GET /api/ai/weather/impact\nPublic endpoint for dashboard]
 
   UseStale{Recent cached weather available?}
   FallbackCache[Use last valid cached weather\nMark stale-data flag]
@@ -19,6 +20,7 @@ flowchart TB
 
   Cron --> Fetch --> FetchOK
   FetchOK -- Yes --> Derive --> Persist --> Cache --> ImpactMatrix --> Inject
+  Inject --> WeatherAPI
 
   FetchOK -- No --> UseStale
   UseStale -- Yes --> FallbackCache --> ImpactMatrix --> Inject

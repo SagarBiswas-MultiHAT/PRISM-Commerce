@@ -24,17 +24,17 @@ flowchart TB
   end
 
   subgraph SCALE[Scale Triggers]
-    T1[p95 API above target for sustained window]
-    T2[Queue depth grows without recovery]
-    T3[Read replica lag exceeds query tolerance]
+    T1[p95 API above target\nfor sustained window]
+    T2[Queue depth grows\nwithout recovery]
+    T3[Read replica lag exceeds\nquery tolerance]
     T4[WSS connection churn spikes]
   end
 
-  subgraph ACTION[Response Paths]
-    A1[Tune Cache, Search, and Query Plans]
-    A2[Increase Worker Concurrency]
-    A3[Split Hot Modules to Independent Services]
-    A4[Compose to Kubernetes Migration Gate]
+  subgraph ACTION[Response Paths — Escalation Levels]
+    L1[Level 1: Tune\nCache TTL + Query Plans + Index]
+    L2[Level 2: Scale Replicas\nDocker Compose Replicas\napi=2, worker=3]
+    L3[Level 3: Split\nExtract Hot Modules\nto Independent Services]
+    L4[Level 4: Migrate\nKubernetes when\nCompose Limits Reached]
   end
 
   Edge --> Gateway --> API
@@ -60,10 +60,11 @@ flowchart TB
   SLO --> T3
   SLO --> T4
 
-  T1 --> A1
-  T2 --> A2
-  T3 --> A1
-  T4 --> A2
-  A1 --> A3
-  A2 --> A3
-  A3 --> A4
+  T1 -->|First response| L1
+  T2 -->|First response| L2
+  T3 -->|First response| L1
+  T4 -->|First response| L2
+
+  L1 -.if insufficient.-> L2
+  L2 -.if insufficient.-> L3
+  L3 -.if Compose limits reached.-> L4

@@ -4,12 +4,12 @@ flowchart TB
   OrderEvent[Order created event]
   Enqueue[Enqueue BullMQ anomaly job]
   Extract[Extract 6 signals\norder_frequency_z\nquantity_z\naddress_mismatch\npayment_method_age\ndevice_fingerprint_score\ncod_history_score]
+  CodFormula[cod_history_score =\nsuccessful_cod_deliveries / total_cod_orders]
 
   SignalCheck{All signal sources available?}
   Partial[Run partial scoring\nSet degraded-risk marker]
 
   Score[Compute per-signal Z scores\nBuild composite risk score]
-  CodFormula[cod_history_score =\nsuccessful_cod_deliveries / total_cod_orders]
   RiskDecision{Composite score > 2.5?}
 
   SafePath[Proceed with normal order pipeline]
@@ -25,7 +25,8 @@ flowchart TB
   SignalCheck -- Yes --> Score
   SignalCheck -- No --> Partial --> Score
 
-  Score --> CodFormula --> RiskDecision
+  Extract --> CodFormula
+  Score --> RiskDecision
 
   RiskDecision -- No --> SafePath
   RiskDecision -- Yes --> Pause --> Notify --> Triage

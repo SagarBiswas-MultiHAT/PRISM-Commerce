@@ -44,6 +44,7 @@ flowchart TB
     LIV[LiveKit SFU]
     SOC[Social APIs\nFacebook/TikTok/YouTube]
     GPT[OpenAI Fallback]
+    R2[Cloudflare R2\nObject Storage\nImages, Videos, Docs]
   end
 
   subgraph BKP[Backup and Recovery Plane]
@@ -54,6 +55,7 @@ flowchart TB
 
   FW[Network Policy\nOnly Cloudflare may reach ingress]
   SCALE[Scale Path\nCompose now -> Kubernetes later]
+  ADMIN_ACCESS[Admin Access\nSSH/VPN Secure Channels Only]
 
   Users -->|HTTPS| DNS --> CDN --> WAF --> TLS --> LB
   LB --> WEB
@@ -88,6 +90,10 @@ flowchart TB
   API -->|HTTPS Sync| SOC
   OLL -.tiered fallback.-> GPT
 
+  API -->|Upload Media/Docs| R2
+  R2 -->|CDN Delivery| CDN
+  WRK -->|Async Video Processing| R2
+
   PGP -->|Encrypted Scheduled Backup| ENC
   ENC --> DR
   DR --> STBY
@@ -95,3 +101,5 @@ flowchart TB
   FW -.enforced at edge and host firewall.-> LB
   SCALE -.capacity planning trigger.-> API
   SCALE -.capacity planning trigger.-> WRK
+  ADMIN_ACCESS -.restricted to.-> APPNODE
+  ADMIN_ACCESS -.restricted to.-> DATANODE

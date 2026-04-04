@@ -33,7 +33,11 @@ flowchart TB
     VMEI[(vol-meilisearch)]
     VGRAF[(vol-grafana)]
     VLOK[(vol-loki)]
+    VOLL[(vol-ollama)]
+    VTMP[(vol-tempo)]
   end
+
+  SentryExt[Sentry\nExternal SaaS Error Tracking]
 
   NET[compose network: prism_internal]
   SEC[secrets and env\n.env + Docker secrets]
@@ -72,6 +76,8 @@ flowchart TB
   MEI --> VMEI
   GRF --> VGRAF
   LOK --> VLOK
+  OLL --> VOLL
+  TMP --> VTMP
 
   NET -.attached.-> WEB
   NET -.attached.-> API
@@ -82,6 +88,9 @@ flowchart TB
   NET -.attached.-> RED
   NET -.attached.-> MEI
   NET -.attached.-> OLL
+
+  API -->|Errors| SentryExt
+  WEB -->|Errors| SentryExt
 
   SEC -.injected.-> WEB
   SEC -.injected.-> API

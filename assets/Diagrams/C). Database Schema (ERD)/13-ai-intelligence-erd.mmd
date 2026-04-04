@@ -12,6 +12,7 @@ erDiagram
   USERS ||--o{ SAHAYAK_CONVERSATIONS : owns_conversation
   FESTIVAL_CALENDAR }o--o{ AI_FORECASTS : feature_source_reference
   WEATHER_CACHE }o--o{ AI_FORECASTS : feature_source_reference
+  PRODUCTS ||--o{ PRODUCT_EMBEDDINGS : has_embedding
 
   AI_FORECASTS {
     uuid id PK
@@ -99,6 +100,14 @@ erDiagram
     jsonb tool_calls
     int tokens_used
     datetime created_at
+  }
+
+  PRODUCT_EMBEDDINGS {
+    uuid id PK
+    uuid product_id FK
+    vector embedding_384
+    string model_version
+    datetime updated_at
   }
 
   PRODUCTS {
