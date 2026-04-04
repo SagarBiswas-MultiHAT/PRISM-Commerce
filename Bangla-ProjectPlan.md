@@ -4,7 +4,7 @@
 
 <div align="center">
 
-![prism_v4_big_picture.svg](assets/prism_v4_big_picture.svg)
+![prism_v4_big_picture.svg](assets/Pics-Bangla-ProjectPlan/prism_v4_big_picture.svg)
 
 </div>
 
@@ -16,7 +16,7 @@
 
 <div align="center">
 
-![prism_v4_12_problems.jpeg](assets/prism_v4_12_problems.jpeg)
+![prism_v4_12_problems.jpeg](assets/Pics-Bangla-ProjectPlan/prism_v4_12_problems.jpeg)
 
 </div>
 
@@ -28,7 +28,7 @@
 
 <div align="center">
 
-![prism_v4_pricing_revenue.jpeg](assets/prism_v4_pricing_revenue.jpeg)
+![prism_v4_pricing_revenue.jpeg](assets/Pics-Bangla-ProjectPlan/prism_v4_pricing_revenue.jpeg)
 
 </div>
 
@@ -40,7 +40,7 @@
 
 <div align="center">
 
-![prism_v4_8_roles.jpeg](assets/prism_v4_8_roles.jpeg)
+![prism_v4_8_roles.jpeg](assets/Pics-Bangla-ProjectPlan/prism_v4_8_roles.jpeg)
 
 </div>
 
@@ -52,7 +52,7 @@
 
 <div align="center">
 
-![prism_v4_15_ai_modules.svg](assets/prism_v4_15_ai_modules.svg)
+![prism_v4_15_ai_modules.svg](assets/Pics-Bangla-ProjectPlan/prism_v4_15_ai_modules.svg)
 
 </div>
 
@@ -64,7 +64,7 @@
 
 <div align="center">
 
-![prism_v4_modules_a_to_l.jpeg](assets/prism_v4_modules_a_to_l.jpeg)
+![prism_v4_modules_a_to_l.jpeg](assets/Pics-Bangla-ProjectPlan/prism_v4_modules_a_to_l.jpeg)
 
 </div>
 
@@ -76,7 +76,7 @@
 
 <div align="center">
 
-![prism_sahayak_demo.jpeg](assets/prism_sahayak_demo.jpeg)
+![prism_sahayak_demo.jpeg](assets/Pics-Bangla-ProjectPlan/prism_sahayak_demo.jpeg)
 
 </div>
 
@@ -86,7 +86,7 @@
 
 <div align="center">
 
-![prism_v4_trust_escrow.svg](assets/prism_v4_trust_escrow.svg)
+![prism_v4_trust_escrow.svg](assets/Pics-Bangla-ProjectPlan/prism_v4_trust_escrow.svg)
 
 </div>
 
@@ -96,7 +96,7 @@
 
 <div align="center">
 
-![prism_v4_bd_native.jpeg](assets/prism_v4_bd_native.jpeg)
+![prism_v4_bd_native.jpeg](assets/Pics-Bangla-ProjectPlan/prism_v4_bd_native.jpeg)
 
 </div>
 
@@ -106,7 +106,7 @@
 
 <div align="center">
 
-![prism_v4_system_simple.svg](assets/prism_v4_system_simple.svg)
+![prism_v4_system_simple.svg](assets/Pics-Bangla-ProjectPlan/prism_v4_system_simple.svg)
 
 </div>
 
@@ -116,7 +116,7 @@
 
 <div align="center">
 
-![prism_v4_15month_roadmap.svg](assets/prism_v4_15month_roadmap.svg)
+![prism_v4_15month_roadmap.svg](assets/Pics-Bangla-ProjectPlan/prism_v4_15month_roadmap.svg)
 
 </div>
 
@@ -126,7 +126,7 @@
 
 <div align="center">
 
-![prism_v4_team_money.jpeg](assets/prism_v4_team_money.jpeg)
+![prism_v4_team_money.jpeg](assets/Pics-Bangla-ProjectPlan/prism_v4_team_money.jpeg)
 
 </div>
 
@@ -136,7 +136,7 @@
 
 <div align="center">
 
-![prism_v3_vs_v4.svg](assets/prism_v3_vs_v4.svg)
+![prism_v3_vs_v4.svg](assets/Pics-Bangla-ProjectPlan/prism_v3_vs_v4.svg)
 
 </div>
 
@@ -146,7 +146,7 @@
 
 <div align="center">
 
-![prism_v4_final_summary.jpeg](assets/prism_v4_final_summary.jpeg)
+![prism_v4_final_summary.jpeg](assets/Pics-Bangla-ProjectPlan/prism_v4_final_summary.jpeg)
 
 </div>
 
